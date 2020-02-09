@@ -26,6 +26,7 @@ def input_manager():
     
     while True:
         keystroke = keyboard.read_key()
+        print("ddd")
         if keystroke == 'esc':
             should_quit = True
             break
@@ -42,6 +43,7 @@ def input_manager():
 
         with open(filename, 'a') as file:
             file.write('{0},{1}\n'.format(get_time(), keystroke))
+
 
 def prompts():
     global fingers, should_quit
