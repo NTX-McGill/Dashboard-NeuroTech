@@ -35,6 +35,11 @@ def input_manager():
                 lines = file.readlines()
                 lines = lines[:-2]
 
+        if keystroke == 'backspace':
+            with open(filename, 'w+') as file:
+                lines = file.readlines()
+                lines = lines[:-2]
+
         with open(filename, 'a') as file:
             file.write('{0},{1}\n'.format(get_time(), keystroke))
 
@@ -52,7 +57,7 @@ def prompts():
 def main():
     global filename
     
-    filename = 'logs/log_{0}.txt'.format(get_time()).format(":", "-")
+    filename = 'logs/log_{0}.txt'.format(get_time()).replace(":", "-")
     
     with open(filename, 'w+') as file:
         file.write('timestamp(ms), keypressed\n')
