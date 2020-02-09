@@ -52,7 +52,7 @@ def prompts():
 def main():
     global filename
     
-    filename = 'logs/log_{0}.txt'.format(get_time()).format(":", "-")
+    filename = 'logs/log_{0}.txt'.format(get_time()).replace(":", "-")
     
     with open(filename, 'w+') as file:
         file.write('timestamp(ms), keypressed\n')
