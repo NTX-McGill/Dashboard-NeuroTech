@@ -34,7 +34,6 @@ def input_manager():
             with open(filename, 'w+') as file:
                 lines = file.readlines()
                 lines = lines[:-2]
-            continue
 
         with open(filename, 'a') as file:
             file.write('{0},{1}\n'.format(get_time(), keystroke))
@@ -53,11 +52,11 @@ def prompts():
 def main():
     global filename
     
-    filename = 'logs/log_{0}.txt'.format(get_time())
+    filename = 'logs/log_{0}.txt'.format(get_time()).format(":", "-")
     
     with open(filename, 'w+') as file:
         file.write('timestamp(ms), keypressed\n')
-    
+
     input_thread = threading.Thread(target=input_manager)
     input_thread.start()
 

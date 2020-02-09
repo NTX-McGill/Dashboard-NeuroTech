@@ -1,5 +1,0 @@
-timestamp(ms), keypressed
-16:08:31:212041,delete
-16:08:31:269199,delete
-16:08:33:908441,delete
-16:08:33:975794,delete
