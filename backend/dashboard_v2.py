@@ -1,5 +1,9 @@
 from time import time
-import keyboard, random, threading
+import datetime
+
+import keyboard
+import random
+import threading
 
 filename = ''
 should_quit = False
@@ -15,7 +19,7 @@ fingers = [
 ]
 
 def get_time():
-    return round(time() * 1000)
+    return datetime.datetime.now().strftime("%H:%M:%S:%f")
 
 def input_manager():
     global filename, should_quit
@@ -25,7 +29,13 @@ def input_manager():
         if keystroke == 'esc':
             should_quit = True
             break
-        
+
+        if keystroke == 'delete':
+            with open(filename, 'w+') as file:
+                lines = file.readlines()
+                lines = lines[:-2]
+            continue
+
         with open(filename, 'a') as file:
             file.write('{0},{1}\n'.format(get_time(), keystroke))
 
@@ -38,15 +48,15 @@ def prompts():
     threading.Timer(3.0, prompts).start()
 
     request = random.choice(fingers)
-    print('Please use your {0} {1} to press "{2}"'.format(request[0], request[1], request[2]))
+    print('\nPlease use your {0} {1} to press "{2}"'.format(request[0], request[1], request[2]))
 
 def main():
     global filename
     
-    filename = 'log_{0}.txt'.format(get_time())
+    filename = 'logs/log_{0}.txt'.format(get_time())
     
     with open(filename, 'w+') as file:
-        file.write('timestamp(ms),keypressed\n')
+        file.write('timestamp(ms), keypressed\n')
     
     input_thread = threading.Thread(target=input_manager)
     input_thread.start()
