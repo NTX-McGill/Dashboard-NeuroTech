@@ -3,6 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import 'typeface-roboto';
+
+Array.prototype.sample = function () {
+    return this[Math.floor(Math.random() * this.length)];
+};
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
