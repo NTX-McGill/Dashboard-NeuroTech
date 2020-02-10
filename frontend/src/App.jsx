@@ -10,17 +10,25 @@ function addZero(x, n) {
 }
 
 function getDateTime() {
-  var d = new Date();
-  var year = d.getFullYear();
-  var month = addZero(d.getMonth(), 2);
-  var date = addZero(d.getDate(), 2);
-  var h = addZero(d.getHours(), 2);
-  var m = addZero(d.getMinutes(), 2);
-  var s = addZero(d.getSeconds(), 2);
-  var ms = addZero(d.getMilliseconds(), 3);
-  return (
-    year + "-" + month + "-" + date + "-" + h + ":" + m + ":" + s + ":" + ms
-  );
+  let timestamp = Date.now();
+  let datetime = new Date(timestamp);
+
+  return [
+    timestamp,
+    datetime.getFullYear() +
+      "-" +
+      addZero(datetime.getMonth() + 1, 2) +
+      "-" +
+      addZero(datetime.getDate(), 2) +
+      "-" +
+      addZero(datetime.getHours(), 2) +
+      ":" +
+      addZero(datetime.getMinutes(), 2) +
+      ":" +
+      addZero(datetime.getSeconds(), 2) +
+      ":" +
+      addZero(datetime.getMilliseconds(), 3)
+  ];
 }
 
 function choice(array) {
@@ -77,9 +85,12 @@ function App() {
 
         let newPrompt = choice(fingers);
         setPrompt(newPrompt);
+        let [timestamp, datetime] = getDateTime();
         fetch(
-          "http://localhost:5000/prompt?timestamp=" +
-            getDateTime() +
+          "http://localhost:5000/prompt?datetime=" +
+            datetime +
+            "&timestamp=" +
+            timestamp +
             "&hand=" +
             newPrompt.hand +
             "&finger=" +
@@ -92,9 +103,12 @@ function App() {
   });
 
   let keyHandler = useCallback(event => {
+    let [timestamp, datetime] = getDateTime();
     fetch(
-      "http://localhost:5000/data-collection?timestamp=" +
-        getDateTime() +
+      "http://localhost:5000/data-collection?datetime=" +
+        datetime +
+        "&timestamp=" +
+        timestamp +
         "&key=" +
         event.key
     );
