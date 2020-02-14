@@ -1,6 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Container, LinearProgress, Typography } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+
+function addZero(x, n) {
+  while (x.toString().length < n) {
+    x = "0" + x;
+  }
+  return x;
+}
+
+function getDateTime() {
+  let timestamp = Date.now();
+  let datetime = new Date(timestamp);
+
+  return [
+    timestamp,
+    datetime.getFullYear() +
+      "-" +
+      addZero(datetime.getMonth() + 1, 2) +
+      "-" +
+      addZero(datetime.getDate(), 2) +
+      "-" +
+      addZero(datetime.getHours(), 2) +
+      ":" +
+      addZero(datetime.getMinutes(), 2) +
+      ":" +
+      addZero(datetime.getSeconds(), 2) +
+      ":" +
+      addZero(datetime.getMilliseconds(), 3)
+  ];
+}
+
+function choice(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
 
 const ProgressBar = withStyles({
   root: {
@@ -14,8 +47,8 @@ const useStyles = makeStyles(theme => ({
   },
   progressBar: {
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
+    marginBottom: theme.spacing(2)
+  }
 }));
 
 function App() {
@@ -40,7 +73,7 @@ function App() {
   const [progress, setProgress] = useState(0);
   const [direction, setDirection] = useState(true); // increasing=true, decreasing=false
 
-  const [prompt, setPrompt] = useState(fingers.sample());
+  const [prompt, setPrompt] = useState(choice(fingers));
 
   useEffect(() => {
     let interval = setInterval(() => {
@@ -49,17 +82,51 @@ function App() {
 
       if ((progress > 100 && direction) || (progress < 0 && !direction)) {
         setDirection(!direction);
-        setPrompt(fingers.sample());
+
+        let newPrompt = choice(fingers);
+        setPrompt(newPrompt);
+        let [timestamp, datetime] = getDateTime();
+        fetch(
+          "http://localhost:5000/prompt?datetime=" +
+            datetime +
+            "&timestamp=" +
+            timestamp +
+            "&hand=" +
+            newPrompt.hand +
+            "&finger=" +
+            newPrompt.finger
+        );
       }
     }, updateInterval);
 
     return () => clearInterval(interval);
   });
 
+  let keyHandler = useCallback(event => {
+    let [timestamp, datetime] = getDateTime();
+    fetch(
+      "http://localhost:5000/data-collection?datetime=" +
+        datetime +
+        "&timestamp=" +
+        timestamp +
+        "&key=" +
+        event.key
+    );
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener("keydown", keyHandler, false);
+    return () => document.removeEventListener("keydown", keyHandler, false);
+  });
+
   return (
     <div className={classes.root}>
       <Container maxWidth="md">
-        <ProgressBar variant="determinate" value={progress} className={classes.progressBar} />
+        <ProgressBar
+          variant="determinate"
+          value={progress}
+          className={classes.progressBar}
+        />
         <Typography variant="h4">
           Press the "{prompt.key}" key with your {prompt.hand} {prompt.finger}
         </Typography>
