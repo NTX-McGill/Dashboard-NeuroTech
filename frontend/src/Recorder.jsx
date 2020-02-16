@@ -2,25 +2,21 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import { Typography } from "@material-ui/core";
 
-import { sendData, sendPrompt } from './Bridge';
-import ProgressBar from './ProgressBar';
-import { choice } from './Utilities';
+import { sendData, sendPrompt } from "./Bridge";
+import ProgressBar from "./ProgressBar";
+import { choice } from "./Utilities";
 
-function Recorder({ recording }) {
+function Recorder({ recording, onKey, onPrompt }) {
   const fingers = [
-    ["left", "pinkie", "a"],
-    ["left", "ring finger", "s"],
-    ["left", "middle finger", "d"],
-    ["left", "index finger", "f"],
-    ["right", "index finger", "j"],
-    ["right", "middle finger", "k"],
-    ["right", "ring finger", "l"],
-    ["right", "pinkie", ";"]
-  ].map(array => ({
-    hand: array[0],
-    finger: array[1],
-    key: array[2]
-  }));
+    { hand: "left", finger: "pinkie", key: "a" },
+    { hand: "left", finger: "ring finger", key: "s" },
+    { hand: "left", finger: "middle finger", key: "d" },
+    { hand: "left", finger: "index finger", key: "f" },
+    { hand: "right", finger: "index finger", key: "j" },
+    { hand: "right", finger: "middle finger", key: "k" },
+    { hand: "right", finger: "ring finger", key: "l" },
+    { hand: "right", finger: "pinkie", key: ";" }
+  ];
 
   const [progress, setProgress] = useState(0);
   const [prompt, setPrompt] = useState(choice(fingers));
@@ -37,19 +33,20 @@ function Recorder({ recording }) {
 
           let newPrompt = choice(fingers);
           setPrompt(newPrompt);
-          sendPrompt({ newPrompt });
+          sendPrompt({ newPrompt }, onPrompt);
         }
-      } else
-        setProgress(0);
+      } else setProgress(0);
     }, updateInterval);
 
     return () => clearInterval(interval);
-  }, [fingers, progress, recording]);
+  }, [fingers, onPrompt, progress, recording]);
 
-  const keyHandler = useCallback(event => {
-    if (recording)
-      sendData({ key: event.key });
-  }, [recording]);
+  const keyHandler = useCallback(
+    event => {
+      if (recording) sendData({ key: event.key }, onKey);
+    },
+    [onKey, recording]
+  );
 
   useEffect(() => {
     document.addEventListener("keydown", keyHandler, false);
@@ -60,10 +57,13 @@ function Recorder({ recording }) {
     <div>
       <ProgressBar percent={progress} />
       <Typography variant="h4">
-        {recording
-          ? <>Press the "{prompt.key}" key with your {prompt.hand} {prompt.finger}</>
-          : <>Waiting...</>
-        }
+        {recording ? (
+          <>
+            Press the "{prompt.key}" key with your {prompt.hand} {prompt.finger}
+          </>
+        ) : (
+          <>Waiting...</>
+        )}
       </Typography>
     </div>
   );
