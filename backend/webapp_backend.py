@@ -49,7 +49,7 @@ def new_session():
     if not os.path.exists(session_filepath):
         os.makedirs(session_filepath)
 
-    file_path = session_filepath + datetime.replace(':', '-') + '.txt'
+    file_path = os.path.join(session_filepath, datetime.replace(':', '-') + '.txt')
     with open(file_path, 'w+') as f:
         f.write('name=' + name.strip() + '\n')
         f.write('notes=' + notes.strip() + '\n')
