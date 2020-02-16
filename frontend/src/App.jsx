@@ -1,138 +1,53 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Container, LinearProgress, Typography } from "@material-ui/core";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import React, { useState } from 'react';
 
-function addZero(x, n) {
-  while (x.toString().length < n) {
-    x = "0" + x;
-  }
-  return x;
-}
+import { Container } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
-function getDateTime() {
-  let timestamp = Date.now();
-  let datetime = new Date(timestamp);
-
-  return [
-    timestamp,
-    datetime.getFullYear() +
-      "-" +
-      addZero(datetime.getMonth() + 1, 2) +
-      "-" +
-      addZero(datetime.getDate(), 2) +
-      "-" +
-      addZero(datetime.getHours(), 2) +
-      ":" +
-      addZero(datetime.getMinutes(), 2) +
-      ":" +
-      addZero(datetime.getSeconds(), 2) +
-      ":" +
-      addZero(datetime.getMilliseconds(), 3)
-  ];
-}
-
-function choice(array) {
-  return array[Math.floor(Math.random() * array.length)];
-}
-
-const ProgressBar = withStyles({
-  root: {
-    height: 15
-  }
-})(LinearProgress);
+import EnterNameSnackbar from './EnterNameSnackbar';
+import Recorder from './Recorder';
+import SessionInfoForm from './SessionInfoForm';
+import { newSession } from './Bridge';
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    margin: 20
-  },
-  progressBar: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2)
-  }
+    root: {
+        margin: theme.spacing() * 4,
+    },
 }));
 
 function App() {
-  let updateInterval = 200;
-  let fingers = [
-    ["left", "pinkie", "a"],
-    ["left", "ring finger", "s"],
-    ["left", "middle finger", "d"],
-    ["left", "index finger", "f"],
-    ["right", "index finger", "j"],
-    ["right", "middle finger", "k"],
-    ["right", "ring finger", "l"],
-    ["right", "pinkie", ";"]
-  ].map(array => ({
-    hand: array[0],
-    finger: array[1],
-    key: array[2]
-  }));
+    const [recording, setRecording] = useState(false);
+    const [name, setName] = useState('');
+    const [notes, setNotes] = useState('');
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const classes = useStyles();
+    const classes = useStyles();
 
-  const [progress, setProgress] = useState(0);
-  const [direction, setDirection] = useState(true); // increasing=true, decreasing=false
+    const click = () => {
+        if (!recording) {
+            if (name === '')
+                setSnackbarOpen(true);
+            else {
+                setSnackbarOpen(false);
+                newSession({ name, notes }, () => setRecording(true));
+            }
+        } else
+            setRecording(false);
+    };
 
-  const [prompt, setPrompt] = useState(choice(fingers));
+    return (
+        <div className={classes.root}>
+            <EnterNameSnackbar open={snackbarOpen} onClose={
+                (_, reason) => reason === 'clickaway' || setSnackbarOpen(false)
+            } />
 
-  useEffect(() => {
-    let interval = setInterval(() => {
-      let factor = direction ? 1 : -1;
-      setProgress(progress + (updateInterval / 3000) * 100 * factor);
-
-      if ((progress > 100 && direction) || (progress < 0 && !direction)) {
-        setDirection(!direction);
-
-        let newPrompt = choice(fingers);
-        setPrompt(newPrompt);
-        let [timestamp, datetime] = getDateTime();
-        fetch(
-          "http://localhost:5000/prompt?datetime=" +
-            datetime +
-            "&timestamp=" +
-            timestamp +
-            "&hand=" +
-            newPrompt.hand +
-            "&finger=" +
-            newPrompt.finger
-        );
-      }
-    }, updateInterval);
-
-    return () => clearInterval(interval);
-  });
-
-  let keyHandler = useCallback(event => {
-    let [timestamp, datetime] = getDateTime();
-    fetch(
-      "http://localhost:5000/data-collection?datetime=" +
-        datetime +
-        "&timestamp=" +
-        timestamp +
-        "&key=" +
-        event.key
+            <Container maxWidth='md'>
+                <br />
+                <SessionInfoForm {...{ click, recording, name, setName, notes, setNotes }} />
+                <br /><br />
+                <Recorder {...{ recording }} />
+            </Container>
+        </div>
     );
-  }, []);
-
-  useEffect(() => {
-    document.addEventListener("keydown", keyHandler, false);
-    return () => document.removeEventListener("keydown", keyHandler, false);
-  });
-
-  return (
-    <div className={classes.root}>
-      <Container maxWidth="md">
-        <ProgressBar
-          variant="determinate"
-          value={progress}
-          className={classes.progressBar}
-        />
-        <Typography variant="h4">
-          Press the "{prompt.key}" key with your {prompt.hand} {prompt.finger}
-        </Typography>
-      </Container>
-    </div>
-  );
 }
 
 export default App;

@@ -1,10 +1,15 @@
 from flask import Flask, request
+from flask_cors import CORS
 import os, time
- 
+
 app = Flask(__name__)
+CORS(app)
+file_path = ''
  
 @app.route('/prompt')
 def prompt():
+    global file_path
+
     datetime = request.args.get('datetime') # YYYY-MM-DD-HH:MM:SS:msms
     timestamp = request.args.get('timestamp') # absolute time (ms)
     hand = request.args.get('hand') # right | left
@@ -17,6 +22,8 @@ def prompt():
  
 @app.route('/data-collection')
 def keystroke():
+    global file_path
+
     datetime = request.args.get('datetime') # YYYY-MM-DD-HH:MM:SS:msms
     timestamp = request.args.get('timestamp') # absolute time (ms)
     key = request.args.get('key') # key pressed
@@ -25,14 +32,27 @@ def keystroke():
         f.write(', '.join([datetime, timestamp, 'keystroke', '', '', key]) + '\n')
  
     return 'OK'
- 
-if not os.path.exists('data'):
-    os.makedirs('data')
 
-start_time = int(round(time.time() * 1000))
-file_path = 'data/' + str(start_time) + '.txt'
-with open(file_path, 'w+') as f:
-    f.write('datetime, timestamp, event, hand, finger, key\n')
+@app.route('/new-session')
+def new_session():    
+    global file_path
+
+    datetime = request.args.get('datetime') # YYYY-MM-DD-HH:MM:SS:msms
+    timestamp = request.args.get('timestamp') # absolute time (ms)
+    name = request.args.get('name') # name of person recording
+    notes = request.args.get('notes') # any additional notes
+
+    if not os.path.exists('data'):
+        os.makedirs('data')
+
+    file_path = 'data/' + datetime.replace(':', '-') + '.txt'
+    with open(file_path, 'w+') as f:
+        f.write('name=' + name.strip() + '\n')
+        f.write('notes=' + notes.strip() + '\n')
+        
+        f.write('datetime, timestamp, event, hand, finger, key\n')
+
+    return 'OK'
  
 if __name__ == '__main__':
     app.run()
