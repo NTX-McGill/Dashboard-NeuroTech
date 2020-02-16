@@ -4,7 +4,6 @@ import os, time
 
 app = Flask(__name__)
 CORS(app)
-file_path = ''
  
 @app.route('/prompt')
 def prompt():
@@ -17,7 +16,6 @@ def prompt():
  
     with open(file_path, 'a') as f:
         f.write(', '.join([datetime, timestamp, 'prompt', hand, finger, '']) + '\n')
-        f.close()
  
     return 'OK'
  
@@ -31,7 +29,6 @@ def keystroke():
  
     with open(file_path, 'a') as f:
         f.write(', '.join([datetime, timestamp, 'keystroke', '', '', key]) + '\n')
-        f.close()
  
     return 'OK'
 
@@ -52,12 +49,12 @@ def new_session():
         os.makedirs(session_filepath)
 
     file_path = os.path.join(session_filepath, datetime.replace(':', '-') + '.txt')
-    with open(file_path, 'w+') as f:
+    print(file_path)
+    with open(file_path, 'wb+') as f:
         f.write('name=' + name.strip() + '\n')
         f.write('notes=' + notes.strip() + '\n')
         
         f.write('datetime, timestamp, event, hand, finger, key\n')
-        f.close()
 
     return 'OK'
  
