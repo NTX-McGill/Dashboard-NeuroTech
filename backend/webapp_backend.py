@@ -17,6 +17,7 @@ def prompt():
  
     with open(file_path, 'a') as f:
         f.write(', '.join([datetime, timestamp, 'prompt', hand, finger, '']) + '\n')
+        f.close()
  
     return 'OK'
  
@@ -30,6 +31,7 @@ def keystroke():
  
     with open(file_path, 'a') as f:
         f.write(', '.join([datetime, timestamp, 'keystroke', '', '', key]) + '\n')
+        f.close()
  
     return 'OK'
 
@@ -55,6 +57,7 @@ def new_session():
         f.write('notes=' + notes.strip() + '\n')
         
         f.write('datetime, timestamp, event, hand, finger, key\n')
+        f.close()
 
     return 'OK'
  
