@@ -18,6 +18,7 @@ function ProgressBar({ percent }) {
             <div className={classes.progress} style={{
                 height: 24,
                 width: percent + '%',
+
             }} />
         </div>
     );
