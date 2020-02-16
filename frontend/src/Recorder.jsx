@@ -6,6 +6,11 @@ import { sendData, sendPrompt } from "./Bridge";
 import ProgressBar from "./ProgressBar";
 import { choice } from "./Utilities";
 
+import Hands from './hand.png';
+import Green from './green.png';
+import Fade from '@material-ui/core/Fade';
+import './app.css';
+
 function Recorder({ recording, onKey, onPrompt }) {
   const fingers = [
     { hand: "left", finger: "pinkie", key: "a" },
@@ -15,7 +20,7 @@ function Recorder({ recording, onKey, onPrompt }) {
     { hand: "right", finger: "index finger", key: "j" },
     { hand: "right", finger: "middle finger", key: "k" },
     { hand: "right", finger: "ring finger", key: "l" },
-    { hand: "right", finger: "pinkie", key: ";" }
+    { hand: "right", finger: "pinkie", key: "semicolon" }
   ];
 
   const [progress, setProgress] = useState(0);
@@ -55,16 +60,45 @@ function Recorder({ recording, onKey, onPrompt }) {
 
   return (
     <div>
+      <div class = 'notGrey'>
       <ProgressBar percent={progress} />
+      <div class = 'line'>
+      <img width='4%'  align='center' src={Green} alt=""/>
+      </div>
+      </div>
       <Typography variant="h4">
         {recording ? (
           <>
-            Press the "{prompt.key}" key with your {prompt.hand} {prompt.finger}
+            Press the "{prompt.key}" key when the bar reaches the green dot
           </>
         ) : (
           <>Waiting...</>
-        )}
+        )
+        }
       </Typography>
+      {recording? progress > 50 ? (
+      <div class= 'notGrey'>
+        <div class='image1'>
+          <img width='40%'  src={Hands} alt=""/>
+        </div>
+        <div class={prompt.key} >
+          <img width='3%'  src={Green} alt=""/>
+        </div>
+      </div>
+      ):(
+      <div class= 'parent'>
+        <div class='image1'>
+          <img width='40%'  src={Hands} alt=""/>
+        </div>
+        <div class={prompt.key} >
+          <img width='3%'  src={Green} alt=""/>
+        </div>
+      </div>
+      ): (
+        <></>
+      )
+      }
+      
     </div>
   );
 }
