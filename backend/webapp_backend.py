@@ -15,7 +15,7 @@ def prompt():
     finger = request.args.get('finger') # pinkie | ring finger | middle finger | index finger
  
     with open(file_path, 'a') as f:
-        f.write(', '.join([datetime, timestamp, 'prompt', hand, finger, '']) + '\n')
+        f.write(', '.join([datetime, timestamp, 'prompt_end', hand, finger, '']) + '\n')
  
     return 'OK'
  
