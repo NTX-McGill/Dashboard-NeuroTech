@@ -45,7 +45,11 @@ def new_session():
     if not os.path.exists('data'):
         os.makedirs('data')
 
-    file_path = 'data/' + datetime.replace(':', '-') + '.txt'
+    session_filepath = f'data/{name}'
+    if not os.path.exists(session_filepath):
+        os.makedirs(session_filepath)
+
+    file_path = session_filepath + datetime.replace(':', '-') + '.txt'
     with open(file_path, 'w+') as f:
         f.write('name=' + name.strip() + '\n')
         f.write('notes=' + notes.strip() + '\n')
