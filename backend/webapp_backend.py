@@ -41,16 +41,13 @@ def new_session():
     name = request.args.get('name') # name of person recording
     notes = request.args.get('notes') # any additional notes
 
-    if not os.path.exists('data'):
-        os.makedirs('data')
-
     session_filepath = f'data/{name}'
     if not os.path.exists(session_filepath):
         os.makedirs(session_filepath)
 
     file_path = os.path.join(session_filepath, datetime.replace(':', '-') + '.txt')
     print(file_path)
-    with open(file_path, 'wb+') as f:
+    with open(file_path, 'w+') as f:
         f.write('name=' + name.strip() + '\n')
         f.write('notes=' + notes.strip() + '\n')
         

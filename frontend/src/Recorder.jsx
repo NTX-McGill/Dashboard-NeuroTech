@@ -8,7 +8,6 @@ import { choice } from "./Utilities";
 
 import Hands from './hand.png';
 import Green from './green.png';
-import Fade from '@material-ui/core/Fade';
 import './app.css';
 
 function Recorder({ recording, onKey, onPrompt }) {
@@ -33,12 +32,16 @@ function Recorder({ recording, onKey, onPrompt }) {
       if (recording) {
         setProgress(progress => progress + (updateInterval / 3000) * 100);
 
+        if (progress === 80) {
+          let newPrompt = choice(fingers);
+          sendPrompt({ newPrompt }, onPrompt);
+        }
+
         if (progress >= 100) {
           setProgress(0);
 
           let newPrompt = choice(fingers);
           setPrompt(newPrompt);
-          sendPrompt({ newPrompt }, onPrompt);
         }
       } else setProgress(0);
     }, updateInterval);
@@ -63,7 +66,7 @@ function Recorder({ recording, onKey, onPrompt }) {
       <div class = 'notGrey'>
       <ProgressBar percent={progress} />
       <div class = 'line'>
-      <img width='4%'  align='center' src={Green} alt=""/>
+      <img width='25px'  align='center' src={Green} alt=""/>
       </div>
       </div>
       <Typography variant="h4">
@@ -76,7 +79,7 @@ function Recorder({ recording, onKey, onPrompt }) {
         )
         }
       </Typography>
-      {recording? progress > 50 ? (
+      {recording? progress > 80 ? (
       <div class= 'notGrey'>
         <div class='image1'>
           <img width='40%'  src={Hands} alt=""/>

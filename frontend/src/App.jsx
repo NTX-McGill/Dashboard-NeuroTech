@@ -10,11 +10,6 @@ import SessionInfoForm from "./SessionInfoForm";
 import { newSession } from "./Bridge";
 import { format } from "./Utilities";
 
-import Logo from './hand.png';
-
-import Paper from '@material-ui/core/Paper';
-import Fade from '@material-ui/core/Fade';
-
 const useStyles = makeStyles(theme => ({
   root: {
     margin: theme.spacing() * 4
