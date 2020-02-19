@@ -5,10 +5,12 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import EnterNameSnackbar from "./EnterNameSnackbar";
 import EventList from "./EventList";
-import Recorder from "./Recorder";
+import GuidedRecorder from "./GuidedRecorder";
 import SessionInfoForm from "./SessionInfoForm";
 import { newSession } from "./Bridge";
 import { format } from "./Utilities";
+import SelfDirectedRecorder from "./SelfDirectedRecorder";
+import InTheAirRecorder from "./InTheAirRecorder";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,6 +26,7 @@ function App() {
   const [recording, setRecording] = useState(false);
   const [name, setName] = useState("");
   const [notes, setNotes] = useState("");
+  const [mode, setMode] = useState(1);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [events, setEvents] = useState([]);
 
@@ -35,7 +38,7 @@ function App() {
       else {
         setSnackbarOpen(false);
         setEvents([]);
-        newSession({ name, notes }, () => setRecording(true));
+        newSession({ name, notes, mode }, () => setRecording(true));
       }
     } else setRecording(false);
   };
@@ -81,7 +84,7 @@ function App() {
         </Typography>
         <br />
         <SessionInfoForm
-          {...{ click, recording, name, setName, notes, setNotes }}
+          {...{ click, recording, name, setName, notes, setNotes, mode, setMode }}
         />
         <br />
         {/* 
@@ -152,7 +155,9 @@ fill="#000000" stroke="none">
         </Fade> */}
 
         <br />
-        <Recorder {...{ recording, onKey, onPrompt }} />
+        {mode == 0 && <SelfDirectedRecorder {...{ recording, onKey, onPrompt }} />}
+        {mode == 1 && <GuidedRecorder {...{ recording, onKey, onPrompt }} />}
+        {mode == 2 && <InTheAirRecorder {...{ recording, onPrompt }} />}
         <br />
         <br />
         <EventList {...{ events }} />

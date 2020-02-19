@@ -10,7 +10,7 @@ import Hands from './hand.png';
 import Green from './green.png';
 import './app.css';
 
-function Recorder({ recording, onKey, onPrompt }) {
+function GuidedRecorder({ recording, onKey, onPrompt }) {
   const fingers = [
     { hand: "left", finger: "pinkie", key: "a" },
     { hand: "left", finger: "ring finger", key: "s" },
@@ -80,7 +80,7 @@ function Recorder({ recording, onKey, onPrompt }) {
         }
       </Typography>
       {recording &&
-        progress > 80 ? (
+        (progress > 80 ? (
           <div className='notGrey'>
             <div className='image1'>
               <img width='40%' src={Hands} alt="" />
@@ -90,18 +90,18 @@ function Recorder({ recording, onKey, onPrompt }) {
             </div>
           </div>
         ) : (
-          <div className='parent'>
-            <div className='image1'>
-              <img width='40%' src={Hands} alt="" />
+            <div className='parent'>
+              <div className='image1'>
+                <img width='40%' src={Hands} alt="" />
+              </div>
+              <div className={prompt.key} >
+                <img width='3%' src={Green} alt="" />
+              </div>
             </div>
-            <div className={prompt.key} >
-              <img width='3%' src={Green} alt="" />
-            </div>
-          </div>
-        )
+          ))
       }
     </div>
   );
 }
 
-export default Recorder;
+export default GuidedRecorder;

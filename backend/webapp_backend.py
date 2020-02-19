@@ -40,6 +40,7 @@ def new_session():
     timestamp = request.args.get('timestamp') # absolute time (ms)
     name = request.args.get('name') # name of person recording
     notes = request.args.get('notes') # any additional notes
+    mode = request.args.get('mode') # 0=self-directed; 1=guided; 2=in-the-air
 
     session_filepath = f'data/{name}'
     if not os.path.exists(session_filepath):
@@ -50,6 +51,7 @@ def new_session():
     with open(file_path, 'w+') as f:
         f.write('name=' + name.strip() + '\n')
         f.write('notes=' + notes.strip() + '\n')
+        f.write('mode=' + mode.strip() + '\n')
         
         f.write('datetime, timestamp, event, hand, finger, key\n')
 
