@@ -15,7 +15,7 @@ function EventList({ events }) {
 
   return (
     <List className={classes.list} dense>
-      <Divider />
+      {events.length > 0 && <Divider />}
       {events.map((item, index) => (
         <Fragment key={index}>
           <ListItem>

@@ -1,15 +1,18 @@
 import React from 'react';
 
-import { Button, Grid, TextField, } from '@material-ui/core';
+import { Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, } from '@material-ui/core';
 import { makeStyles, } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
     fullWidth: {
         width: '100%',
     },
+    selectFormControl: {
+        minWidth: 120,
+    }
 });
 
-function SessionInfoForm({ click, recording, name, setName, notes, setNotes }) {
+function SessionInfoForm({ click, recording, name, setName, notes, setNotes, mode, setMode }) {
     const classes = useStyles();
 
     return (
@@ -27,6 +30,20 @@ function SessionInfoForm({ click, recording, name, setName, notes, setNotes }) {
                     width={1}
                     value={name}
                 />
+                <br /><br />
+                <FormControl className={classes.selectFormControl}>
+                    <InputLabel>Recording mode</InputLabel>
+                    <Select
+                        inputProps={{ readOnly: recording }}
+                        onChange={event => setMode(event.target.value)}
+                        value={mode}
+                        variant={recording ? 'filled' : 'standard'}
+                    >
+                        <MenuItem value={0}><b>Self-directed:</b>&nbsp;type at your own pace; no prompt</MenuItem>
+                        <MenuItem value={1}><b>Guided:</b>&nbsp;receive prompts to type keys</MenuItem>
+                        <MenuItem value={2}><b>In the air:</b>&nbsp;synch response with green dot</MenuItem>
+                    </Select>
+                </FormControl>
                 <br /><br />
                 <Button
                     className={classes.fullWidth}
@@ -49,7 +66,7 @@ function SessionInfoForm({ click, recording, name, setName, notes, setNotes }) {
                     margin='dense'
                     multiline
                     onChange={event => setNotes(event.target.value)}
-                    rows={4}
+                    rows={7}
                     value={notes}
                     variant={recording ? 'filled' : 'outlined'}
                 />
