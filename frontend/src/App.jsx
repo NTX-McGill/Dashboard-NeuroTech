@@ -84,7 +84,7 @@ function App() {
           {...{ click, recording, name, setName, notes, setNotes }}
         />
         <br />
-{/* 
+        {/* 
         <Fade in={recording}>
           <Paper elevation={5} className={classes.paper}>
             <svg width="1000" height="300" viewBox="0 0 1000 700" >
