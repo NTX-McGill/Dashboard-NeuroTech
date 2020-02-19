@@ -63,11 +63,11 @@ function Recorder({ recording, onKey, onPrompt }) {
 
   return (
     <div>
-      <div class = 'notGrey'>
-      <ProgressBar percent={progress} />
-      <div class = 'line'>
-      <img width='25px'  align='center' src={Green} alt=""/>
-      </div>
+      <div className='notGrey'>
+        <ProgressBar percent={progress} />
+        <div className='line'>
+          <img width='25px' align='center' src={Green} alt="" />
+        </div>
       </div>
       <Typography variant="h4">
         {recording ? (
@@ -75,33 +75,31 @@ function Recorder({ recording, onKey, onPrompt }) {
             Press the "{prompt.key}" key when the bar reaches the green dot
           </>
         ) : (
-          <>Waiting...</>
-        )
+            <>Waiting...</>
+          )
         }
       </Typography>
-      {recording? progress > 80 ? (
-      <div class= 'notGrey'>
-        <div class='image1'>
-          <img width='40%'  src={Hands} alt=""/>
-        </div>
-        <div class={prompt.key} >
-          <img width='3%'  src={Green} alt=""/>
-        </div>
-      </div>
-      ):(
-      <div class= 'parent'>
-        <div class='image1'>
-          <img width='40%'  src={Hands} alt=""/>
-        </div>
-        <div class={prompt.key} >
-          <img width='3%'  src={Green} alt=""/>
-        </div>
-      </div>
-      ): (
-        <></>
-      )
+      {recording &&
+        progress > 80 ? (
+          <div className='notGrey'>
+            <div className='image1'>
+              <img width='40%' src={Hands} alt="" />
+            </div>
+            <div className={prompt.key} >
+              <img width='3%' src={Green} alt="" />
+            </div>
+          </div>
+        ) : (
+          <div className='parent'>
+            <div className='image1'>
+              <img width='40%' src={Hands} alt="" />
+            </div>
+            <div className={prompt.key} >
+              <img width='3%' src={Green} alt="" />
+            </div>
+          </div>
+        )
       }
-      
     </div>
   );
 }
