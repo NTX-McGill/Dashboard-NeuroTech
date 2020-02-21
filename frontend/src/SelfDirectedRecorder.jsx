@@ -6,9 +6,7 @@ import { sendData } from "./Bridge";
 
 function SelfDirectedRecorder({ recording, onKey }) {
     const keyHandler = useCallback(
-        event => {
-            if (recording) sendData({ key: event.key }, onKey);
-        },
+        event => recording && sendData({ key: event.key }, onKey),
         [onKey, recording]
     );
 

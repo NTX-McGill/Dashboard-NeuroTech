@@ -50,9 +50,7 @@ function GuidedRecorder({ recording, onKey, onPrompt }) {
   }, [fingers, onPrompt, progress, recording]);
 
   const keyHandler = useCallback(
-    event => {
-      if (recording) sendData({ key: event.key }, onKey);
-    },
+    event => recording && sendData({ key: event.key }, onKey),
     [onKey, recording]
   );
 
