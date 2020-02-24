@@ -33,7 +33,7 @@ function GuidedRecorder({ recording, onKey, onPrompt }) {
         setProgress(progress => progress + (updateInterval / 3000) * 100);
 
         if (progress === 80) {
-          let newPrompt = choice(fingers);
+          let newPrompt = prompt ;
           sendPrompt({ newPrompt }, onPrompt);
         }
 

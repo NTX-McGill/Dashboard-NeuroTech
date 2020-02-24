@@ -51,3 +51,17 @@ export function sendPrompt({ newPrompt }, callback) {
     .then(res => callback({ res, datetime, timestamp, newPrompt }))
     .catch(console.log);
 }
+
+export function sendCustomPrompt({ newCustomPrompt }, callback) {
+  let [timestamp, datetime] = getDateTime();
+  fetch(
+    "http://localhost:5000/custom-prompt?datetime=" +
+    datetime +
+    "&timestamp=" +
+    timestamp +
+    "&prompt=" +
+    newCustomPrompt
+  )
+    .then(res => callback({ res, datetime, timestamp, newCustomPrompt }))
+    .catch(console.log);
+}

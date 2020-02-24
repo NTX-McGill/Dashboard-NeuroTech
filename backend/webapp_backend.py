@@ -18,6 +18,19 @@ def prompt():
         f.write(', '.join([datetime, timestamp, 'prompt_end', hand, finger, '']) + '\n')
  
     return 'OK'
+
+@app.route('/custom-prompt')
+def custom_prompt():
+    global file_path
+
+    datetime = request.args.get('datetime') # YYYY-MM-DD-HH:MM:SS:msms
+    timestamp = request.args.get('timestamp') # absolute time (ms)
+    prompt = request.args.get('prompt') # custom prompt
+ 
+    with open(file_path, 'a') as f:
+        f.write(', '.join([datetime, timestamp, 'prompt_end', prompt, '']) + '\n')
+ 
+    return 'OK'
  
 @app.route('/data-collection')
 def keystroke():
