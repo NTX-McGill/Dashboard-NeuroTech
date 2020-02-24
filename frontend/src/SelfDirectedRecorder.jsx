@@ -18,7 +18,7 @@ function SelfDirectedRecorder({ recording, onKey }) {
     return (
         <div>
             <Typography variant="h4">
-                {recording ? <>Type a key whenever.</> : <>Waiting...</>}
+                {recording ? <>Start typing!</> : <>Waiting...</>}
             </Typography>
         </div>
     )

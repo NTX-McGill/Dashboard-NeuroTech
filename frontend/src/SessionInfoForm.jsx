@@ -12,7 +12,7 @@ const useStyles = makeStyles({
     }
 });
 
-function SessionInfoForm({ click, recording, name, setName, notes, setNotes, mode, setMode }) {
+function SessionInfoForm({ click, recording, name, setName, notes, setNotes, customPrompts, setCustomPrompts, mode, setMode }) {
     const classes = useStyles();
 
     return (
@@ -40,8 +40,8 @@ function SessionInfoForm({ click, recording, name, setName, notes, setNotes, mod
                         variant={recording ? 'filled' : 'standard'}
                     >
                         <MenuItem value={0}><b>Self-directed:</b>&nbsp;type at your own pace; no prompt</MenuItem>
-                        <MenuItem value={1}><b>Guided:</b>&nbsp;receive prompts to type keys</MenuItem>
-                        <MenuItem value={2}><b>In the air:</b>&nbsp;synch response with green dot</MenuItem>
+                        <MenuItem value={1}><b>Guided:</b>&nbsp;receive set prompts to type keys</MenuItem>
+                        <MenuItem value={2}><b>In the air:</b>&nbsp;respond to timed custom commands</MenuItem>
                     </Select>
                 </FormControl>
                 <br /><br />
@@ -56,6 +56,24 @@ function SessionInfoForm({ click, recording, name, setName, notes, setNotes, mod
                     {recording ? 'Stop' : 'Start'} recording
                 </Button>
             </Grid>
+            {mode === 2 ? 
+            <Grid item xs>
+                <TextField
+                    className={classes.fullWidth}
+                    InputProps={{
+                        readOnly: recording,
+                    }}
+                    label='Custom prompts (separate by commas)'
+                    margin='dense'
+                    multiline
+                    onChange={event => setCustomPrompts(event.target.value)}
+                    variant={recording ? 'filled' : 'outlined'}
+                    width={1}
+                    rows={7}
+                    value={customPrompts}
+                />
+            </Grid>
+            : <></>}
             <Grid item xs>
                 <TextField
                     className={classes.fullWidth}
