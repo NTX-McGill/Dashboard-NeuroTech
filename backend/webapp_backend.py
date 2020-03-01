@@ -1,6 +1,6 @@
 from flask import Flask, request
 from flask_cors import CORS
-import os, time
+import os, time, json
 
 app = Flask(__name__)
 CORS(app)
@@ -28,7 +28,7 @@ def custom_prompt():
     prompt = request.args.get('prompt') # custom prompt
  
     with open(file_path, 'a') as f:
-        f.write(', '.join([datetime, timestamp, 'prompt_end', prompt, '']) + '\n')
+        f.write(', '.join([datetime, timestamp, 'prompt_end', prompt ]) + '\n')
  
     return 'OK'
  
@@ -47,13 +47,16 @@ def keystroke():
 
 @app.route('/new-session')
 def new_session():    
+
     global file_path
 
     datetime = request.args.get('datetime') # YYYY-MM-DD-HH:MM:SS:msms
     timestamp = request.args.get('timestamp') # absolute time (ms)
-    name = request.args.get('name') # name of person recording
+    subject_id = request.args.get('id') # subject id of person recording
+    mode = request.args.get('mode') # recording mode
+    trial = request.args.get('trial') # trial number
+    prompts = request.args.get('prompts') # prompts, defined if mode is guided or in air
     notes = request.args.get('notes') # any additional notes
-    mode = request.args.get('mode') # 0=self-directed; 1=guided; 2=in-the-air
     year,month,day,rest = datetime.split('-')
 
     session_filepath = f'data/{year}-{month}-{day}'
@@ -62,12 +65,20 @@ def new_session():
 
     file_path = os.path.join(session_filepath, datetime.replace(':', '-') + '.txt')
     print(file_path)
-    with open(file_path, 'w+') as f:
-        f.write('name=' + name.strip() + '\n')
-        f.write('notes=' + notes.strip() + '\n')
-        f.write('mode=' + mode.strip() + '\n')
-        
-        f.write('datetime, timestamp, event, hand, finger, key\n')
+
+    metadata = {
+        "id": subject_id,
+        "trial": trial,
+        "mode": mode,
+        "datetime": datetime,
+        "timestamp": timestamp,
+        "prompts": prompts,
+        "notes": notes
+     }
+
+    with open(file_path, 'w+') as f:  # writing JSON object
+        json.dump(metadata, f, indent=4)    
+        f.write('\ndatetime, timestamp, event, hand, finger, key\n')
 
     return 'OK'
  
