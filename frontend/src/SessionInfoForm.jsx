@@ -23,7 +23,7 @@ function SessionInfoForm({ click, recording, name, setName, notes, setNotes, cus
                     InputProps={{
                         readOnly: recording,
                     }}
-                    label='Name'
+                    label='Subject ID'
                     margin='dense'
                     onChange={event => setName(event.target.value)}
                     variant={recording ? 'filled' : 'outlined'}
