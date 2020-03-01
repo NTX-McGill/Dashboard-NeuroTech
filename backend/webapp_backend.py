@@ -54,8 +54,9 @@ def new_session():
     name = request.args.get('name') # name of person recording
     notes = request.args.get('notes') # any additional notes
     mode = request.args.get('mode') # 0=self-directed; 1=guided; 2=in-the-air
+    year,month,day,rest = datetime.split('-')
 
-    session_filepath = f'data/{name}'
+    session_filepath = f'data/{year}-{month}-{day}'
     if not os.path.exists(session_filepath):
         os.makedirs(session_filepath)
 
