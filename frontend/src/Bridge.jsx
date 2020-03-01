@@ -1,19 +1,30 @@
 import { getDateTime } from "./Utilities";
 
-export function newSession({ name, notes, mode }, callback) {
+export function newSession({ id, notes, prompts, mode , hand, trial}, callback) {
   let [timestamp, datetime] = getDateTime();
+  let mode_str = "Self-directed";
+  if (mode === 1) {
+    mode_str = "Guided";
+    JSON.stringify(prompts);
+  }
+  else if (mode === 2) mode_str = "In-the-air";
   fetch(
     "http://localhost:5000/new-session?datetime=" +
     datetime +
     "&timestamp=" +
     timestamp +
-    "&name=" +
-    encodeURIComponent(name) +
+    "&id=" +
+    encodeURIComponent(id) +
     "&notes=" +
     encodeURIComponent(notes.replace(/(?:\r\n|\r|\n)/g, "\\n")) +
     "&mode=" +
-    mode
-
+    mode_str + 
+    "&prompts=" +
+    prompts + 
+    "&hand=" +
+    hand + 
+    "&trial=" +
+    trial
   )
     .then(res => callback({ res, datetime, timestamp }))
     .catch(console.log);
