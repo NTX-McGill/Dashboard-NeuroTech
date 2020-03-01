@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, } from '@material-ui/core';
+import { Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, FormControlLabel, RadioGroup, Radio, FormLabel} from '@material-ui/core';
 import { makeStyles, } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
@@ -12,7 +12,7 @@ const useStyles = makeStyles({
     }
 });
 
-function SessionInfoForm({ click, recording, name, setName, notes, setNotes, customPrompts, setCustomPrompts, mode, setMode }) {
+function SessionInfoForm({ click, recording, id, setId, notes, setNotes, customPrompts, setCustomPrompts, mode, setMode, trial, setTrial, setHand }) {
     const classes = useStyles();
 
     return (
@@ -23,12 +23,12 @@ function SessionInfoForm({ click, recording, name, setName, notes, setNotes, cus
                     InputProps={{
                         readOnly: recording,
                     }}
-                    label='Name'
+                    label='Subject ID'
                     margin='dense'
-                    onChange={event => setName(event.target.value)}
+                    onChange={event => setId(event.target.value)}
                     variant={recording ? 'filled' : 'outlined'}
                     width={1}
-                    value={name}
+                    value={id}
                 />
                 <br /><br />
                 <FormControl className={classes.selectFormControl}>
@@ -89,6 +89,40 @@ function SessionInfoForm({ click, recording, name, setName, notes, setNotes, cus
                     variant={recording ? 'filled' : 'outlined'}
                 />
             </Grid>
+            
+            <Grid item xs={4}>
+            <TextField
+                id="standard-helperText"
+                label="Trial Number"
+                margin='dense'
+                defaultValue={trial}
+                onChange={event => setTrial(event.target.value)}
+                variant={recording ? 'filled' : 'outlined'}
+            />        
+            <br/><br/>
+            <FormControl component="fieldset">
+                <FormLabel component="legend">Hand Recorded</FormLabel>
+                <RadioGroup aria-label="position" name="position" defaultValue="both" onChange={event => setHand(event.target.value)} row>
+                    <FormControlLabel
+                      value="right"
+                      control={<Radio color="primary" />}
+                      label="Right"
+                    />
+                    <FormControlLabel
+                      value="left"
+                      control={<Radio color="primary" />}
+                      label="Left"
+                    />
+                    <FormControlLabel
+                      value="both"
+                      control={<Radio color="primary" />}
+                      label="Both"
+                    />
+                </RadioGroup>
+            </FormControl>
+            </Grid>
+            
+            
         </Grid>
     );
 }
