@@ -28,7 +28,7 @@ function App() {
   const [snackbarIdOpen, setSnackbarIdOpen] = useState(false);
   const [snackbarPromptsOpen, setSnackbarPromptsOpen] = useState(false);
   const [events, setEvents] = useState([]);
-  const [hand, setHand] = React.useState('both');
+  const [hand, setHand] = React.useState("both");
   const [trial, setTrial] = React.useState(0);
 
   const classes = useStyles();
@@ -42,10 +42,13 @@ function App() {
         setSnackbarPromptsOpen(false);
         setEvents([]);
         let prompts = customPrompts;
-        if (mode === 1){
-          prompts = "left pinkie a , left ring finger s , left middle finger d ,left index finger f ,right index finger j ,right middle finger k ,right ring finger l ,right pinkie semicolon" ;
+        if (mode === 1) {
+          prompts =
+            "left pinkie a , left ring finger s , left middle finger d ,left index finger f ,right index finger j ,right middle finger k ,right ring finger l ,right pinkie semicolon";
         }
-        newSession({ id, notes, prompts, mode, hand, trial }, () => setRecording(true));
+        newSession({ id, notes, prompts, mode, hand, trial }, () =>
+          setRecording(true)
+        );
       }
     } else {
       setRecording(false);
@@ -71,10 +74,7 @@ function App() {
   const onCustomPrompt = ({ newCustomPrompt, datetime, timestamp }) => {
     setEvents(events => [
       [
-        format(
-          'Prompted "{0}"',
-          newCustomPrompt
-        ),
+        format('Prompted "{0}"', newCustomPrompt),
         datetime + format(" ({0})", timestamp)
       ],
       ...events
@@ -114,13 +114,32 @@ function App() {
         </Typography>
         <br />
         <SessionInfoForm
-          {...{ click, recording, id, setId, notes, setNotes, customPrompts, setCustomPrompts, mode, setMode, hand, trial, setTrial, setHand }}
+          {...{
+            click,
+            recording,
+            id,
+            setId,
+            notes,
+            setNotes,
+            customPrompts,
+            setCustomPrompts,
+            mode,
+            setMode,
+            hand,
+            trial,
+            setTrial,
+            setHand
+          }}
         />
         <br />
         <br />
-        {mode === 0 && <SelfDirectedRecorder {...{ recording, onKey, onPrompt }} />}
+        {mode === 0 && (
+          <SelfDirectedRecorder {...{ recording, onKey, onPrompt }} />
+        )}
         {mode === 1 && <GuidedRecorder {...{ recording, onKey, onPrompt }} />}
-        {mode === 2 && <InTheAirRecorder {...{ recording, onCustomPrompt, customPrompts }} />}
+        {mode === 2 && (
+          <InTheAirRecorder {...{ recording, onCustomPrompt, customPrompts }} />
+        )}
         <br />
         <br />
         <EventList {...{ events }} />
