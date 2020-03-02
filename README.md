@@ -4,8 +4,6 @@
 Welcome
 
 
-
-
 ## Frontend
 ```
 cd frontend
@@ -21,14 +19,21 @@ yarn start
 ```
 cd backend
 
+python3 -m venv env
+```
+Add your env folder in .gitignore
 
-
-pip install -r requirements.txt
-
-python webapp_backend.py
-
+Start the virtual environment using:
+```
+source env/bin/activate
 ```
 
 
 
-pip freeze > requirements.txt
+To install all of the necessary dependencies in it use:
+
+```
+pip install -r requirements.txt
+
+python webapp_backend.py
+```
