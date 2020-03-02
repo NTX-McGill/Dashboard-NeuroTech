@@ -13,9 +13,6 @@ import { format } from "./Utilities";
 import SelfDirectedRecorder from "./SelfDirectedRecorder";
 import InTheAirRecorder from "./InTheAirRecorder";
 
-import P5Component from "./P5Component";
-import ChartJsComponent from "./ChartJsComponent";
-
 const useStyles = makeStyles(theme => ({
   root: {
     margin: theme.spacing() * 4
@@ -96,7 +93,6 @@ function App() {
 
   return (
     <div className={classes.root}>
-      <ChartJsComponent />
       <EnterIdSnackbar
         open={snackbarIdOpen}
         onClose={(_, reason) =>
