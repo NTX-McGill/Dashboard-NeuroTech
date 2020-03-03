@@ -1,6 +1,9 @@
-import React from "react";
+import React, { Component } from "react";
 import { Line } from "react-chartjs-2";
 import "chartjs-plugin-streaming"
+import socketIOClient from "socket.io-client";
+
+
 
 function shuffle(array) {
   let counter = array.length;
@@ -22,54 +25,6 @@ function shuffle(array) {
   return array;
 }
 
-const data_old = {
-  labels: ["January", "February", "March", "April", "May", "June", "July", 1, 2, 3, 4, 5, 6, 7, 9, 0, 123, 6, 4,],
-  datasets: [
-    {
-      label: "My First dataset",
-      fill: false,
-      lineTension: 0.1,
-      backgroundColor: "rgba(75,192,192,0.4)",
-      borderColor: "rgba(75,192,192,1)",
-      borderCapStyle: "butt",
-      borderDash: [],
-      borderDashOffset: 0.0,
-      borderJoinStyle: "miter",
-      pointBorderColor: "rgba(75,192,192,1)",
-      pointBackgroundColor: "#000",
-      pointBorderWidth: 1,
-      pointHoverRadius: 5,
-      pointHoverBackgroundColor: "rgba(75,192,192,1)",
-      pointHoverBorderColor: "rgba(220,220,220,1)",
-      pointHoverBorderWidth: 2,
-      pointRadius: 10,
-      pointHitRadius: 10,
-      data: shuffle([59, 80, 80, 56, 55, 40, 270, 5, 3, 30, 54, 56, 78, 32, 97])
-    },
-    {
-      label: "My second dataset",
-      fill: false,
-      lineTension: 0.1,
-      backgroundColor: "rgba(255,0,192,0.4)",
-      borderColor: "rgba(255,0,192,1)",
-      borderCapStyle: "butt",
-      borderDash: [],
-      borderDashOffset: 0.0,
-      borderJoinStyle: "miter",
-      pointBorderColor: "rgba(255,0,192,1)",
-      pointBackgroundColor: "#fff",
-      pointBorderWidth: 1,
-      pointHoverRadius: 5,
-      pointHoverBackgroundColor: "rgba(255,0,192,1)",
-      pointHoverBorderColor: "rgba(255,0,220,1)",
-      pointHoverBorderWidth: 2,
-      pointRadius: 10,
-      pointHitRadius: 10,
-      data: [59, 80, 80, 56, 55, 40, 270, 5, 3, 30, 54, 56, 78, 32, 97]
-    }
-  ]
-};
-
 const data = {
   datasets: [
     {
@@ -78,7 +33,8 @@ const data = {
       backgroundColor: "rgba(255, 99, 132, 0.5)",
       lineTension: 0,
       borderDash: [8, 4],
-      data: []
+      data: [],
+      fill: false,
     }
   ]
 };
@@ -100,15 +56,15 @@ const options = {
         duration: 20000,
         delay: 2000,
         refresh: 1,
-        onRefresh: function () {
-          if (Math.random() < .01) {
-          data.datasets[0].data.push({
-            x: Date.now(),
-            y: Math.random() 
-          });
-        }
+        // onRefresh: function () {
+        //   if (Math.random() < .01) {
+        //   data.datasets[0].data.push({
+        //     x: Date.now(),
+        //     y: Math.random() 
+        //   });
+        // }
         
-        },
+        // },
 
       },
       // ticks: {
@@ -137,43 +93,50 @@ const options = {
     }
   }
 };
+// socket.on('ML graphs', function (data) { // 1st channel ("left")
+//   // update left datapoint
+//   console.log('received data from ML')
+//   chart.data.datasets[0].data[0] = data['left-prob'];
+//   chart.data.datasets[0].data[1] = data['right-prob'];
+//   historyChart.config.data.datasets[0].data.push({
+//     x: Date.now(),
+//     y: data['right-prob']
+//   })
+//   chart.update()
+//   x_val++
+//   historyChart.update( {
+//     preservation: true
+//   })
+// });
 
-// scales: {
-//   xAxes: [{
-//       type: 'realtime',
-//       realtime: {
-//           duration: 20000,
-//           delay: 2000,
-//       }
-//   }],
-//   yAxes: [{
-//       scaleLabel: {
-//           display: true,
-//           labelString: 'value'
-//       }
-//   }]
-// },
-// scales: {
-//   xAxes: [
-//     {
-//       type: "realtime",
-//       realtime: {
-//         onRefresh: function () {
-//           // data.datasets[0].data.push({
-//             // x: Date.now(),
-//             // y: Math.random() 
-//           // });
-//         },
-//         delay: 2000,
-//         refresh: 1000,
-//       }
-//     }
-//   ]
-// }
-// };
+class ChartJsComponent extends Component {
+  constructor() {
+    super();
+    this.state = {
+      response: false,
+      endpoint: "http://localhost:4001"
+    };
+  }
 
-function ChartJsComponent() {
-  return <Line data={data} options={options} height="500" width="1200"/>;
+  componentDidMount() {
+    const { endpoint } = this.state;
+    const socket = socketIOClient(endpoint);
+    socket.on("Timeseries", new_data => {
+      console.log(new_data);
+      this.setState({ response: new_data })
+      data.datasets[0].data.push({
+      x: Date.now(),
+      y: new_data[1]
+      });
+
+    });
+  }
+  render() {
+    return (
+      <Line data={data} options={options} height="500" width="1200"/>
+    )
+  
+  }
 }
 
 export default ChartJsComponent;
