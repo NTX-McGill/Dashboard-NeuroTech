@@ -1,6 +1,6 @@
 import { getDateTime } from "./Utilities";
 
-export function newSession({ id, notes, prompts, mode , hand, trial}, callback) {
+export async function newSession({ id, notes, prompts, mode , hand, trial}, callback) {
   let [timestamp, datetime] = getDateTime();
   let mode_str = "Self-directed";
   if (mode === 1) {
@@ -30,7 +30,7 @@ export function newSession({ id, notes, prompts, mode , hand, trial}, callback) 
     .catch(console.log);
 }
 
-export function sendData({ key }, callback) {
+export async function sendData({ key }, callback) {
   if (key === " ")
     key = "space";
 
@@ -47,7 +47,7 @@ export function sendData({ key }, callback) {
     .catch(console.log);
 }
 
-export function sendPrompt({ newPrompt }, callback) {
+export async function sendPrompt({ newPrompt }, callback) {
   let [timestamp, datetime] = getDateTime();
   fetch(
     "http://localhost:5000/prompt?datetime=" +
@@ -63,7 +63,7 @@ export function sendPrompt({ newPrompt }, callback) {
     .catch(console.log);
 }
 
-export function sendCustomPrompt({ newCustomPrompt }, callback) {
+export async function sendCustomPrompt({ newCustomPrompt }, callback) {
   let [timestamp, datetime] = getDateTime();
   fetch(
     "http://localhost:5000/custom-prompt?datetime=" +

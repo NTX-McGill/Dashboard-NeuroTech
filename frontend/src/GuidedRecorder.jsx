@@ -47,7 +47,7 @@ function GuidedRecorder({ recording, onKey, onPrompt }) {
     }, updateInterval);
 
     return () => clearInterval(interval);
-  }, [fingers, onPrompt, progress, recording]);
+  }, [fingers, onPrompt, progress, prompt, recording]);
 
   const keyHandler = useCallback(
     event => recording && sendData({ key: event.key }, onKey),
