@@ -38,7 +38,7 @@ function InTheAirRecorder({ recording, onCustomPrompt, customPrompts }) {
         }, updateInterval);
 
         return () => clearInterval(interval);
-    }, [fingers, onCustomPrompt, progress, recording]);
+    }, [customPrompt, fingers, onCustomPrompt, progress, recording]);
  
     return (
         <div>
