@@ -44,7 +44,7 @@ function App() {
         let prompts = customPrompts;
         if (mode === 1) {
           prompts =
-            "left pinkie a , left ring finger s , left middle finger d ,left index finger f ,right index finger j ,right middle finger k ,right ring finger l ,right pinkie semicolon";
+            "left pinkie a , left ring finger s , left middle finger d ,left index finger f ,right index finger j ,right middle finger k ,right ring finger l , right thumb space, left thumb space, right pinkie semicolon";
         }
         newSession({ id, notes, prompts, mode, hand, trial }, () =>
           setRecording(true)

@@ -16,10 +16,12 @@ function GuidedRecorder({ recording, onKey, onPrompt }) {
     { hand: "left", finger: "ring finger", key: "s" },
     { hand: "left", finger: "middle finger", key: "d" },
     { hand: "left", finger: "index finger", key: "f" },
+    { hand: "left", finger: "thumb", key: "space bar" },
     { hand: "right", finger: "index finger", key: "j" },
     { hand: "right", finger: "middle finger", key: "k" },
     { hand: "right", finger: "ring finger", key: "l" },
-    { hand: "right", finger: "pinkie", key: "semicolon" }
+    { hand: "right", finger: "pinkie", key: "semicolon" },
+    { hand: "right", finger: "thumb", key: "space bar" },
   ];
 
   const [progress, setProgress] = useState(0);
