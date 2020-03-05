@@ -4,11 +4,11 @@ import { Typography } from "@material-ui/core";
 
 import { sendData, sendPrompt } from "./Bridge";
 import ProgressBar from "./ProgressBar";
-import { choice } from "./Utilities";
+import { choice, getDateTime } from "./Utilities";
 
-import Hands from './hand.png';
-import Green from './green.png';
-import './app.css';
+import Hands from "./hand.png";
+import Green from "./green.png";
+import "./app.css";
 
 function GuidedRecorder({ recording, onKey, onPrompt }) {
   const fingers = [
@@ -24,16 +24,17 @@ function GuidedRecorder({ recording, onKey, onPrompt }) {
 
   const [progress, setProgress] = useState(0);
   const [prompt, setPrompt] = useState(choice(fingers));
+  const [keyQueue, setKeyQueue] = useState([]);
 
   useEffect(() => {
-    const updateInterval = 30; // in ms
+    const updateInterval = 30;
 
     let interval = setInterval(() => {
       if (recording) {
         setProgress(progress => progress + (updateInterval / 3000) * 100);
 
         if (progress === 80) {
-          let newPrompt = prompt ;
+          let newPrompt = prompt;
           sendPrompt({ newPrompt }, onPrompt);
         }
 
@@ -49,9 +50,24 @@ function GuidedRecorder({ recording, onKey, onPrompt }) {
     return () => clearInterval(interval);
   }, [fingers, onPrompt, progress, prompt, recording]);
 
+  useEffect(() => {
+    let id = setInterval(async () => {
+      if (keyQueue.length > 0) {
+        sendData({ ...keyQueue[0] }, onKey);
+        setKeyQueue(keyQueue => keyQueue.slice(1));
+      }
+    }, 10);
+    return () => clearInterval(id);
+  }, [keyQueue, onKey]);
+
   const keyHandler = useCallback(
-    event => recording && sendData({ key: event.key }, onKey),
-    [onKey, recording]
+    async event =>
+      recording &&
+      setKeyQueue(keyQueue => [
+        ...keyQueue,
+        { key: event.key, time: getDateTime() }
+      ]),
+    [recording]
   );
 
   useEffect(() => {
@@ -61,43 +77,52 @@ function GuidedRecorder({ recording, onKey, onPrompt }) {
 
   return (
     <div>
-      <div className='notGrey'>
+      <div className="notGrey">
         <ProgressBar percent={progress} />
-        <div className='line'>
-          <img width='25px' align='center' src={Green} alt="" />
+        <div className="line">
+          <img width="25px" align="center" src={Green} alt="" />
         </div>
       </div>
+
       <Typography variant="h4">
-        {recording ? (
-          <>
-            Press the "{prompt.key}" key when the bar reaches the green dot
-          </>
-        ) : (
-            <>Waiting...</>
-          )
-        }
+        {recording
+          ? `Press the ${prompt.key} key when the bar reaches the green dot`
+          : "Waiting..."}
       </Typography>
+
+      {recording && (
+        <Typography variant="body1">
+          {keyQueue.length} keystrokes in queue to be sent to backend
+          {keyQueue.length > 0 && "..."}
+        </Typography>
+      )}
+      {!recording && keyQueue.length > 0 && (
+        <Typography variant="body1">
+          {keyQueue.length} keystrokes in queue to be sent to backend. Please
+          don't start a new recording until all have been sent.
+        </Typography>
+      )}
+
       {recording &&
         (progress > 80 ? (
-          <div className='notGrey'>
-            <div className='image1'>
-              <img width='40%' src={Hands} alt="" />
+          <div className="notGrey">
+            <div className="image1">
+              <img width="40%" src={Hands} alt="" />
             </div>
-            <div className={prompt.key} >
-              <img width='3%' src={Green} alt="" />
+            <div className={prompt.key}>
+              <img width="3%" src={Green} alt="" />
             </div>
           </div>
         ) : (
-            <div className='parent'>
-              <div className='image1'>
-                <img width='40%' src={Hands} alt="" />
-              </div>
-              <div className={prompt.key} >
-                <img width='3%' src={Green} alt="" />
-              </div>
+          <div className="parent">
+            <div className="image1">
+              <img width="40%" src={Hands} alt="" />
             </div>
-          ))
-      }
+            <div className={prompt.key}>
+              <img width="3%" src={Green} alt="" />
+            </div>
+          </div>
+        ))}
     </div>
   );
 }

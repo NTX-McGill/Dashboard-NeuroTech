@@ -30,11 +30,11 @@ export async function newSession({ id, notes, prompts, mode , hand, trial}, call
     .catch(console.log);
 }
 
-export async function sendData({ key }, callback) {
+export async function sendData({ key, time }, callback) {
   if (key === " ")
     key = "space";
 
-  let [timestamp, datetime] = getDateTime();
+  let [timestamp, datetime] = time;
   fetch(
     "http://localhost:5000/data-collection?datetime=" +
     datetime +
