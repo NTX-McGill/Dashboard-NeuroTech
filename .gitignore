@@ -1,6 +1,8 @@
 .vscode/
 nt/
 node_modules
+python-socket-io-server/NeuroTech-ML
+NeuroTech
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
