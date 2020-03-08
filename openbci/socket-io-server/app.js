@@ -4,15 +4,15 @@ const http = require("http");
 const socketIo = require("socket.io");
 const axios = require("axios");
 
-const port = 4001;
-// const index = require("./routes/index");
+const port = process.env.PORT || 4001;
+const index = require("./routes/index");
 
 const app = express();
-// app.use(index);
+app.use(index);
 
 const server = http.createServer(app);
 
-const io = socketIo(server);
+const io = socketIo(server); // < Interesting!
 
 const OSC_PORT = 12345;
 this.oscServer = new osc.Server(OSC_PORT, "127.0.0.1");
@@ -22,7 +22,7 @@ const getApiAndEmit = async socket => {
     const res = await axios.get(
       "https://api.darksky.net/forecast/e485e8977609bdb6a9690f8a0d5230db/43.7695,11.2558"
     ); // Getting the data from DarkSky
-    socket.emit("FromAPI", Date.now()); // Emitting a new message. It will be consumed by the client
+    socket.emit("FromAPI", res.data.currently.temperature); // Emitting a new message. It will be consumed by the client
     console.log("Update Temperature");
   } catch (error) {
     console.error(`Error: ${error.code}`);
@@ -31,15 +31,14 @@ const getApiAndEmit = async socket => {
 
 io.on("connection", socket => {
   console.log("New client connected");
-
-  let counter = 0;
+  let count = 0;
   this.oscServer.on("message", data => {
-    console.log("message");
-    counter++;
-    if (counter == 10) {
-      socket.emit("FromAPI", data);
-      counter = 0;
-    }
+    // count++;
+    // if (count == 100) {
+    console.log(data);
+    socket.emit("Timeseries", data);
+    //   count = 0;
+    // }
   });
 
   socket.on("disconnect", () => console.log("Client disconnected"));
@@ -47,15 +46,15 @@ io.on("connection", socket => {
 
 let interval;
 
-// io.on("connection", socket => {
-//   console.log("New client connected");
-//   if (interval) {
-//     clearInterval(interval);
-//   }
-//   interval = setInterval(() => getApiAndEmit(socket), 1000);
-//   socket.on("disconnect", () => {
-//     console.log("Client disconnected");
-//   });
-// });
+io.on("connection", socket => {
+  console.log("New client connected");
+  if (interval) {
+    clearInterval(interval);
+  }
+  interval = setInterval(() => getApiAndEmit(socket), 10000);
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
+  });
+});
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
