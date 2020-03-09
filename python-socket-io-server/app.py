@@ -43,12 +43,15 @@ async def emit_predictions():
 
         # print(bci_buffer.shape[1])
         if (bci_buffer.shape[1] == BUFFER_SIZE):
-            prediction = (predict_function(bci_buffer))[0]
-            print(prediction)
-            print(np.argmax(prediction))
-            # print(np.where(prediction == np.amax(prediction)))
+            finger_probs = (predict_function(bci_buffer))[0]
+            finger_index = np.argmax(finger_probs)
+            print(np.argmax(finger_probs))
+            print(list(finger_probs))
+            # print(np.where(finger_probs == np.amax(finger_probs)))
             bci_buffer = np.delete(bci_buffer, np.arange(0, BUFFER_DIST, 1), 1)
-            await sio.emit('Finger', sample)
+            await sio.emit('Finger', int(finger_index))
+            await sio.emit('FingerProbs', str(list(finger_probs)))
+
 
 
 

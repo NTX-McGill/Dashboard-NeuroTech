@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Line } from "react-chartjs-2";
+import { Line, Bar } from "react-chartjs-2";
 import "chartjs-plugin-streaming"
 import socketIOClient from "socket.io-client";
 
@@ -93,6 +93,21 @@ const options = {
     }
   }
 };
+
+const barData = {
+  labels: ['Left Pinky', 'Left Ring', 'Left Middle', 'Left Index', 'Thumbs', 'Right Index', 'Right Middle', 'Right Ring', 'Right Pinky'],
+  datasets: [
+    {
+      label: 'My First dataset',
+      backgroundColor: 'rgba(255,99,132,0.2)',
+      borderColor: 'rgba(255,99,132,1)',
+      borderWidth: 1,
+      hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+      hoverBorderColor: 'rgba(255,99,132,1)',
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    }
+  ]
+};
 // socket.on('ML graphs', function (data) { // 1st channel ("left")
 //   // update left datapoint
 //   console.log('received data from ML')
@@ -113,27 +128,37 @@ class ChartJsComponent extends Component {
   constructor() {
     super();
     this.state = {
-      response: false,
+      response: [0, 0, 0, 0, 0, 0, 0, 0],
       endpoint: "http://localhost:4001"
     };
   }
 
   componentDidMount() {
+    console.log("Chart Mounted");
     const { endpoint } = this.state;
     const socket = socketIOClient(endpoint);
-    socket.on("Timeseries", new_data => {
+    socket.on("FingerProbs", new_data => {
       console.log(new_data);
-      this.setState({ response: new_data })
-      data.datasets[0].data.push({
-      x: Date.now(),
-      y: new_data[1]
-      });
-
+      let int_data = JSON.parse(new_data);
+      console.log(int_data);
+      console.log(typeof(int_data));
+      this.setState({ response: int_data })
+      barData.datasets[0].data = int_data;
+      // data.datasets[0].data.push({
+      // x: Date.now(),
+      // y: new_data[1]
+      // });
     });
   }
   render() {
     return (
-      <Line data={data} options={options} height="500" width="1200"/>
+      //<Line data={data} options={options} height="500" width="1200"/>
+      <Bar
+        data={barData}
+        width={100}
+        height={50}
+        options={{ maintainAspectRatio: true }}
+      />
     )
   
   }
