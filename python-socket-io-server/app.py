@@ -46,9 +46,9 @@ async def emit_predictions():
             prediction = (predict_function(bci_buffer))[0]
             print(prediction)
             print(np.argmax(prediction))
-            # print(np.where(prediction == np.amax(prediction)))
+            finger_index = np.argmax(prediction)
             bci_buffer = np.delete(bci_buffer, np.arange(0, BUFFER_DIST, 1), 1)
-            await sio.emit('Finger', sample)
+            await sio.emit('Finger', int (finger_index))
 
 
 

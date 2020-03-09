@@ -10,6 +10,7 @@ import "./predictionWidget.css";
 import { choice } from "./Utilities";
 
 const data = ['a','s','d','f','j','k','l','semicolon','space'];
+let finger = 'a';
 
 class PredictionWidget extends Component {
 
@@ -24,10 +25,10 @@ class PredictionWidget extends Component {
   componentDidMount() {
     const { endpoint } = this.state;
     const socket = socketIOClient(endpoint);
-    socket.on("Timeseries", new_data => {
+    socket.on("Finger", new_data => {
       console.log(new_data);
       this.setState({ prediction: new_data })
-      data = data[new_data[1]];
+      finger = data[new_data];
     });
   }
   render() {
@@ -35,12 +36,12 @@ class PredictionWidget extends Component {
       <Paper className="paper">
       <Typography variant="h4">Predictions</Typography>
       <Divider className="divider"/>
-      <p> {data} </p>
+      <p> {finger} </p>
       <div className="notGrey">
         <div className="image1">
           <img width="100%" src={Hands} alt="" />
         </div>
-        <div className={data}>
+        <div className={finger}>
           <img width="15px" src={Green} alt="" />
         </div>
       </div>
