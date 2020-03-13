@@ -12,6 +12,8 @@ import { newSession } from "./Bridge";
 import { format } from "./Utilities";
 import SelfDirectedRecorder from "./SelfDirectedRecorder";
 import InTheAirRecorder from "./InTheAirRecorder";
+import TouchTypeRecorder from "./TouchTypeRecorder";
+import RecordingStoppedSnackbar from "./RecordingStoppedSnackbar";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,19 +29,31 @@ function App() {
   const [mode, setMode] = useState(1);
   const [snackbarIdOpen, setSnackbarIdOpen] = useState(false);
   const [snackbarPromptsOpen, setSnackbarPromptsOpen] = useState(false);
+  const [snackbarRecordingStoppedOpen, setSnackbarRecordingStoppedOpen] = useState(false);
   const [events, setEvents] = useState([]);
   const [hand, setHand] = React.useState("both");
   const [trial, setTrial] = React.useState(0);
 
   const classes = useStyles();
 
+  const closeSnackbars = () => {
+    setSnackbarIdOpen(false);
+    setSnackbarPromptsOpen(false);
+    setSnackbarRecordingStoppedOpen(false);
+  };
+
+  const stopRecording = () => {
+    setRecording(false);
+    setTrial(trial => parseFloat(trial) + 1);
+    setSnackbarRecordingStoppedOpen(true);
+  };
+
   const click = () => {
     if (!recording) {
       if (id === "") setSnackbarIdOpen(true);
-      else if (mode === 2 && customPrompts === "") setSnackbarPromptsOpen(true);
+      else if ((mode === 2 || mode === 3) && customPrompts === "") setSnackbarPromptsOpen(true);
       else {
-        setSnackbarIdOpen(false);
-        setSnackbarPromptsOpen(false);
+        closeSnackbars();
         setEvents([]);
         let prompts = customPrompts;
         if (mode === 1) {
@@ -50,10 +64,7 @@ function App() {
           setRecording(true)
         );
       }
-    } else {
-      setRecording(false);
-      setTrial(parseFloat(trial) + 1);
-    }
+    } else stopRecording();
   };
 
   const onPrompt = ({ newPrompt, datetime, timestamp }) => {
@@ -105,9 +116,17 @@ function App() {
         onClose={(_, reason) =>
           reason === "clickaway" || setSnackbarPromptsOpen(false)
         }
+        mode={mode}
       />
 
-      <Container maxWidth="lg">
+      <RecordingStoppedSnackbar
+        open={snackbarRecordingStoppedOpen}
+        onClose={(_, reason) =>
+          reason === 'clickaway' || setSnackbarRecordingStoppedOpen(false)
+        }
+      />
+
+      <Container maxWidth="xl">
         <br />
         <Typography variant="h2">
           NeuroTech 2020 - Recording Dashboard
@@ -128,7 +147,8 @@ function App() {
             hand,
             trial,
             setTrial,
-            setHand
+            setHand,
+            closeSnackbars
           }}
         />
         <br />
@@ -140,6 +160,7 @@ function App() {
         {mode === 2 && (
           <InTheAirRecorder {...{ recording, onCustomPrompt, customPrompts }} />
         )}
+        {mode === 3 && <TouchTypeRecorder {...{ recording, onCustomPrompt, customPrompts, stopRecording }} />}
         <br />
         <br />
         <EventList {...{ events }} />
