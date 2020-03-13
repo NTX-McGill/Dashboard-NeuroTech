@@ -98,6 +98,9 @@ def compute_features(data, channel_names, feature_names, mutate=False):
 def predict_function(arr):
     res, _ = compute_features(arr, channel_names, features)
     input_arr = np.array(list(res.values()))
+    # print("INSIDE", np.sum(np.abs(arr[0])))
+    # print(input_arr[0])
+    # print(res.keys())
     return clf.predict_proba(np.squeeze(input_arr).reshape(1, -1))
 # model_file = "model_windows-2020-02-23-03_08_2020_15:22:15.pkl"
 # model_file = 'model_windows-2020-02-23-03_08_2020_15:41:37.pkl'
