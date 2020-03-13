@@ -72,3 +72,9 @@
   top: 23%;
   left: 39%;
 }
+
+.space {
+  position: absolute;
+  top: 50%;
+  left: 21%;
+}
