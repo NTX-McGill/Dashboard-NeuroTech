@@ -1,98 +1,10 @@
 import React, { Component } from "react";
-import { Line, Bar } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import "chartjs-plugin-streaming"
 import socketIOClient from "socket.io-client";
 
 
 
-function shuffle(array) {
-  let counter = array.length;
-
-  // While there are elements in the array
-  while (counter > 0) {
-    // Pick a random index
-    let index = Math.floor(Math.random() * counter);
-
-    // Decrease counter by 1
-    counter--;
-
-    // And swap the last element with it
-    let temp = array[counter];
-    array[counter] = array[index];
-    array[index] = temp;
-  }
-
-  return array;
-}
-
-const data = {
-  datasets: [
-    {
-      label: "Dataset 1",
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-      lineTension: 0,
-      borderDash: [8, 4],
-      data: [],
-      fill: false,
-    }
-  ]
-};
-
-
-
-const options = {
-  title: {
-    display: true,
-    text: 'Push data feed sample'
-  },
-  height:500,
-  width:500,
-  responsive: false,
-  scales: {
-    xAxes: [{
-      type: 'realtime',
-      realtime: {
-        duration: 20000,
-        delay: 2000,
-        refresh: 1,
-        // onRefresh: function () {
-        //   if (Math.random() < .01) {
-        //   data.datasets[0].data.push({
-        //     x: Date.now(),
-        //     y: Math.random() 
-        //   });
-        // }
-        
-        // },
-
-      },
-      // ticks: {
-      //   autoSkip: false,
-      //   maxTicksLimit: 10
-      // },
-    }],
-    yAxes: [{
-      scaleLabel: {
-        display: true,
-        labelString: 'value'
-      }
-    }]
-  },
-  tooltips: {
-    mode: 'nearest',
-    intersect: false
-  },
-  hover: {
-    mode: 'nearest',
-    intersect: false
-  },
-  plugins: {
-    streaming: {
-      frameRate: 30
-    }
-  }
-};
 
 const barData = {
   labels: ['Left Pinky', 'Left Ring', 'Left Middle', 'Left Index', 'Thumbs', 'Right Index', 'Right Middle', 'Right Ring', 'Right Pinky'],
@@ -165,3 +77,94 @@ class ChartJsComponent extends Component {
 }
 
 export default ChartJsComponent;
+
+// For Reference
+// function shuffle(array) {
+//   let counter = array.length;
+// 
+//   // While there are elements in the array
+//   while (counter > 0) {
+//     // Pick a random index
+//     let index = Math.floor(Math.random() * counter);
+// 
+//     // Decrease counter by 1
+//     counter--;
+// 
+//     // And swap the last element with it
+//     let temp = array[counter];
+//     array[counter] = array[index];
+//     array[index] = temp;
+//   }
+// 
+//   return array;
+// }
+// 
+// const data = {
+//   datasets: [
+//     {
+//       label: "Dataset 1",
+//       borderColor: "rgb(255, 99, 132)",
+//       backgroundColor: "rgba(255, 99, 132, 0.5)",
+//       lineTension: 0,
+//       borderDash: [8, 4],
+//       data: [],
+//       fill: false,
+//     }
+//   ]
+// };
+// 
+// 
+// 
+// const options = {
+//   title: {
+//     display: true,
+//     text: 'Push data feed sample'
+//   },
+//   height:500,
+//   width:500,
+//   responsive: false,
+//   scales: {
+//     xAxes: [{
+//       type: 'realtime',
+//       realtime: {
+//         duration: 20000,
+//         delay: 2000,
+//         refresh: 1,
+//         // onRefresh: function () {
+//         //   if (Math.random() < .01) {
+//         //   data.datasets[0].data.push({
+//         //     x: Date.now(),
+//         //     y: Math.random() 
+//         //   });
+//         // }
+//         
+//         // },
+// 
+//       },
+//       // ticks: {
+//       //   autoSkip: false,
+//       //   maxTicksLimit: 10
+//       // },
+//     }],
+//     yAxes: [{
+//       scaleLabel: {
+//         display: true,
+//         labelString: 'value'
+//       }
+//     }]
+//   },
+//   tooltips: {
+//     mode: 'nearest',
+//     intersect: false
+//   },
+//   hover: {
+//     mode: 'nearest',
+//     intersect: false
+//   },
+//   plugins: {
+//     streaming: {
+//       frameRate: 30
+//     }
+//   }
+// };
+// 

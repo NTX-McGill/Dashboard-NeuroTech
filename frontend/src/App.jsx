@@ -144,7 +144,7 @@ function App() {
         <br />
         <br />
         <EventList {...{ events }} />
-    <Chart />
+        {/*<Chart />*/}
       </Container>
     </div>
   );

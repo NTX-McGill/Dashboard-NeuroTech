@@ -19,6 +19,7 @@ matplotlib==3.2.0
 monotonic==1.5
 multidict==4.7.5
 numpy==1.18.1
+osc4py3==1.0.8
 pandas==1.0.1
 pylsl==1.12.2
 pyparsing==2.4.6
@@ -33,4 +34,3 @@ six==1.14.0
 sklearn==0.0
 Werkzeug==1.0.0
 yarl==1.4.2
-scipy

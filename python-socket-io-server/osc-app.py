@@ -1,7 +1,13 @@
 import sys
 sys.path.append('NeuroTech-ML/')
 
-from pylsl import StreamInlet, resolve_stream
+# from osc4py3.as_eventloop import *
+# from osc4py3 import oscmethod as osm
+from pythonosc import dispatcher
+from pythonosc import osc_server
+
+from oscpy.server import OSCThreadServer
+
 import socketio
 import time
 from aiohttp import web
@@ -24,18 +30,22 @@ app = web.Application()
 sio.attach(app)
 
 
-# Set up streaming over lsl from OpenBCI
-streams = resolve_stream('type', 'EEG')
-inlet = StreamInlet(streams[0])
+# Set up streaming over osc from OpenBCI
+# osc_startup()
+# osc_tcp_client('127.0.0.1', 12345, "Open")
+# streams = resolve_stream('type', 'EEG')
+# inlet = StreamInlet(streams[0])
+
 
 # Tunable Params
 BUFFER_SIZE = 250
-BUFFER_DIST = 250
+BUFFER_DIST = 25
 
 
 
 # Setup background process for emitting predictions
 async def emit_predictions():
+    print("Inside")
     """
     Waits for sample from OpenBCI, predicts the finger pressed, and emits it.   
     """
@@ -91,11 +101,10 @@ async def emit_predictions():
             # Predict finger pressed
             finger_probs = (predict_function(filter_buffer))
             finger_index = np.argmax(finger_probs)
-            # print("BCI BUFFER: ", bci_buffer[0, 0], str(np.sum(bci_buffer)))
-            # print("AFTER BUFFER: ", filter_buffer[0, 0], str(np.sum(filter_buffer)))
-            # print(finger_probs)
-            # print(np.argmax(finger_probs))
-            # print(list(finger_probs))
+            print("BCI BUFFER: ", bci_buffer[0, 0], str(np.sum(bci_buffer)))
+            print("AFTER BUFFER: ", filter_buffer[0, 0], str(np.sum(filter_buffer)))
+            print(finger_probs[0])
+            print(np.argmax(finger_probs))
 
             # Remove BUFFER_DIST from beginning of buffer
             bci_buffer = np.delete(bci_buffer, np.arange(0, BUFFER_DIST, 1), 1)
@@ -117,7 +126,20 @@ def disconnect(sid):
 
 # app.router.add_get('/', index)
 
+# dispatcher = dispatcher.Dispatcher()
+# dispatcher.map("/openbci", emit_predictions)
+# 
+# server = osc_server.ThreadingOSCUDPServer(
+#         ('127.0.0.1', 12345), dispatcher)
+
+
 
 if __name__ == '__main__':
-    sio.start_background_task(emit_predictions)
+    osc = OSCThreadServer()
+    sock = osc.listen(address='127.0.0.1', port=12345, default=True)
+    osc.bind(b'/openbci', emit_predictions)
+
+    # print("Serving on {}".format(server.server_address))
+    # server.serve_forever()
+    # sio.start_background_task(server.serve_forever)
     web.run_app(app, host='0.0.0.0', port='4001')
