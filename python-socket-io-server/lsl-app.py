@@ -80,7 +80,7 @@ async def emit_predictions():
             # Build filter buffer
             filter_buffer = []
 
-            for i, (channel, filters) in enumerate(zip(bci_buffer[[2, 3, 1, 5, 4, 6, 7, 0]], filtering)):
+            for i, (channel, filters) in enumerate(zip(bci_buffer, filtering)):
                 # print(channel[0])
                 # print("NZ", str(filtering[i]["nz"]))
                 # print("BZ:",str(filtering[i]["bz"]))
@@ -122,5 +122,6 @@ def disconnect(sid):
 
 
 if __name__ == '__main__':
+    print("Attempting to connect to OpenBCI")
     sio.start_background_task(emit_predictions)
     web.run_app(app, host='0.0.0.0', port='4001')
