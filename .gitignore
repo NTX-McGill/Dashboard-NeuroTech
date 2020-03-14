@@ -1,5 +1,7 @@
 .vscode/
 nt/
+node_modules
+NeuroTech-ML-backup
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

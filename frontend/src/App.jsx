@@ -12,6 +12,7 @@ import { newSession } from "./Bridge";
 import { format } from "./Utilities";
 import SelfDirectedRecorder from "./SelfDirectedRecorder";
 import InTheAirRecorder from "./InTheAirRecorder";
+import Chart from "./ChartJsComponent.jsx";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -143,6 +144,7 @@ function App() {
         <br />
         <br />
         <EventList {...{ events }} />
+        {/*<Chart />*/}
       </Container>
     </div>
   );
