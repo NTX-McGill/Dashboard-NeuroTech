@@ -5,6 +5,10 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import PredictionWidget from "./PredictionWidget";
 
+import Bar_Chart from "./ChartJsComponent.jsx";
+import Line_Chart from "./Chart_Iemg.jsx";
+import Channel_1_Chart from "./Chart_feature1.jsx";
+
 const useStyles = makeStyles(theme => ({
   paper: {
     minHeight: 300,
@@ -34,6 +38,9 @@ function App() {
           </Grid>
         </Grid>
       </Container>
+      <Bar_Chart/>
+      <Line_Chart/>
+      <Channel_1_Chart/>
     </div>
   );
 }
