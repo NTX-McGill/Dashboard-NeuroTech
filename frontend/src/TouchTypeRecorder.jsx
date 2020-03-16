@@ -51,7 +51,7 @@ function TouchTypeRecorder({ recording, onCustomPrompt, customPrompts, stopRecor
                         stopRecording();
                 }
 
-                setProgress(progress => progress + (updateInterval / 3000) * 100);
+                setProgress(progress => progress + (updateInterval / 2000) * 100);
 
                 if (progress === 80) {
                     let { finger, character } = prompts[promptIndex];
