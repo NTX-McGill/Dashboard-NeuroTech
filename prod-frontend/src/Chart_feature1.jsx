@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import "moment"
+
 import { Line } from "react-chartjs-2";
 import "chartjs-plugin-streaming"
 import socketIOClient from "socket.io-client";
@@ -14,32 +16,56 @@ const options = {
   width:500,
   responsive: false,
   scales: {
-    xAxes: [{
-      type: 'realtime',
-      realtime: {
-        duration: 20000,
-        delay: 2000,
-        refresh: 1,
-        // onRefresh: function () {
-        //   if (Math.random() < .01) {
-        //   data.datasets[0].data.push({
-        //     x: Date.now(),
-        //     y: Math.random() 
-        //   });
-        // }
-        
+    xAxes: [
+      {
+        id: 'time-axis',
+        type: 'linear',
+        ticks: {
+          max: 0,
+          min: -5,
+          stepSize: 1
+        },
+        // type: 'time',
+        // time: {
+        //   unit: 'second',
         // },
+        scaleLabel: {
+          display: true,
+          labelString: 'Time'
+        }
+      },
+
+
+      {
+        id: 'live-axis',
+        type: 'realtime',
+        realtime: {
+          duration: 20000,
+          delay: 2000,
+          refresh: 1,
+          // onRefresh: function () {
+          //   if (Math.random() < .01) {
+          //   data.datasets[0].data.push({
+          //     x: Date.now(),
+          //     y: Math.random() 
+          //   });
+          // }
+
+          // },
+
+        },
+        ticks: {
+          display: false,
+          // autoSkip: false,
+          // maxTicksLimit: 10
+        }
 
       },
-      // ticks: {
-      //   autoSkip: false,
-      //   maxTicksLimit: 10
-      // },
-    }],
+    ],
     yAxes: [{
       scaleLabel: {
         display: true,
-        labelString: 'value'
+        labelString: 'uVrms'
       }
     }]
   },
@@ -52,16 +78,18 @@ const options = {
     intersect: false
   },
   plugins: {
-    streaming: {
-      frameRate: 30
-    }
+    streaming: false
+    // streaming: {
+    //   frameRate: 10
+    // }
   }
 };
 
 const data = {
   datasets: [
     {
-      label: "Channel 1",
+      label: "Channel 1 Filtered",
+      xAxisID: 'live-axis',
       borderColor: "rgb(255, 99, 132)",
       backgroundColor: "rgba(255, 99, 132, 0.5)",
       lineTension: 0,
@@ -70,68 +98,69 @@ const data = {
       fill: false,
     },
     {
-      label: "Channel 2",
-      borderColor: "rgb(255, 255, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-      lineTension: 0,
-      borderDash: [8, 4],
-      data: [],
-      fill: false,
-    },
-    {
-      label: "Channel 3",
-      borderColor: "rgb(255, 99, 255)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-      lineTension: 0,
-      borderDash: [8, 4],
-      data: [],
-      fill: false,
-    },
-    {
-      label: "Chanell 4",
-      borderColor: "rgb(255, 255, 255)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-      lineTension: 0,
-      borderDash: [8, 4],
-      data: [],
-      fill: false,
-    },
-    {
-      label: "Channel 5",
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-      lineTension: 0,
-      borderDash: [8, 4],
-      data: [],
-      fill: false,
-    },
-    {
-      label: "Channel 6",
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-      lineTension: 0,
-      borderDash: [8, 4],
-      data: [],
-      fill: false,
-    },
-    {
-      label: "Channel 7",
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-      lineTension: 0,
-      borderDash: [8, 4],
-      data: [],
-      fill: false,
-    },
-    {
-      label: "Channel 8",
-      borderColor: "rgb(255, 99, 132)",
+      label: "Channel 1 Unfiltered",
+      xAxisID: 'live-axis',
+      borderColor: "rgb(0, 255, 0)",
       backgroundColor: "rgba(255, 99, 132, 0.5)",
       lineTension: 0,
       borderDash: [8, 4],
       data: [],
       fill: false,
     }
+    // {
+    //   label: "Channel 3",
+    //   borderColor: "rgb(255, 99, 255)",
+    //   backgroundColor: "rgba(255, 99, 132, 0.5)",
+    //   lineTension: 0,
+    //   borderDash: [8, 4],
+    //   data: [],
+    //   fill: false,
+    // },
+    // {
+    //   label: "Chanell 4",
+    //   borderColor: "rgb(255, 255, 255)",
+    //   backgroundColor: "rgba(255, 99, 132, 0.5)",
+    //   lineTension: 0,
+    //   borderDash: [8, 4],
+    //   data: [],
+    //   fill: false,
+    // },
+    // {
+    //   label: "Channel 5",
+    //   borderColor: "rgb(255, 99, 132)",
+    //   backgroundColor: "rgba(255, 99, 132, 0.5)",
+    //   lineTension: 0,
+    //   borderDash: [8, 4],
+    //   data: [],
+    //   fill: false,
+    // },
+    // {
+    //   label: "Channel 6",
+    //   borderColor: "rgb(255, 99, 132)",
+    //   backgroundColor: "rgba(255, 99, 132, 0.5)",
+    //   lineTension: 0,
+    //   borderDash: [8, 4],
+    //   data: [],
+    //   fill: false,
+    // },
+    // {
+    //   label: "Channel 7",
+    //   borderColor: "rgb(255, 99, 132)",
+    //   backgroundColor: "rgba(255, 99, 132, 0.5)",
+    //   lineTension: 0,
+    //   borderDash: [8, 4],
+    //   data: [],
+    //   fill: false,
+    // },
+    // {
+    //   label: "Channel 8",
+    //   borderColor: "rgb(255, 99, 132)",
+    //   backgroundColor: "rgba(255, 99, 132, 0.5)",
+    //   lineTension: 0,
+    //   borderDash: [8, 4],
+    //   data: [],
+    //   fill: false,
+    // }
   ]
 };
 
@@ -164,24 +193,26 @@ class ChartJsComponent extends Component {
     console.log("Chart Mounted");
     const { endpoint } = this.state;
     const socket = socketIOClient(endpoint);
-    socket.on("channels_filtered", new_data => {
-      console.log(new_data);
+    socket.on("Channel_Data", new_data => {
+      console.log("Channel data: " + new_data);
       let int_data = JSON.parse(new_data);
       this.setState({ response: int_data })
       // barData.datasets[0].data = int_data;
 
-      for (let i = 0; i < 8; i++) {
-        data.datasets[i].data.push({
+      for (let j = 0; j < 2; j++) {
+        console.log(int_data[0][j]);
+        data.datasets[j].data.push({
           x: Date.now(),
-          y: int_data[i]
+          y: int_data[j][0]
         });
       }
+      console.log(data.datasets[0].data.length)
     })
   }
 
   render() {
     return (
-      <Line data={data} options={options} height="500" width="1200"/>
+      <Line data={data} options={options} height="400" width="1200"/>
       // <Line
       //   data={barData}
       //   width={100}

@@ -38,8 +38,8 @@ function App() {
           </Grid>
         </Grid>
       </Container>
-      <Bar_Chart/>
-      <Line_Chart/>
+      {/*<Bar_Chart/>*/}
+      {/*<Line_Chart/> pri:*/}
       <Channel_1_Chart/>
     </div>
   );

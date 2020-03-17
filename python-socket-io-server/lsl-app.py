@@ -30,7 +30,7 @@ inlet = StreamInlet(streams[0])
 
 # Tunable Params
 BUFFER_SIZE = 250
-BUFFER_DIST = 50
+BUFFER_DIST = 25
 
 
 # Setup background process for emitting predictions
@@ -92,22 +92,28 @@ async def emit_predictions():
             # Predict finger pressed
             finger_probs, feature_arr = (predict_function(filter_buffer))
             finger_index = np.argmax(finger_probs)
-            print(feature_arr.shape)
+            # print(feature_arr.shape)
             # print("BCI BUFFER: ", bci_buffer[0], str(np.sum(bci_buffer)))
 
             # print("AFTER BUFFER: ", filter_buffer[0], str(np.sum(filter_buffer)))
-            print(str(np.array2string(finger_probs[0], separator=', ')))
-            print(finger_index)
+            # print(str(np.array2string(finger_probs[0], separator=', ')))
+            # print(finger_index)
 
-            # Remove BUFFER_DIST from beginning of buffer
-            bci_buffer = np.delete(bci_buffer, np.arange(0, BUFFER_DIST, 1), 1)
 
             # Emit predictions
             await sio.emit('Finger', int(finger_index))
             await sio.emit('FingerProbs', str(finger_probs[0].tolist()))
             await sio.emit('Channel_1_IEMG', int(feature_arr[0]))
             # get last column
-            await sio.emit('channels_filtered', str(filter_buffer[:, 249].tolist()))
+            # await sio.emit('channels_unfiltered', str(bci_buffer[:, 249].tolist()))
+            await sio.emit('Channel_Data', str(np.append([filter_buffer[:, 249]], [bci_buffer[:, 249]], axis=0).tolist()))
+            print("Fitlered")
+            print(filter_buffer[:, 249])
+            print("BCI")
+            print(bci_buffer[:, 249])
+
+            # Remove BUFFER_DIST from beginning of buffer
+            bci_buffer = np.delete(bci_buffer, np.arange(0, BUFFER_DIST, 1), 1)
 
 @sio.event
 async def connect(sid, environ):
