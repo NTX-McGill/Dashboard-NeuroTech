@@ -8,6 +8,7 @@ import PredictionWidget from "./PredictionWidget";
 import Bar_Chart from "./ChartJsComponent.jsx";
 import Line_Chart from "./Chart_Iemg.jsx";
 import Channel_1_Chart from "./Chart_feature1.jsx";
+import FingerHeatmap from "./HeatmapComponent.jsx";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -40,7 +41,8 @@ function App() {
       </Container>
       {/*<Bar_Chart/>*/}
       {/*<Line_Chart/> pri:*/}
-      <Channel_1_Chart/>
+      {/*<Channel_1_Chart/>*/}
+      <FingerHeatmap/>
     </div>
   );
 }

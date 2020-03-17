@@ -29,8 +29,8 @@ inlet = StreamInlet(streams[0])
 
 
 # Tunable Params
-BUFFER_SIZE = 250
-BUFFER_DIST = 25
+BUFFER_SIZE = 500
+BUFFER_DIST = 500
 
 
 # Setup background process for emitting predictions
