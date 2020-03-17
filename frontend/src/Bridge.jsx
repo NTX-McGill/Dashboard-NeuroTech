@@ -20,7 +20,7 @@ export async function newSession({ id, notes, prompts, mode , hand, trial}, call
     "&mode=" +
     mode_str + 
     "&prompts=" +
-    prompts + 
+    encodeURIComponent(prompts.replace(/(?:\r\n|\r|\n)/g, "\\n").replace(/"/g, '\\"')) + 
     "&hand=" +
     hand + 
     "&trial=" +
