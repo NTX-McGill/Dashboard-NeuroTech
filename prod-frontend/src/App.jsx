@@ -42,7 +42,7 @@ function App() {
       {/*<Bar_Chart/>*/}
       {/*<Line_Chart/> pri:*/}
       {/*<Channel_1_Chart/>*/}
-      <FingerHeatmap/>
+      <FingerHeatmap blockWidth={20} />
     </div>
   );
 }

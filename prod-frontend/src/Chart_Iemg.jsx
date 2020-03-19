@@ -114,7 +114,7 @@ class ChartJsComponent extends Component {
   }
   render() {
     return (
-      <Line data={data} options={options} height="400" width="1200"/>
+      <Line data={data} options={options} height="500" width="1200"/>
       // <Line
       //   data={barData}
       //   width={100}

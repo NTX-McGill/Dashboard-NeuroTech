@@ -7,7 +7,7 @@ import socketIOClient from "socket.io-client";
 
 
 const barData = {
-  labels: ['Left Pinky', 'Left Ring', 'Left Middle', 'Left Index', 'Thumbs', 'Right Index', 'Right Middle', 'Right Ring', 'Right Pinky'],
+  labels: ['Nothing', 'Right Thumb', 'Right Index', 'Right Middle', 'Right Ring', 'Right Pinky', 'Left thumb', 'Left Index', 'Left Middle', 'Left Ring', 'Left Pinky'],
   datasets: [
     {
       label: 'My First dataset',
@@ -39,72 +39,26 @@ function generateData(count, yrange) {
 class Heatmap extends Component {
   constructor(props) {
     super(props);
+
+    let fingerLabels =  ['Nothing', 'Right Thumb', 'Right Index', 'Right Middle', 'Right Ring', 'Right Pinky', 'Left thumb', 'Left Index', 'Left Middle', 'Left Ring', 'Left Pinky'];
+    let series = [];
+    let zeroData =[];
+    for (let i = 1; i <= props.blockWidth; i++) {
+      zeroData.push({
+        x: i,
+        y: 0
+      })
+    }
+    for (let i = 0; i< fingerLabels.length; i++) {
+      series.push({
+        name: fingerLabels[i],
+        data: zeroData.slice()
+      })
+    }
+
     this.state = {
-      counter: 19,
-      series: [{
-        name: 'Metric1',
-        data: generateData(18, {
-          min: 0,
-          max: 100
-        })
-      },
-        {
-          name: 'Metric2',
-          data: generateData(18, {
-            min: 0,
-            max: 100
-          })
-        },
-        {
-          name: 'Metric3',
-          data: generateData(18, {
-            min: 0,
-            max: 100
-          })
-        },
-        {
-          name: 'Metric4',
-          data: generateData(18, {
-            min: 0,
-            max: 100
-          })
-        },
-        {
-          name: 'Metric5',
-          data: generateData(18, {
-            min: 0,
-            max: 100
-          })
-        },
-        {
-          name: 'Metric6',
-          data: generateData(18, {
-            min: 0,
-            max: 100
-          })
-        },
-        {
-          name: 'Metric7',
-          data: generateData(18, {
-            min: 0,
-            max: 100
-          })
-        },
-        {
-          name: 'Metric8',
-          data: generateData(18, {
-            min: 0,
-            max: 100
-          })
-        },
-        {
-          name: 'Metric9',
-          data: generateData(18, {
-            min: 0,
-            max: 100
-          })
-        }
-      ],
+      counter: props.blockWidth +1,
+      series: series,
       options: {
         chart: {
           id: 'heatmap',
@@ -129,8 +83,13 @@ class Heatmap extends Component {
     socket.on("FingerProbs", new_data => {
       let int_data = JSON.parse(new_data);
       let series = this.state.series;
+      console.log(series);
       for (let i = 0; i < 9; i++) {
           series[i].data.shift();
+        // for (let j = 0; j < 17; j++) {
+        //   console.log(series[i]);
+        //   series[i].data[j + 1].x = j;
+        // }
           series[i].data.push({x: "" + this.state.counter, y: (int_data[i] * 100)});
       }
       this.setState({ 
@@ -139,7 +98,6 @@ class Heatmap extends Component {
         options: this.state.options,
       })
       ApexCharts.exec('heatmap', 'updateSeries', series);
-      console.log(this.state);
       // barData.datasets[0].data = int_data;
       // data.datasets[0].data.push({
       // x: Date.now(),
