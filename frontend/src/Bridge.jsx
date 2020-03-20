@@ -8,6 +8,7 @@ export async function newSession({ id, notes, prompts, mode , hand, trial}, call
     JSON.stringify(prompts);
   }
   else if (mode === 2) mode_str = "In-the-air";
+  else if (mode === 3 || mode === 4) mode_str = "Guided-in-the-air";
   fetch(
     "http://localhost:5000/new-session?datetime=" +
     datetime +
@@ -20,7 +21,7 @@ export async function newSession({ id, notes, prompts, mode , hand, trial}, call
     "&mode=" +
     mode_str + 
     "&prompts=" +
-    prompts + 
+    encodeURIComponent(prompts.replace(/(?:\r\n|\r|\n)/g, "\\n").replace(/"/g, '\\"')) + 
     "&hand=" +
     hand + 
     "&trial=" +

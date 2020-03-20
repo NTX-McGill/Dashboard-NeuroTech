@@ -85,6 +85,9 @@ function SessionInfoForm({
             <MenuItem value={3}>
               <b>Touch-Type:</b>&nbsp;touch-type a text prompt ITA
             </MenuItem>
+            <MenuItem value={4}>
+              <b>Guided in the air:</b>&nbsp;set key prompts without registering presses
+            </MenuItem>
           </Select>
         </FormControl>
         <br />
