@@ -14,6 +14,7 @@ import SelfDirectedRecorder from "./SelfDirectedRecorder";
 import InTheAirRecorder from "./InTheAirRecorder";
 import TouchTypeRecorder from "./TouchTypeRecorder";
 import RecordingStoppedSnackbar from "./RecordingStoppedSnackbar";
+import GuidedInTheAirRecorder from "./GuidedInTheAirRecorder";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -161,6 +162,7 @@ function App() {
           <InTheAirRecorder {...{ recording, onCustomPrompt, customPrompts }} />
         )}
         {mode === 3 && <TouchTypeRecorder {...{ recording, onCustomPrompt, customPrompts, stopRecording }} />}
+        {mode === 4 && <GuidedInTheAirRecorder {...{ recording, onPrompt }} />}
         <br />
         <br />
         <EventList {...{ events }} />

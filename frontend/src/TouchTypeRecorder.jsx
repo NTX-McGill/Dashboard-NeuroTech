@@ -106,13 +106,13 @@ function TouchTypeRecorder({
           {prompts
             .slice(Math.max(0, promptIndex - 25), promptIndex)
             .map(prompt => prompt.character)
-            .map(char => (char === "space" ? " " : char))
+            .map(char => (char === "space" ? '\u00A0' : char))
             .join("")}
         </Typography>
         <Typography display="inline" variant="h4" color="secondary">
           <u>
             {prompts[promptIndex].character === "space"
-              ? " "
+              ? '\u00A0'
               : prompts[promptIndex].character}
           </u>
         </Typography>
@@ -120,7 +120,7 @@ function TouchTypeRecorder({
           {prompts
             .slice(promptIndex + 1)
             .map(prompt => prompt.character)
-            .map(char => (char === "space" ? " " : char))
+            .map(char => (char === "space" ? '\u00A0' : char))
             .join("")}
         </Typography>
       </div>
