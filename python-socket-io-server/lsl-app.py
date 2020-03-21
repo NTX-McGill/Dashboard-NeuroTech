@@ -31,6 +31,7 @@ inlet = StreamInlet(streams[0])
 # Tunable Params
 BUFFER_SIZE = 500
 BUFFER_DIST = 500
+FEATURES = ['iemg', 'mav', 'mmav', 'mmav2', 'var', 'rms']
 
 
 # Setup background process for emitting predictions
@@ -90,8 +91,17 @@ async def emit_predictions():
             filter_buffer = np.array(filter_buffer)
 
             # Predict finger pressed
-            finger_probs, feature_arr = (predict_function(filter_buffer))
+            finger_probs, feature_dict = (predict_function(filter_buffer))
             finger_index = np.argmax(finger_probs)
+            formatted_feature_dict = {}
+            for feature in FEATURES:
+                feature_array = []
+                for i in range(1, 9):
+                    feature_array.append(feature_dict["channel " + str(i) + "_" + feature][0])
+                    
+                formatted_feature_dict[feature] = feature_array
+            print("Formatted")
+            print(formatted_feature_dict)
             # print(feature_arr.shape)
             # print("BCI BUFFER: ", bci_buffer[0], str(np.sum(bci_buffer)))
 
@@ -103,14 +113,14 @@ async def emit_predictions():
             # Emit predictions
             await sio.emit('Finger', int(finger_index))
             await sio.emit('FingerProbs', str(finger_probs[0].tolist()))
-            await sio.emit('Channel_1_IEMG', int(feature_arr[0]))
-            # get last column
-            # await sio.emit('channels_unfiltered', str(bci_buffer[:, 249].tolist()))
-            await sio.emit('Channel_Data', str(np.append([filter_buffer[:, 249]], [bci_buffer[:, 249]], axis=0).tolist()))
-            print("Fitlered")
-            print(filter_buffer[:, 249])
-            print("BCI")
-            print(bci_buffer[:, 249])
+            await sio.emit('Feature_Data', formatted_feature_dict)
+            # str(feature_arr.transpose().reshape(8,len(FEATURES)).tolist()))
+            print("Feature Data")
+            await sio.emit('Signal_Data', str(np.append([filter_buffer[:, 249]], [bci_buffer[:, 249]], axis=0).tolist()))
+            # print("Fitlered")
+            # print(filter_buffer[:, 249])
+            # print("BCI")
+            # print(bci_buffer[:, 249]) 
 
             # Remove BUFFER_DIST from beginning of buffer
             bci_buffer = np.delete(bci_buffer, np.arange(0, BUFFER_DIST, 1), 1)

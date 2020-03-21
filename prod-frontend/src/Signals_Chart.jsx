@@ -193,12 +193,11 @@ class ChartJsComponent extends Component {
     console.log("Chart Mounted");
     const { endpoint } = this.state;
     const socket = socketIOClient(endpoint);
-    socket.on("Channel_Data", new_data => {
-      console.log("Channel data: " + new_data);
+    socket.on("Signal_Data", new_data => {
+      console.log("Signal data: " + new_data);
       let int_data = JSON.parse(new_data);
       this.setState({ response: int_data })
       // barData.datasets[0].data = int_data;
-
       for (let j = 0; j < 2; j++) {
         console.log(int_data[0][j]);
         data.datasets[j].data.push({

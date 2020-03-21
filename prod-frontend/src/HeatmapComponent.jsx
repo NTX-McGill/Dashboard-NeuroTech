@@ -72,6 +72,9 @@ class Heatmap extends Component {
         title: {
           text: 'HeatMap Chart (Single color)'
         },
+        animations: {
+          enabled: false,
+        }
       }
     }
   }
@@ -85,6 +88,7 @@ class Heatmap extends Component {
       let series = this.state.series;
       console.log(series);
       for (let i = 0; i < 9; i++) {
+
           series[i].data.shift();
         // for (let j = 0; j < 17; j++) {
         //   console.log(series[i]);

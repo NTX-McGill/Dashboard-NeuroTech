@@ -100,8 +100,8 @@ def predict_function(arr):
     input_arr = np.array(list(res.values()))
     # print("INSIDE", np.sum(np.abs(arr[0])))
     # print(input_arr[0])
-    # print(res.keys())
-    return clf.predict_proba(np.squeeze(input_arr).reshape(1, -1)), input_arr
+    print(res)
+    return clf.predict_proba(np.squeeze(input_arr).reshape(1, -1)), res
 # model_file = "model_windows-2020-02-23-03_08_2020_15:22:15.pkl"
 # model_file = 'model_windows-2020-02-23-03_08_2020_15:41:37.pkl'
 
