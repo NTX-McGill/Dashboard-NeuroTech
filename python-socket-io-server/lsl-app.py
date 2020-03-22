@@ -24,10 +24,6 @@ app = web.Application()
 sio.attach(app)
 
 
-# Set up streaming over lsl from OpenBCI
-streams = resolve_stream('type', 'EEG')
-inlet = StreamInlet(streams[0])
-
 
 # Tunable Params
 # @todo convert to seconds
@@ -109,5 +105,9 @@ def disconnect(sid):
 
 if __name__ == '__main__':
     print("Attempting to connect to OpenBCI")
+    # Set up streaming over lsl from OpenBCI
+    streams = resolve_stream('type', 'EEG')
+    inlet = StreamInlet(streams[0])
+
     sio.start_background_task(emit_predictions)
     web.run_app(app, host='0.0.0.0', port='4001')
