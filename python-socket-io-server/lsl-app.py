@@ -4,7 +4,7 @@ from scipy import zeros, signal, random
 import numpy as np
 from filters import *
 import pickle
-from real_time_prediction import predict_function
+# from real_time_prediction import predict_function
 from real_time_class import Prediction
 import asyncio
 from aiohttp import web
@@ -44,7 +44,7 @@ async def emit_predictions():
 
     # Initialize buffer for storing incoming data
     
-    model_file = 'NeuroTech-ML/model_windows-2020-02-23-03_08_2020_15-48-56.pkl'
+    model_file = 'NeuroTech-ML/windows_date_all_subject_all_mode_1_2_4.pkl'
     bci_buffer = np.zeros([8, 1])
     predictor = Prediction(model_filename=model_file, shift=BUFFER_DIST/BUFFER_SIZE)
 
@@ -61,24 +61,10 @@ async def emit_predictions():
         # Check if buffer is ready for prediction
         if (bci_buffer.shape[1] == BUFFER_SIZE):
             # Build filter buffer
-            filter_buffer = []
 
-            # for i, (channel, filters) in enumerate(zip(bci_buffer, filtering)):
-            #     # print(channel[0])
-            #     # print("NZ", str(filtering[i]["nz"]))
-            #     # print("BZ:",str(filtering[i]["bz"]))
-
-            #     out_1, filtering[i]["nz"] = signal.lfilter(
-            #         nb, na, channel, zi=filtering[i]["nz"])
-            #     out_2, filtering[i]["bz"] = signal.lfilter(
-            #         bb, ba, out_1, zi=filtering[i]["bz"])
-            #     filter_buffer.append(out_2)
-
-            # filter_buffer = np.array(filter_buffer)
-            finger_probs = predictor.predict_function(bci_buffer)
+            filter_buffer, feature_dict, finger_probs = predictor.get_filtered_features_prediction(bci_buffer)
 
             # Predict finger pressed
-            finger_probs, feature_dict = (predict_function(filter_buffer))
             finger_index = np.argmax(finger_probs)
             formatted_feature_dict = {}
             for feature in FEATURES:
@@ -87,16 +73,9 @@ async def emit_predictions():
                     feature_array.append(feature_dict["channel " + str(i) + "_" + feature][0])
                     
                 formatted_feature_dict[feature] = feature_array
+                
             print("Formatted")
             print(formatted_feature_dict)
-            # print(feature_arr.shape)
-            # print("BCI BUFFER: ", bci_buffer[0], str(np.sum(bci_buffer)))
-
-            # print("AFTER BUFFER: ", filter_buffer[0], str(np.sum(filter_buffer)))
-            # print(str(np.array2string(finger_probs[0], separator=', ')))
-            # print(finger_index)
-
-
             # Emit predictions
             await sio.emit('Finger', int(finger_index))
             await sio.emit('FingerProbs', str(finger_probs[0].tolist()))
