@@ -57,7 +57,7 @@ function TouchTypeRecorder({
         }
 
         setProgress(progress => progress + (updateInterval / 2000) * 100);
-        console.log(progress);
+        
         if (progress === 80 || progress === 81) {
           let { finger, character } = prompts[promptIndex];
           sendCustomPrompt(
