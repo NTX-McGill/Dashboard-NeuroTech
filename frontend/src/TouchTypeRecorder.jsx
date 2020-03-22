@@ -57,8 +57,8 @@ function TouchTypeRecorder({
         }
 
         setProgress(progress => progress + (updateInterval / 2000) * 100);
-
-        if (progress === 80) {
+        console.log(progress);
+        if (progress === 80 || progress === 81) {
           let { finger, character } = prompts[promptIndex];
           sendCustomPrompt(
             { newCustomPrompt: finger + " " + character },
@@ -97,8 +97,8 @@ function TouchTypeRecorder({
             {prompts[promptIndex].finger} when the bar reaches the green dot
           </>
         ) : (
-          <>Waiting...</>
-        )}
+            <>Waiting...</>
+          )}
       </Typography>
 
       <div style={{ overflow: "auto", whiteSpace: "nowrap", marginBottom: 14 }}>
@@ -136,15 +136,15 @@ function TouchTypeRecorder({
             </div>
           </div>
         ) : (
-          <div className="parent">
-            <div className="image1">
-              <img width="40%" src={Hands} alt="" />
+            <div className="parent">
+              <div className="image1">
+                <img width="40%" src={Hands} alt="" />
+              </div>
+              <div className={handGraphicLookup[prompts[promptIndex].finger]}>
+                <img width="3%" src={Green} alt="" />
+              </div>
             </div>
-            <div className={handGraphicLookup[prompts[promptIndex].finger]}>
-              <img width="3%" src={Green} alt="" />
-            </div>
-          </div>
-        ))}
+          ))}
     </div>
   );
 }
