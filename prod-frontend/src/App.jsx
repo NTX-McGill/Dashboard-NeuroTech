@@ -40,8 +40,8 @@ function App() {
         </Grid>
       </Container>
       {/*<Bar_Chart/>*/}
-      <Features_Chart hand="Left" feature="iemg" />
-      <Features_Chart hand="Left" feature="var" />
+      {/* <Features_Chart hand="Left" feature="rms" /> */}
+      {/* <Features_Chart hand="Left" feature="var" /> */}
       {/*<Channel_1_Chart/>*/}
       {/*<FingerHeatmap blockWidth={20} />*/}
     </div>
