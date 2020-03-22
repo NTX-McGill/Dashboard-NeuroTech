@@ -36,8 +36,8 @@ const options = {
         type: 'realtime',
         realtime: {
           duration: 20000,
-          delay: 1000,
-          refresh: 2000,
+          delay: 0,
+          refresh: 500,
           // onRefresh: function () {
           //   console.log(data.datasets[0]);
           //   if (Math.random() < .01) {
@@ -65,7 +65,7 @@ const options = {
   },
   plugins: {
     streaming: {
-      frameRate: 2
+      frameRate: 10
     }
   },
   animation: {

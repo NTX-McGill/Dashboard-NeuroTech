@@ -5,6 +5,7 @@ import numpy as np
 from filters import *
 import pickle
 from real_time_prediction import predict_function
+from real_time_class import Prediction
 import asyncio
 from aiohttp import web
 import time
@@ -29,8 +30,9 @@ inlet = StreamInlet(streams[0])
 
 
 # Tunable Params
-BUFFER_SIZE = 500
-BUFFER_DIST = 500
+# @todo convert to seconds
+BUFFER_SIZE = 250
+BUFFER_DIST = 25
 FEATURES = ['iemg', 'mav', 'mmav', 'mmav2', 'var', 'rms']
 
 
@@ -41,27 +43,11 @@ async def emit_predictions():
     """
 
     # Initialize buffer for storing incoming data
+    
+    model_file = 'NeuroTech-ML/model_windows-2020-02-23-03_08_2020_15-48-56.pkl'
     bci_buffer = np.zeros([8, 1])
+    predictor = Prediction(model_filename=model_file, shift=BUFFER_DIST/BUFFER_SIZE)
 
-    # Initializing filter hyperparameters
-    fs = 250
-    order = 2
-    low = 20
-    high = 120
-    nyq = fs / 2
-    bb, ba = signal.butter(order, [low/nyq, high/nyq], 'bandpass')
-    bz = signal.lfilter_zi(bb, ba)
-    notch_freq = 60.0
-    bp_stop = notch_freq + 3.0 * np.array([-1, 1])
-    nb, na = signal.iirnotch(notch_freq, notch_freq / 6, fs)
-    nz = signal.lfilter_zi(nb, na)
-
-    # Initialize variable filter parameters for each channel
-    filter_params = {
-        "nz": nz,
-        "bz": bz,
-    }
-    filtering = [filter_params] * 8
 
     while True:
         # Pull and append sample from OpenBCI to buffer
@@ -77,18 +63,19 @@ async def emit_predictions():
             # Build filter buffer
             filter_buffer = []
 
-            for i, (channel, filters) in enumerate(zip(bci_buffer, filtering)):
-                # print(channel[0])
-                # print("NZ", str(filtering[i]["nz"]))
-                # print("BZ:",str(filtering[i]["bz"]))
+            # for i, (channel, filters) in enumerate(zip(bci_buffer, filtering)):
+            #     # print(channel[0])
+            #     # print("NZ", str(filtering[i]["nz"]))
+            #     # print("BZ:",str(filtering[i]["bz"]))
 
-                out_1, filtering[i]["nz"] = signal.lfilter(
-                    nb, na, channel, zi=filtering[i]["nz"])
-                out_2, filtering[i]["bz"] = signal.lfilter(
-                    bb, ba, out_1, zi=filtering[i]["bz"])
-                filter_buffer.append(out_2)
+            #     out_1, filtering[i]["nz"] = signal.lfilter(
+            #         nb, na, channel, zi=filtering[i]["nz"])
+            #     out_2, filtering[i]["bz"] = signal.lfilter(
+            #         bb, ba, out_1, zi=filtering[i]["bz"])
+            #     filter_buffer.append(out_2)
 
-            filter_buffer = np.array(filter_buffer)
+            # filter_buffer = np.array(filter_buffer)
+            finger_probs = predictor.predict_function(bci_buffer)
 
             # Predict finger pressed
             finger_probs, feature_dict = (predict_function(filter_buffer))
