@@ -44,7 +44,6 @@ async def emit_predictions():
 
     # Initialize buffer for storing incoming data
     
-    # Make sure to download the model file from Slack learning-machines. It is too big to add to the github repo.
     model_file = 'NeuroTech-ML/model_windows_date_all_subject_all_mode_1_2-03_18_2020_22_33_39.pkl'
     bci_buffer = np.zeros([8, 1])
     predictor = Prediction(model_filename=model_file, shift=BUFFER_DIST/BUFFER_SIZE)
@@ -78,6 +77,8 @@ async def emit_predictions():
             print("Formatted")
             print(formatted_feature_dict)
             # Emit predictions
+
+            # @todo emit the timestamps along with the data points.
             await sio.emit('Finger', int(finger_index))
             await sio.emit('FingerProbs', str(finger_probs[0].tolist()))
             await sio.emit('Feature_Data', formatted_feature_dict)

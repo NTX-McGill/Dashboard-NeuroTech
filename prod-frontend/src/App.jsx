@@ -39,11 +39,10 @@ function App() {
           </Grid>
         </Grid>
       </Container>
-      <Bar_Chart/>
-      <Features_Chart hand="Left" feature="rms" />
-      {/* <Features_Chart hand="Left" feature="var" /> */}
+      {/* <Bar_Chart/> */}
+      <Features_Chart feature="rms" />
       {/*<Channel_1_Chart/>*/}
-      {/*<FingerHeatmap blockWidth={20} />*/}
+      {/* <FingerHeatmap blockWidth={20} /> */}
     </div>
   );
 }

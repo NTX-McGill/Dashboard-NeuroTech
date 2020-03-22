@@ -37,7 +37,6 @@ const options = {
         realtime: {
           duration: 20000,
           delay: 0,
-          refresh: 500,
           // onRefresh: function () {
           //   console.log(data.datasets[0]);
           //   if (Math.random() < .01) {
@@ -87,15 +86,15 @@ class ChartJsComponent extends Component {
     };
 
     // const features = ['iemg', 'mav', 'mmav', 'mmav2', 'var', 'rms'];
-    const colors = ["#FF6900", "#00D084", "#8Ed1FC", "#EB144C", "#F78DA7", "#9900EF", "#7BDCB5", "#FCB900"];
+    const colors = ["#808081", "#7B4A8C", "#36569C", "#317058", "#DBB10E", "#FA5D34", "#DE382D", "#A05131"];
 
     for (let i = 1; i < 9; i++) {
       data.datasets.push(
         {
           label: "Channel " + i,
           xAxisID: 'live-axis',
-          borderColor: colors[i],
-          backgroundColor: "rgba(255, 99, 132, 0.5)",
+          borderColor: colors[i - 1],
+          backgroundColor: colors[i - 1],
           lineTension: 0,
           borderDash: [8, 4],
           data: [{
