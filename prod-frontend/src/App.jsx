@@ -6,7 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import PredictionWidget from "./PredictionWidget";
 
 import Features_Chart from "./FeaturesChart.jsx";
-import Signals_Chart from "./SignalsChart.jsx";
+import Signals_Chart from "./FilteredSignalsChart.jsx";
 import FingerHeatmap from "./HeatmapComponent.jsx";
 
 const useStyles = makeStyles(theme => ({

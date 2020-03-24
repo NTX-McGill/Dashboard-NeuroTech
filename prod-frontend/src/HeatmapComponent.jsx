@@ -90,7 +90,7 @@ class Heatmap extends Component {
         socket.on("FingerProbs", new_data => {
             let int_data = JSON.parse(new_data);
             let series = this.state.series;
-            for (let i = 0; i < 11; i++) {
+            for (let i = 0; i < 9; i++) {
                 series[i].data.shift();
                 // for (let j = 0; j < 17; j++) {
                 //   console.log(series[i]);
