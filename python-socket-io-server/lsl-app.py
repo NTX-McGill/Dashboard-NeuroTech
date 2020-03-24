@@ -59,7 +59,7 @@ async def emit_predictions():
             # Build filter buffer
             timestamp = round(time.time() * 1000)
 
-            filter_buffer, feature_dict, finger_probs = predictor.get_filtered_features_prediction(bci_buffer)
+            filter_buffer, feature_dict, finger_probs = predictor.get_filtered_features_prediction(np.array(bci_buffer))
 
             # Predict finger pressed
             finger_index = np.argmax(finger_probs)
@@ -75,12 +75,16 @@ async def emit_predictions():
             # Emit predictions
 
             # @todo emit the timestamps along with the data points. Fix Signal_Data labels
+            # print(filter_buffer[:, 249])
+            # print(bci_buffer[:, 249])
+            signal_data = np.append([filter_buffer[:, 249]], [bci_buffer[:, 249]], axis=0).tolist()
+            # print(signal_data)
             await sio.emit('Finger', int(finger_index))
             await sio.emit('FingerProbs', str(finger_probs[0].tolist()))
             await sio.emit('Feature_Data', formatted_feature_dict)
             # str(feature_arr.transpose().reshape(8,len(FEATURES)).tolist()))
             await sio.emit('Signal_Data', {
-                "data": str(np.append([filter_buffer[:, 249]], [bci_buffer[:, 249]], axis=0).tolist()),
+                "data": str(signal_data),
                 "timestamp": timestamp
             })
             # print("Fitlered")
@@ -94,7 +98,7 @@ async def emit_predictions():
 @sio.event
 async def connect(sid, environ):
     print("Connected")
-    await sio.emit('my_response', {'data': 'Connected', 'count': 0}, room=sid)
+    # await sio.emit('my_response', {'data': 'Connected', 'count': 0}, room=sid)
 
 
 @sio.event

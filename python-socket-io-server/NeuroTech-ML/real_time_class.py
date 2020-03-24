@@ -164,7 +164,7 @@ class Prediction():
         res, _ = self.compute_features(filtered_arr, self.channel_names, self.features)
         input_arr = np.array(list(res.values()))
         return self.clf.predict_proba(np.squeeze(input_arr).reshape(1, -1))
-        
+
     def get_filtered_features_prediction(self, arr):
         # assume already filtered
         """

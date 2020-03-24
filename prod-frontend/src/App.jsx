@@ -41,7 +41,7 @@ function App() {
       {/* <Bar_Chart/> */}
       <Signals_Chart/>
       {/* <Features_Chart feature="rms" /> */}
-      <Features_Chart feature="var" />
+      {/* <Features_Chart feature="var" /> */}
       <FingerHeatmap blockWidth={100} />
     </div>
   );

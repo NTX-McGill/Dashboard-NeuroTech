@@ -98,7 +98,7 @@ class Heatmap extends Component {
                 // }
                 series[i].data.push({ x: "" + this.state.counter, y: (int_data[i] * 100) });
             }
-            if (this.state.buffer !== 50) {
+            if (this.state.buffer !== 24) {
                 this.setState({
                     buffer: this.state.buffer + 1,
                     counter: this.state.counter + 1,
