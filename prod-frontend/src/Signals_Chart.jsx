@@ -12,8 +12,8 @@ const options = {
     display: true,
     text: 'Push data feed sample'
   },
-  height:500,
-  width:500,
+  height: 500,
+  width: 500,
   responsive: false,
   scales: {
     xAxes: [
@@ -41,7 +41,7 @@ const options = {
         type: 'realtime',
         realtime: {
           duration: 20000,
-          delay: 2000,
+          delay: 0,
           refresh: 1,
           // onRefresh: function () {
           //   if (Math.random() < .01) {
@@ -82,87 +82,10 @@ const options = {
     // streaming: {
     //   frameRate: 10
     // }
-  }
+  },
+  animation: false
 };
 
-const data = {
-  datasets: [
-    {
-      label: "Channel 1 Filtered",
-      xAxisID: 'live-axis',
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-      lineTension: 0,
-      borderDash: [8, 4],
-      data: [],
-      fill: false,
-    },
-    {
-      label: "Channel 1 Unfiltered",
-      xAxisID: 'live-axis',
-      borderColor: "rgb(0, 255, 0)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-      lineTension: 0,
-      borderDash: [8, 4],
-      data: [],
-      fill: false,
-    }
-    // {
-    //   label: "Channel 3",
-    //   borderColor: "rgb(255, 99, 255)",
-    //   backgroundColor: "rgba(255, 99, 132, 0.5)",
-    //   lineTension: 0,
-    //   borderDash: [8, 4],
-    //   data: [],
-    //   fill: false,
-    // },
-    // {
-    //   label: "Chanell 4",
-    //   borderColor: "rgb(255, 255, 255)",
-    //   backgroundColor: "rgba(255, 99, 132, 0.5)",
-    //   lineTension: 0,
-    //   borderDash: [8, 4],
-    //   data: [],
-    //   fill: false,
-    // },
-    // {
-    //   label: "Channel 5",
-    //   borderColor: "rgb(255, 99, 132)",
-    //   backgroundColor: "rgba(255, 99, 132, 0.5)",
-    //   lineTension: 0,
-    //   borderDash: [8, 4],
-    //   data: [],
-    //   fill: false,
-    // },
-    // {
-    //   label: "Channel 6",
-    //   borderColor: "rgb(255, 99, 132)",
-    //   backgroundColor: "rgba(255, 99, 132, 0.5)",
-    //   lineTension: 0,
-    //   borderDash: [8, 4],
-    //   data: [],
-    //   fill: false,
-    // },
-    // {
-    //   label: "Channel 7",
-    //   borderColor: "rgb(255, 99, 132)",
-    //   backgroundColor: "rgba(255, 99, 132, 0.5)",
-    //   lineTension: 0,
-    //   borderDash: [8, 4],
-    //   data: [],
-    //   fill: false,
-    // },
-    // {
-    //   label: "Channel 8",
-    //   borderColor: "rgb(255, 99, 132)",
-    //   backgroundColor: "rgba(255, 99, 132, 0.5)",
-    //   lineTension: 0,
-    //   borderDash: [8, 4],
-    //   data: [],
-    //   fill: false,
-    // }
-  ]
-};
 
 // socket.on('ML graphs', function (data) { // 1st channel ("left")
 //   // update left datapoint
@@ -183,10 +106,51 @@ const data = {
 class ChartJsComponent extends Component {
   constructor() {
     super();
+    const data = {
+      datasets: []
+    };
+
+    const colors = ["#808081", "#7B4A8C", "#36569C", "#317058", "#DBB10E", "#FA5D34", "#DE382D", "#A05131"];
+
+    for (let i = 0; i < 8; i++) {
+      data.datasets.push(
+        {
+          label: "Channel " + (i + 1) + " Filtered",
+          xAxisID: 'live-axis',
+          borderColor: colors[i],
+          backgroundColor: colors[i],
+          lineTension: 0,
+          borderDash: [8, 4],
+          data: [{
+            x: Date.now(),
+            y: Math.random()
+          }],
+          fill: false,
+        },
+        {
+          label: "Channel " + (i + 1) + " Unfiltered",
+          xAxisID: 'live-axis',
+          borderColor: colors[i],
+          backgroundColor: colors[i],
+          lineTension: 0,
+          borderDash: [8, 4],
+          data: [{
+            x: Date.now(),
+            y: Math.random()
+          }],
+          fill: false,
+          hidden: true,
+        }
+      )
+    }
+
     this.state = {
       response: [0, 0, 0, 0, 0, 0, 0, 0],
-      endpoint: "http://localhost:4001"
+      endpoint: "http://localhost:4001",
+      data: data,
+      options: options
     };
+
   }
 
   componentDidMount() {
@@ -195,23 +159,24 @@ class ChartJsComponent extends Component {
     const socket = socketIOClient(endpoint);
     socket.on("Signal_Data", new_data => {
       console.log("Signal data: " + new_data);
-      let int_data = JSON.parse(new_data);
-      this.setState({ response: int_data })
+      const int_data = JSON.parse(new_data["data"])
+      // let int_data = JSON.parse(new_data);
       // barData.datasets[0].data = int_data;
-      for (let j = 0; j < 2; j++) {
-        console.log(int_data[0][j]);
-        data.datasets[j].data.push({
-          x: Date.now(),
-          y: int_data[j][0]
-        });
+      for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 2; j++) {
+          this.state.data.datasets[i + j * 8].data.push({
+            x: new_data["timestamp"],
+            y: int_data[j][i]
+          });
+        }
       }
-      console.log(data.datasets[0].data.length)
+      console.log(this.state.data.datasets[0].data)
     })
   }
 
   render() {
     return (
-      <Line data={data} options={options} height="400" width="1200"/>
+      <Line data={this.state.data} options={options} height={400} width={1200} />
       // <Line
       //   data={barData}
       //   width={100}
@@ -219,7 +184,7 @@ class ChartJsComponent extends Component {
       //   options={{ maintainAspectRatio: true }}
       // />
     )
-  
+
   }
 }
 

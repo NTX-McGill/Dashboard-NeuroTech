@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import Chart from 'react-apexcharts';
-import ApexCharts from 'apexcharts';
+import Heatmap from "react-simple-heatmap"
+// import Chart from 'react-apexcharts';
+// import ApexCharts from 'apexcharts';
 import socketIOClient from "socket.io-client";
 
 
@@ -22,48 +23,49 @@ const barData = {
 };
 
 function generateData(count, yrange) {
-    var i = 0;
-    var series = [];
-    while (i < count) {
-        var x = (i + 1).toString();
-        var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
-        series.push({
-            x: x,
-            y: y
-        });
-        i++;
-    }
-    return series;
+  var i = 0;
+  var series = [];
+  while (i < count) {
+    var x = (i + 1).toString();
+    var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
+    series.push({
+      x: x,
+      y: y
+    });
+    i++;
+  }
+  return series;
 }
 
-class Heatmap extends Component {
+class FingerHeatmap extends Component {
   constructor(props) {
     super(props);
 
-    let fingerLabels =  ['Nothing', 'Right Thumb', 'Right Index', 'Right Middle', 'Right Ring', 'Right Pinky', 'Left thumb', 'Left Index', 'Left Middle', 'Left Ring', 'Left Pinky'];
+    let fingerLabels = ['Nothing', 'Right Thumb', 'Right Index', 'Right Middle', 'Right Ring', 'Right Pinky', 'Left thumb', 'Left Index', 'Left Middle', 'Left Ring', 'Left Pinky'];
     let series = [];
-    let zeroData =[];
-    for (let i = 1; i <= props.blockWidth; i++) {
-      zeroData.push({
-        x: i,
-        y: 0
-      })
-    }
-    for (let i = 0; i< fingerLabels.length; i++) {
-      series.push({
-        name: fingerLabels[i],
-        data: zeroData.slice()
-      })
+    let zeroData = [];
+    for (let i = 0; i < 8; i++) {
+      let rowData = [];
+      for (let j = 0; j < 10; j++) {
+        rowData.push(Math.random());
+      }
+      series.push(rowData);
     }
 
     this.state = {
-      counter: props.blockWidth +1,
+      counter: props.blockWidth + 1,
       series: series,
       options: {
         chart: {
           id: 'heatmap',
           height: 350,
           type: 'heatmap',
+          animations: {
+            enabled: false,
+            dynamicAnimation: {
+              enabled: false
+            }
+          }
         },
         dataLabels: {
           enabled: false
@@ -72,10 +74,10 @@ class Heatmap extends Component {
         title: {
           text: 'HeatMap Chart (Single color)'
         },
-        animations: {
-          enabled: false,
-        }
-      }
+      },
+      test_data: [[10, 12, 33],
+            [21, 45, 31],
+            [16, 32, 29]],
     }
   }
 
@@ -86,47 +88,56 @@ class Heatmap extends Component {
     socket.on("FingerProbs", new_data => {
       let int_data = JSON.parse(new_data);
       let series = this.state.series;
+      console.log(int_data);
       console.log(series);
-      for (let i = 0; i < 9; i++) {
 
-          series[i].data.shift();
-        // for (let j = 0; j < 17; j++) {
-        //   console.log(series[i]);
-        //   series[i].data[j + 1].x = j;
-        // }
-          series[i].data.push({x: "" + this.state.counter, y: (int_data[i] * 100)});
+      // series = series.map((val, i) => val.slice(0, -1).push(int_data[i]));
+      series.splice(0, 1);
+      series.push(int_data);
+      let random_data = [];
+      for (let i = 0; i < 8; i++) {
+        random_data.push(Math.random());
       }
-      this.setState({ 
+      series.push(random_data);
+      // for (let i = 0; i < series.length; i++) {
+      //   series[i].splice(0, 1);
+      //   series[i].push(int_data[i]);
+      // }
+      console.log(series);
+
+      // for (let i = 0; i < 9; i++) {
+
+      //   series[i].data.shift();
+      //   // for (let j = 0; j < 17; j++) {
+      //   //   console.log(series[i]);
+      //   //   series[i].data[j + 1].x = j;
+      //   // }
+      //   series[i].data.push({ x: "" + this.state.counter, y: (int_data[i] * 100) });
+      // }
+      this.setState({
         counter: this.state.counter + 1,
-        series,
+        series: series,
         options: this.state.options,
+        test_data: this.state.test_data
       })
-      ApexCharts.exec('heatmap', 'updateSeries', series);
-      // barData.datasets[0].data = int_data;
-      // data.datasets[0].data.push({
-      // x: Date.now(),
-      // y: new_data[1]
-      // });
     });
   }
   render() {
     return (
       <div className="app">
         <div className="row">
-          <div className="mixed-chart">
-            <Chart
-              options={this.state.options}
-              series={this.state.series}
-              type="heatmap"
-              width="500"
+          <div className="mixed-chart" style={{ height: "500px", width: "500px" }}>
+            <Heatmap
+              data={this.state.series}
+            // width="500"
             />
           </div>
         </div>
       </div>
-    );  
+    );
   }
 }
 
-export default Heatmap;
+export default FingerHeatmap;
 
 

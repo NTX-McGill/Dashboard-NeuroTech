@@ -33,15 +33,16 @@ function App() {
           McGill NeuroTech 2020 - Production Dashboard
         </Typography>
 
-        <Grid container spacing={4}>
+        {/* <Grid container spacing={4}>
           <Grid item xs={3}>
             <PredictionWidget paperCN={classes.paper} />
           </Grid>
-        </Grid>
+        </Grid> */}
       </Container>
       {/* <Bar_Chart/> */}
-      <Features_Chart feature="rms" />
-      {/*<Channel_1_Chart/>*/}
+      <Signals_Chart/>
+      {/* <Features_Chart feature="rms" /> */}
+      {/* <Features_Chart feature="var" /> */}
       {/* <FingerHeatmap blockWidth={20} /> */}
     </div>
   );

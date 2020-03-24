@@ -28,7 +28,7 @@ sio.attach(app)
 # Tunable Params
 # @todo convert to seconds
 BUFFER_SIZE = 250
-BUFFER_DIST = 25
+BUFFER_DIST = 50
 FEATURES = ['iemg', 'mav', 'mmav', 'mmav2', 'var', 'rms']
 
 
@@ -57,12 +57,14 @@ async def emit_predictions():
         # Check if buffer is ready for prediction
         if (bci_buffer.shape[1] == BUFFER_SIZE):
             # Build filter buffer
+            timestamp = round(time.time() * 1000)
 
             filter_buffer, feature_dict, finger_probs = predictor.get_filtered_features_prediction(bci_buffer)
 
             # Predict finger pressed
             finger_index = np.argmax(finger_probs)
             formatted_feature_dict = {}
+            formatted_feature_dict["timestamp"] = timestamp
             for feature in FEATURES:
                 feature_array = []
                 for i in range(1, 9):
@@ -74,13 +76,16 @@ async def emit_predictions():
             print(formatted_feature_dict)
             # Emit predictions
 
-            # @todo emit the timestamps along with the data points.
+            # @todo emit the timestamps along with the data points. Fix Signal_Data labels
             await sio.emit('Finger', int(finger_index))
             await sio.emit('FingerProbs', str(finger_probs[0].tolist()))
             await sio.emit('Feature_Data', formatted_feature_dict)
             # str(feature_arr.transpose().reshape(8,len(FEATURES)).tolist()))
             print("Feature Data")
-            await sio.emit('Signal_Data', str(np.append([filter_buffer[:, 249]], [bci_buffer[:, 249]], axis=0).tolist()))
+            await sio.emit('Signal_Data', {
+                "data": str(np.append([filter_buffer[:, 249]], [bci_buffer[:, 249]], axis=0).tolist()),
+                "timestamp": timestamp
+            })
             # print("Fitlered")
             # print(filter_buffer[:, 249])
             # print("BCI")

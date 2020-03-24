@@ -122,12 +122,13 @@ class ChartJsComponent extends Component {
 
     socket.on("Feature_Data", new_data => {
       console.log(new_data);
+      // const parsed_data = JSON.parse(new_data);
       // let int_data = JSON.parse(new_data);
       // this.setState({ response: int_data })
       // // barData.datasets[0].data = int_data;
       for (let i = 0; i < this.state.data.datasets.length; i++) {
         this.state.data.datasets[i].data.push({
-          x: Date.now(),
+          x: new_data["timestamp"],
           y: new_data[this.state.feature][i]
         })
       }
