@@ -28,7 +28,7 @@ sio.attach(app)
 # Tunable Params
 # @todo convert to seconds
 BUFFER_SIZE = 250
-BUFFER_DIST = 50
+BUFFER_DIST = 25
 FEATURES = ['iemg', 'mav', 'mmav', 'mmav2', 'var', 'rms']
 
 
@@ -72,8 +72,6 @@ async def emit_predictions():
                     
                 formatted_feature_dict[feature] = feature_array
                 
-            print("Formatted")
-            print(formatted_feature_dict)
             # Emit predictions
 
             # @todo emit the timestamps along with the data points. Fix Signal_Data labels
@@ -81,7 +79,6 @@ async def emit_predictions():
             await sio.emit('FingerProbs', str(finger_probs[0].tolist()))
             await sio.emit('Feature_Data', formatted_feature_dict)
             # str(feature_arr.transpose().reshape(8,len(FEATURES)).tolist()))
-            print("Feature Data")
             await sio.emit('Signal_Data', {
                 "data": str(np.append([filter_buffer[:, 249]], [bci_buffer[:, 249]], axis=0).tolist()),
                 "timestamp": timestamp

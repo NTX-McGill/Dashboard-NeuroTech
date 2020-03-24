@@ -5,9 +5,8 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import PredictionWidget from "./PredictionWidget";
 
-import Bar_Chart from "./Probs_Chart.jsx";
-import Features_Chart from "./Features_Chart.jsx";
-import Signals_Chart from "./Signals_Chart.jsx";
+import Features_Chart from "./FeaturesChart.jsx";
+import Signals_Chart from "./SignalsChart.jsx";
 import FingerHeatmap from "./HeatmapComponent.jsx";
 
 const useStyles = makeStyles(theme => ({
@@ -42,8 +41,8 @@ function App() {
       {/* <Bar_Chart/> */}
       <Signals_Chart/>
       {/* <Features_Chart feature="rms" /> */}
-      {/* <Features_Chart feature="var" /> */}
-      {/* <FingerHeatmap blockWidth={20} /> */}
+      <Features_Chart feature="var" />
+      <FingerHeatmap blockWidth={100} />
     </div>
   );
 }
