@@ -10,7 +10,7 @@ import Hands from "./hand.png";
 import Green from "./green.png";
 import "./app.css";
 
-function GuidedRecorder({ recording, onPrompt }) {
+function GuidedInTheAirRecorder({ recording, onPrompt }) {
   const fingers = [
     { hand: "left", finger: "pinkie", key: "a" },
     { hand: "left", finger: "ring finger", key: "s" },
@@ -88,4 +88,4 @@ function GuidedRecorder({ recording, onPrompt }) {
   );
 }
 
-export default GuidedRecorder;
+export default GuidedInTheAirRecorder;
