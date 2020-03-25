@@ -28,7 +28,7 @@ sio.attach(app)
 # @todo convert to seconds
 BUFFER_SIZE = 250
 BUFFER_DIST = 25
-FEATURES = ['iemg', 'mav', 'mmav', 'mmav2', 'var', 'rms']
+FEATURES = ['iemg', 'mav', 'mmav', 'var', 'rms']
 
 
 # Setup background process for emitting predictions
@@ -39,7 +39,7 @@ async def emit_predictions():
 
     # Initialize buffer for storing incoming data
 
-    model_file = 'NeuroTech-ML/model_windows_date_all_subject_all_mode_1_2-03_18_2020_22_33_39.pkl'
+    model_file = 'NeuroTech-ML/model_features_2020-03-22_windows_date_all_subject_all_mode_1_2_4-03_24_2020_18_40_49.pkl'
     bci_buffer = np.zeros([8, 1])
     predictor = Prediction(model_filename=model_file,
                            shift=BUFFER_DIST/BUFFER_SIZE)

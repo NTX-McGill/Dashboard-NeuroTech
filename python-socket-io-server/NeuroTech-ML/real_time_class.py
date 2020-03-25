@@ -27,7 +27,8 @@ class Prediction():
             with open(model_filename, 'rb') as f:
                 data = pickle.load(f)
                 self.clf = data['classifier']
-                self.features = data['features']
+                # self.features = data['features']
+                self.features = ['iemg', 'mav', 'mmav', 'var','var_abs', 'rms', 'rms_3', 'wl', 'zc', 'ssc', 'wamp', 'freq_feats','freq_var']
                 
         #Parameters for filters
         self.num_channels = num_channels
@@ -164,7 +165,7 @@ class Prediction():
         res, _ = self.compute_features(filtered_arr, self.channel_names, self.features)
         input_arr = np.array(list(res.values()))
         return self.clf.predict_proba(np.squeeze(input_arr).reshape(1, -1))
-
+    
     def get_filtered_features_prediction(self, arr):
         # assume already filtered
         """
@@ -177,6 +178,5 @@ class Prediction():
         input_arr = np.array(list(res.values()))
         return filtered_arr, res, self.clf.predict_proba(np.squeeze(input_arr).reshape(1, -1))
 
-    
    
     

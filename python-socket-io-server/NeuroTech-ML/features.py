@@ -7,129 +7,148 @@ Created on Fri Mar  6 09:32:01 2020
 """
 
 import numpy as np
-import pandas as pd
-from scipy import signal
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import axes3d, Axes3D
-import seaborn as sns
 import matplotlib.mlab as mlab
 
-def silly(signal):
-    if len(signal) < 20:
-        print('aaaaaaahhhhhhhhh hell')
-        return np.asarray([1,2,3])
-    return np.asarray(signal[:3])
+###Temporal features
 
-
-
-#Integrated IEMG
+#Integrated emg
 def iemg(signal):
     return np.sum(np.abs(signal))
 
 #Mean absolute value
 def mav(signal):
-    return np.sum(np.abs(signal)) / len(signal)
+    return np.mean(np.abs(signal)) 
 
 #Modified mean absolute value
 def mmav(signal):
-    def weights(n, N):
+    def weight(n, N):
         if n < 0.25*N: return 4*n/N
         elif 0.25*N <= n and n <= 0.75*N: return 1
         else: return 4*(n - N)/N
     
-    w = np.array([weights(n, len(signal)) for n in range(len(signal))])
-    return np.dot(w, np.abs(signal)) / len(signal)
-
-#Modified mean abs value 2
-def mmav2(signal):
-    def weights(n,N):
-        if n < .33*N or n > .67*N: return .33
-        else: return .67
-    w = np.array([weights(n, len(signal)) for n in range(len(signal))])
-    return np.dot(w, np.abs(signal)) / len(signal)
-
-#
+    N = len(signal)
+    w = [weight(n, N) for n in range(N)]
+    return np.average(signal, weights=w)
 
 #Variance
 def var(signal):
-    return np.sum(np.square(signal)) / (len(signal) - 1)
+    return np.var(signal) 
+
+#Variance of amplitudes of signal
+def var_abs(signal):
+    return np.var(np.abs(signal))
 
 #Root mean square
 def rms(signal):
-    return np.sqrt(np.sum(np.square(signal)) / len(signal))
+    return np.sqrt(np.mean(np.square(signal)))
 
+#Root mean squared subwindows
+def rms_3(signal):
+    N = len(signal)
+    one_third, two_thirds = int(N / 3), int(2 * N / 3)
+    return [rms(signal[:one_third]), rms(signal[one_third: two_thirds]), rms(signal[two_thirds:])]
 
 #In what follows, thresholds: 10-100mV
     
+### Helper functions for computing features below
+
+def consec_prod(signal):
+    #calculates x[i+1] * x[i] for i = 1, ..., len(signal) - 1
+    return signal[1:] * signal[:-1]
+
+def consec_abs_diff(signal):
+    #calculates |x[i+1] - x[i]| for i = 1, ..., len(signal) - 1
+    return np.abs(signal[1:] - signal[:-1])
+
+def consec_abs_sum(signal):
+    #calculates |x[i+1] + x[i]| for i = 1, ..., len(signal) - 1
+    return np.abs(signal[1:] + signal[:-1])
+
+###
+
+#Waveform length
+def wl(signal):
+    return np.sum(consec_abs_diff(signal))
 
 #Zero crossing
-def zc(signal, threshold=40):
-    signal = np.array(signal)
-    signal -= np.mean(signal)
+def zc(signal, threshold=20):
+    T = [threshold for i in range(len(signal) - 1)]
+    #|x[i+1] - x[i]| > |x[i+1] + x[i]| - calculates if signal crosses zero at i
+    #|x[i+1] - x[i]| > threshold - removes noise
+    return np.sum(np.where(consec_abs_diff(signal) > np.maximum(consec_abs_sum(signal), T)))
+
+#Slope sign change
+def ssc(signal, threshold=20):
+    T = [threshold for i in range(len(signal) - 2)] #Threshold
+    where_concave = np.where(signal[1:-1] > np.maximum(signal[:-2], signal[2:]), 1, 0) #Where slope changes from pos to neg
+    where_convex = np.where(signal[1: -1] < np.minimum(signal[:-2], signal[2:]), 1, 0) #Where slope changes from neg to pos
+    noise_condition = np.where(np.maximum(consec_abs_diff(signal[:-1]), consec_abs_diff(signal[1:])) >  T, 1, 0) #Where max(|x[i+1] - x[i]|, |x[i] - x[i-1]|) > threshold for i = 2, ..., len(signal) - 2
     
-    shifted_signal = np.append(signal[1:], signal[-1])
-    return len(signal[ (signal*shifted_signal < 0) & (np.abs(signal-shifted_signal) >= threshold)])
+    return np.sum((where_concave + where_convex) * noise_condition)
 
 #Willison amplitude
 def wamp(signal, threshold=20):
-    shifted_signal = np.append(signal[1:], signal[-1])
-    return len(signal[ np.abs(signal-shifted_signal) >= threshold])
-
-def wl(signal):
-    signal = np.array(signal)
-    shifted_signal = np.append(signal[1:], signal[-1])
-    return np.sum(np.abs(signal-shifted_signal))
-
-# slope sign change
-def ssch(signal):
-    def is_neg(a):
-        if a<0: return 1
-        else: return 0
-    return np.sum([is_neg(signal[i]*signal[i+1]) for i in range(len(signal)-1)])
-
-#The Length of the Waveform Per Unit
-def wfl(signal):
-    return np.sum([np.abs(signal[i]-signal[i+1]) for i in range(len(signal)-1)]) / len(signal)
+    return np.sum(np.where(consec_abs_diff(signal) > threshold, 1, 0))
 
 #Spectrogram
 
-# helper function returns just the trimmed power spectrum - we don't care really about very low frequencies (below 5hz)
+### Helper functions for computing features below
+
+#Returns just the trimmed power spectrum - we don't care really about very low frequencies (below 5hz)
 def get_psd(signal):
     psd,freqs = mlab.psd(signal,NFFT=256,window=mlab.window_hanning,Fs=250,noverlap=0)
     return psd
 
-# some basic freq domain features
-def freq_feats(signal):
-    if len(signal) < 250:
-        print('we need to fix this : the window is too short')
-        return [1,2,3,4,5,6]
-    psd = get_psd(signal)
-    return [np.mean(psd[5:20]),np.mean(psd[20:40]),np.mean(psd[40:60]),np.mean(psd[60:80]),np.mean(psd[80:100]),np.mean(psd[100:120])]    
+#Returns list of bands that you can use
+def get_bands(psd):
+    return [psd[5:20] , psd[20:40] , psd[40:60] , psd[80:100] , psd[100:120]]
 
-# some more freq domain features
-def freq_var(signal):
-    if len(signal) < 250:
-        print('aaaaaaahhhhhhhhh hell : the window is too short')
-        return np.asarray([1,2,3])
+###
+
+# some basic freq domain features 
+def freq_feats(signal):
     psd = get_psd(signal)
-    return np.asarray([np.mean(psd[:40]),np.mean(psd[40:80]),np.mean(psd[80:])])
+    return [np.mean(i) for i in get_bands(psd)] 
+
+# jonathan suggested this would be better
+def freq_feats_relative(signal):
+    psd = get_psd(signal)
+    total = np.sum(psd)
+    return [np.mean(i)/total for i in get_bands(psd)]
+
+# some more freq domain features - michell : take out the high freq stuff
+def freq_var(signal):
+    psd = get_psd(signal)
+    return np.asarray([np.mean(np.abs(psd[:40] - np.array([np.mean(psd[:40])]*40))) ,
+                       np.mean(np.abs(psd[40:80] - np.array([np.mean(psd[40:80])]*40))) ,
+                               np.mean(np.abs(psd[80:] - np.array([np.mean(psd[80:])]*len(psd[80:])))) ])
 
 # more freq domain features
 def freq_misc(signal):
-    if len(signal) < 250:
-        print('window too short')
-        return [1,2,3,4]
     psd = get_psd(signal)
-    return [ssch(psd),mav(psd),mmav(psd),zc(psd-[.5]*len(psd))]
+    return [ssc(psd),mav(psd),mmav(psd),zc(psd-[.5]*len(psd))]
 
-
-### subinterval features
-#Root mean squared subwindows
-def rms_3(signal):
-    signal_split = [signal[:int(len(signal)/3)],signal[int(len(signal)/3):int(2*len(signal)/3)],signal[int(2*len(signal)/3):]]
-    return [np.sqrt(np.sum(np.square(i))) / len(signal_split[0]) for i in signal_split]
-
-
-
-#Still want WL and SSC
     
+## Unhelpful feature: power spectral density
+""" # FIX DIMENSIONS LATER
+def psd(signal):
+    shift = 0.1
+    fs_Hz = 250
+    NFFT = 256
+    overlap = NFFT - int(shift * fs_Hz)
+    
+    # Pxx - 1D array for power spectrum values
+    # freq - 1D array corresponding to Pxx values
+    Pxx, freq = mlab.psd(np.squeeze(signal),
+                                   NFFT=NFFT,
+                                   window=mlab.window_hanning,
+                                   Fs=fs_Hz,
+                                   noverlap=overlap
+                                   )
+    # Make it size 130 so we can splice it
+    Pxx.append(Pxx[-1])
+    # Bin it by taking average power of every 10 hz
+    Pxx_bins = np.reshape(Pxx,(10,-1)).mean();
+    
+    return Pxx_bins
+"""
