@@ -19,7 +19,7 @@ const options = {
         type: 'linear',
         ticks: {
           max: 0,
-          min: -5,
+          min: -10,
           stepSize: 1
         },
         // type: 'time',
@@ -35,8 +35,9 @@ const options = {
         id: 'live-axis',
         type: 'realtime',
         realtime: {
-          duration: 20000,
+          duration: 10000,
           delay: 0,
+          refresh: 2500,
           // onRefresh: function () {
           //   console.log(data.datasets[0]);
           //   if (Math.random() < .01) {
@@ -64,7 +65,7 @@ const options = {
   },
   plugins: {
     streaming: {
-      frameRate: 10
+      frameRate: 2
     }
   },
   animation: {
@@ -121,13 +122,14 @@ class ChartJsComponent extends Component {
     const socket = socketIOClient(endpoint);
 
     socket.on("Feature_Data", new_data => {
-      console.log(new_data);
+      // console.log(new_data);
+      // const parsed_data = JSON.parse(new_data);
       // let int_data = JSON.parse(new_data);
       // this.setState({ response: int_data })
       // // barData.datasets[0].data = int_data;
       for (let i = 0; i < this.state.data.datasets.length; i++) {
         this.state.data.datasets[i].data.push({
-          x: Date.now(),
+          x: new_data["timestamp"],
           y: new_data[this.state.feature][i]
         })
       }
@@ -139,7 +141,7 @@ class ChartJsComponent extends Component {
         <Typography variant="h1">
           {this.props.feature}
         </Typography>
-        <Line data={this.state.data} options={this.state.options} height={500} width={1200} />
+        <Line data={this.state.data} options={this.state.options} height={400} width={1200} />
       </React.Fragment>
       // <Line
       //   data={barData}

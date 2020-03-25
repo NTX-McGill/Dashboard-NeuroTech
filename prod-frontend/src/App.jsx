@@ -5,9 +5,8 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import PredictionWidget from "./PredictionWidget";
 
-import Bar_Chart from "./Probs_Chart.jsx";
-import Features_Chart from "./Features_Chart.jsx";
-import Signals_Chart from "./Signals_Chart.jsx";
+import Features_Chart from "./FeaturesChart.jsx";
+import Signals_Chart from "./FilteredSignalsChart.jsx";
 import FingerHeatmap from "./HeatmapComponent.jsx";
 
 const useStyles = makeStyles(theme => ({
@@ -33,16 +32,17 @@ function App() {
           McGill NeuroTech 2020 - Production Dashboard
         </Typography>
 
-        <Grid container spacing={4}>
+        {/* <Grid container spacing={4}>
           <Grid item xs={3}>
             <PredictionWidget paperCN={classes.paper} />
           </Grid>
-        </Grid>
+        </Grid> */}
       </Container>
       {/* <Bar_Chart/> */}
-      <Features_Chart feature="rms" />
-      {/*<Channel_1_Chart/>*/}
-      {/* <FingerHeatmap blockWidth={20} /> */}
+      <Signals_Chart/>
+      {/* <Features_Chart feature="rms" /> */}
+      {/* <Features_Chart feature="var" /> */}
+      <FingerHeatmap blockWidth={100} />
     </div>
   );
 }
