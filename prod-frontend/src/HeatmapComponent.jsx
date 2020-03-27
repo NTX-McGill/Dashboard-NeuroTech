@@ -7,7 +7,7 @@ import socketIOClient from "socket.io-client";
 
 
 const barData = {
-    labels: ['Nothing', 'Right Thumb', 'Right Index', 'Right Middle', 'Right Ring', 'Right Pinky', 'Left thumb', 'Left Index', 'Left Middle', 'Left Ring', 'Left Pinky'],
+    labels: ['Nothing', 'Right Thumb', 'Right Index', 'Right Middle', 'Right Ring', 'Right Pinky', 'Left Index', 'Left Middle', 'Left Ring', 'Left Pinky'],
     datasets: [
         {
             label: 'My First dataset',
@@ -40,7 +40,7 @@ class Heatmap extends Component {
     constructor(props) {
         super(props);
 
-        let fingerLabels = ['Nothing', 'Right Thumb', 'Right Index', 'Right Middle', 'Right Ring', 'Right Pinky', 'Left thumb', 'Left Index', 'Left Middle', 'Left Ring', 'Left Pinky'];
+        let fingerLabels = ['Nothing', 'Right Thumb', 'Right Index', 'Right Middle', 'Right Ring', 'Right Pinky', 'Left Index', 'Left Middle', 'Left Ring', 'Left Pinky'];
         let series = [];
         let zeroData = [];
         for (let i = 1; i <= props.blockWidth; i++) {
