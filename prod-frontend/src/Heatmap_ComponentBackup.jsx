@@ -83,7 +83,7 @@ class FingerHeatmap extends Component {
 
   componentDidMount() {
     console.log("Chart Mounted");
-    const endpoint = "http://localhost:4001";
+    const endpoint = "http://localhost:4002";
     const socket = socketIOClient(endpoint);
     socket.on("FingerProbs", new_data => {
       let int_data = JSON.parse(new_data);
