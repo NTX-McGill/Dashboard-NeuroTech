@@ -32,12 +32,15 @@ const options = {
         }
       },
       {
+        gridLines : {
+          display : false
+        },
         id: 'live-axis',
         type: 'realtime',
         realtime: {
           duration: 10000,
           delay: 0,
-          refresh: 2500,
+          refresh: 1000,
           // onRefresh: function () {
           //   console.log(data.datasets[0]);
           //   if (Math.random() < .01) {
@@ -50,8 +53,8 @@ const options = {
         },
         ticks: {
           display: false,
-          // autoSkip: false,
-          // maxTicksLimit: 10
+          autoSkip: false,
+          maxTicksLimit: 10
         }
 
       },
@@ -65,7 +68,7 @@ const options = {
   },
   plugins: {
     streaming: {
-      frameRate: 2
+      frameRate: 15
     }
   },
   animation: {
@@ -138,10 +141,10 @@ class ChartJsComponent extends Component {
   render() {
     return (
       <React.Fragment>
-        <Typography variant="h1">
+        <Typography variant="h4">
           {this.props.feature}
         </Typography>
-        <Line data={this.state.data} options={this.state.options} height={400} width={1200} />
+        <Line data={this.state.data} options={this.state.options} height={300} width={1000} />
       </React.Fragment>
       // <Line
       //   data={barData}

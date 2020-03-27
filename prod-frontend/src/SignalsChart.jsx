@@ -8,6 +8,7 @@ import socketIOClient from "socket.io-client";
 
 
 const options = {
+  backgroundColor:'rgb(0,0,0)',
   title: {
     display: true,
     text: 'Push data feed sample'
