@@ -1,13 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 
-import { Container, Grid, Typography } from "@material-ui/core";
+import { AppBar, Container, Tab, Tabs, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-import PredictionWidget from "./PredictionWidget";
-
-import Features_Chart from "./FeaturesChart.jsx";
-import Signals_Chart from "./FilteredSignalsChart.jsx";
-import FingerHeatmap from "./HeatmapComponent.jsx";
+import ChartPage from "./ChartPage";
+import DataCollection from "./dataCollection/DataCollection";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -20,9 +17,21 @@ const useStyles = makeStyles(theme => ({
   title: {
     marginBottom: theme.spacing() * 4,
   },
+  navigation: {
+    marginBottom: theme.spacing(4),
+  },
 }));
 
+function a11yProps(index) {
+  return {
+    id: `full-width-tab-${index}`,
+    'aria-controls': `full-width-tabpanel-${index}`,
+  };
+}
+
 function App() {
+  const [tab, setTab] = useState(0);
+
   const classes = useStyles();
 
   return (
@@ -31,6 +40,17 @@ function App() {
         <Typography className={classes.title} variant="h3">
           McGill NeuroTech 2020 - Production Dashboard
         </Typography>
+        <Tabs
+          className={classes.navigation}
+          value={tab}
+          onChange={(tab, newValue) => setTab(newValue)}
+          variant="fullWidth"
+          indicatorColor="primary"
+          textColor="primary"
+        >
+          <Tab label="Chart View" {...a11yProps(0)} />
+          <Tab label="Data Collection" {...a11yProps(1)} />
+        </Tabs>
 
         {/* <Grid container spacing={4}>
           <Grid item xs={3}>
@@ -38,11 +58,8 @@ function App() {
           </Grid>
         </Grid> */}
       </Container>
-      {/* <Bar_Chart/> */}
-      {/*<Signals_Chart/>*/}
-      {/* <Features_Chart feature="rms" /> */}
-      <FingerHeatmap blockWidth={100} />
-      <Features_Chart feature="var" />
+
+      {[<ChartPage />, <DataCollection />][tab]}
     </div>
   );
 }
