@@ -125,4 +125,4 @@ if __name__ == '__main__':
     inlet = StreamInlet(streams[0])
 
     sio.start_background_task(emit_predictions)
-    web.run_app(app, host='0.0.0.0', port='4001')
+    web.run_app(app, host='0.0.0.0', port='4002')

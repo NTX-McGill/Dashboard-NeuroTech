@@ -112,7 +112,7 @@ class ChartJsComponent extends Component {
     }
 
     this.state = {
-      endpoint: "http://localhost:4001",
+      endpoint: "http://localhost:4002",
       feature: props.feature,
       data: data,
       options: options
