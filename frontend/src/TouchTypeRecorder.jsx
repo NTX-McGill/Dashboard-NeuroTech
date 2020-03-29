@@ -57,11 +57,15 @@ function TouchTypeRecorder({
         }
 
         setProgress(progress => progress + (updateInterval / 2000) * 100);
-        
         if (progress === 80 || progress === 81) {
-          let { finger, character } = prompts[promptIndex];
+          let parts = prompts[promptIndex].finger.split(' ');
           sendCustomPrompt(
-            { newCustomPrompt: finger + " " + character },
+            {
+              newCustomPrompt: prompts[promptIndex].finger + ' - ' + prompts[promptIndex].character,
+              finger: parts.slice(1).join(' '),
+              hand: parts[0],
+              key: prompts[promptIndex].character,
+            },
             onCustomPrompt
           );
         }
