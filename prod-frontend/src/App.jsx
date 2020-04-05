@@ -4,7 +4,8 @@ import { Container, Tab, Tabs, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import ChartPage from "./chartView/ChartPage";
-import DataCollection from "./dataCollectionView/DataCollection";
+import DataCollectionPage from "./dataCollectionView/DataCollectionPage";
+import CalibrationPage from "./calibrationView/CalibrationPage";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -30,7 +31,7 @@ function a11yProps(index) {
 }
 
 function App() {
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState(2);
 
   const classes = useStyles();
 
@@ -50,6 +51,7 @@ function App() {
         >
           <Tab label="Chart View" {...a11yProps(0)} />
           <Tab label="Data Collection" {...a11yProps(1)} />
+          <Tab label="Calibration" {...a11yProps(2)} />
         </Tabs>
 
         {/* <Grid container spacing={4}>
@@ -59,7 +61,7 @@ function App() {
         </Grid> */}
       </Container>
 
-      {[<ChartPage />, <DataCollection />][tab]}
+      {[<ChartPage />, <DataCollectionPage />, <CalibrationPage />][tab]}
     </div>
   );
 }

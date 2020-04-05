@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function DataCollection() {
+function DataCollectionPage() {
   const [recording, setRecording] = useState(false);
   const [id, setId] = useState("");
   const [customPrompts, setCustomPrompts] = useState("");
@@ -143,4 +143,4 @@ function DataCollection() {
   );
 }
 
-export default DataCollection;
+export default DataCollectionPage;
