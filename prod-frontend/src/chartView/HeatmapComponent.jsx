@@ -6,7 +6,7 @@ import socketIOClient from "socket.io-client";
 
 
 
-const barData = {
+/* const barData = {
     labels: ['Nothing', 'Right Thumb', 'Right Index', 'Right Middle', 'Right Ring', 'Right Pinky', 'Left Index', 'Left Middle', 'Left Ring', 'Left Pinky'],
     datasets: [
         {
@@ -19,9 +19,9 @@ const barData = {
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0]
         }
     ]
-};
+}; */
 
-function generateData(count, yrange) {
+/* function generateData(count, yrange) {
     var i = 0;
     var series = [];
     while (i < count) {
@@ -34,7 +34,7 @@ function generateData(count, yrange) {
         i++;
     }
     return series;
-}
+} */
 
 class Heatmap extends Component {
     constructor(props) {

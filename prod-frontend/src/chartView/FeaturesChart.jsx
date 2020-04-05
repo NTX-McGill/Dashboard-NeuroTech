@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Line } from "react-chartjs-2";
 import "chartjs-plugin-streaming"
-import { Container, Grid, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import socketIOClient from "socket.io-client";
-import FeatureSelect from "./FeatureSelect.jsx"
+
 
 
 const options = {
@@ -32,8 +32,8 @@ const options = {
         }
       },
       {
-        gridLines : {
-          display : false
+        gridLines: {
+          display: false
         },
         id: 'live-axis',
         type: 'realtime',

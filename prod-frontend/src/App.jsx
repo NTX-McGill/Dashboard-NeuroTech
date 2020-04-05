@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
-import { AppBar, Container, Tab, Tabs, Typography } from "@material-ui/core";
+import { Container, Tab, Tabs, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-import ChartPage from "./ChartPage";
-import DataCollection from "./dataCollection/DataCollection";
+import ChartPage from "./chartView/ChartPage";
+import DataCollection from "./dataCollectionView/DataCollection";
 
 const useStyles = makeStyles(theme => ({
   paper: {
