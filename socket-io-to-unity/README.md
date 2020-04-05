@@ -9,7 +9,7 @@
 
 
 ## Running the Demo
-1. Run OpenBCI with the following networking settings
+1. Run OpenBCI with the following networking settings\
 ![OpenBCI](images/openbci.png)
 1. Run ```python app.py``` in python-socket-io-server folder
 1. Go to the Game tab in Unity and press play
