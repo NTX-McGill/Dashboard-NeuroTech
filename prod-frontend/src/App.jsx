@@ -8,6 +8,7 @@ import PredictionWidget from "./PredictionWidget";
 import Features_Chart from "./FeaturesChart.jsx";
 import Signals_Chart from "./FilteredSignalsChart.jsx";
 import FingerHeatmap from "./HeatmapComponent.jsx";
+import P5heatmap from "./p5heatmap.jsx";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -41,8 +42,9 @@ function App() {
       {/* <Bar_Chart/> */}
       {/*<Signals_Chart/>*/}
       {/* <Features_Chart feature="rms" /> */}
-      <FingerHeatmap blockWidth={100} />
-      <Features_Chart feature="var" />
+      <P5heatmap/>
+    <FingerHeatmap blockWidth={100} />
+    <Features_Chart feature="var" />
     </div>
   );
 }

@@ -39,7 +39,8 @@ async def emit_predictions():
 
     # Initialize buffer for storing incoming data
 
-    model_file = 'NeuroTech-ML/model_features_2020-03-22_windows_date_all_subject_all_mode_1_2_4-03_24_2020_18_40_49.pkl'
+    # model_file = 'NeuroTech-ML/model_features_2020-03-22_windows_date_all_subject_all_mode_1_2_4-03_24_2020_18_40_49.pkl'
+    model_file = 'NeuroTech-ML/model_windows_date_all_subject_all_mode_1_2_4_groups_ok_good.pkl'
     bci_buffer = np.zeros([8, 1])
     predictor = Prediction(model_filename=model_file,
                            shift=BUFFER_DIST/BUFFER_SIZE)

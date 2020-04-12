@@ -27,8 +27,8 @@ class Prediction():
             with open(model_filename, 'rb') as f:
                 data = pickle.load(f)
                 self.clf = data['classifier']
-                # self.features = data['features']
-                self.features = ['iemg', 'mav', 'mmav', 'var','var_abs', 'rms', 'rms_3', 'wl', 'zc', 'ssc', 'wamp', 'freq_feats','freq_var']
+                self.features = data['features']
+                # self.features = ['iemg', 'mav', 'mmav', 'var','var_abs', 'rms', 'rms_3', 'wl', 'zc', 'ssc', 'wamp', 'freq_feats','freq_var']
                 
         #Parameters for filters
         self.num_channels = num_channels
