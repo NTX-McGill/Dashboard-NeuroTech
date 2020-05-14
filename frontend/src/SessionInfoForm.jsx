@@ -37,7 +37,8 @@ function SessionInfoForm({
   setMode,
   trial,
   setTrial,
-  setHand
+  setHand,
+  closeSnackbars
 }) {
   const classes = useStyles();
 
@@ -65,7 +66,10 @@ function SessionInfoForm({
           <InputLabel>Recording mode</InputLabel>
           <Select
             inputProps={{ readOnly: recording }}
-            onChange={event => setMode(event.target.value)}
+            onChange={event => {
+              closeSnackbars();
+              setMode(event.target.value);
+            }}
             value={mode}
             variant={recording ? "filled" : "standard"}
           >
@@ -77,6 +81,12 @@ function SessionInfoForm({
             </MenuItem>
             <MenuItem value={2}>
               <b>In the air:</b>&nbsp;respond to timed custom commands
+            </MenuItem>
+            <MenuItem value={3}>
+              <b>Touch-Type:</b>&nbsp;touch-type a text prompt ITA
+            </MenuItem>
+            <MenuItem value={4}>
+              <b>Guided in the air:</b>&nbsp;set key prompts without registering presses
             </MenuItem>
           </Select>
         </FormControl>
@@ -93,14 +103,14 @@ function SessionInfoForm({
           {recording ? "Stop" : "Start"} recording
         </Button>
       </Grid>
-      {mode === 2 && (
+      {(mode === 2 || mode === 3) && (
         <Grid item xs>
           <TextField
             className={classes.fullWidth}
             InputProps={{
               readOnly: recording
             }}
-            label="Custom prompts (separate by commas)"
+            label={mode === 2 ? "Custom prompts (separate by commas)" : "Text to type"}
             margin="dense"
             multiline
             onChange={event => setCustomPrompts(event.target.value)}

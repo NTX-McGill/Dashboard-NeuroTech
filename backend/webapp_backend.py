@@ -26,10 +26,15 @@ def custom_prompt():
     datetime = request.args.get('datetime') # YYYY-MM-DD-HH:MM:SS:msms
     timestamp = request.args.get('timestamp') # absolute time (ms)
     prompt = request.args.get('prompt') # custom prompt
+    hand = request.args.get('hand')
+    finger = request.args.get('finger')
+    key = request.args.get('key')
  
     with open(file_path, 'a') as f:
-        f.write(', '.join([datetime, timestamp, 'prompt_end', prompt ]) + '\n')
- 
+        if (not hand is None) and (not finger is None) and (not key is None):
+            f.write(', '.join([datetime, timestamp, 'prompt_end', hand, finger, key ]) + '\n')
+        else:
+            f.write(', '.join([datetime, timestamp, 'prompt_end', prompt ]) + '\n')
     return 'OK'
  
 @app.route('/data-collection')
