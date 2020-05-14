@@ -41,7 +41,7 @@ class ChartJsComponent extends Component {
     super();
     this.state = {
       response: [0, 0, 0, 0, 0, 0, 0, 0],
-      endpoint: "http://localhost:4001"
+      endpoint: "http://localhost:4002"
     };
   }
 

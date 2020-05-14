@@ -1,5 +1,7 @@
 .vscode/
 nt/
+node_modules
+NeuroTech-ML-backup
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -35,6 +37,7 @@ MANIFEST
 .DS_Store
 logs/
 
+prod-frontend/node_modules
 node_modules/
 
 # PyInstaller
