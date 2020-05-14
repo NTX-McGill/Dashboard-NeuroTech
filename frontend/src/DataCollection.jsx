@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function App() {
+function DataCollection() {
   const [recording, setRecording] = useState(false);
   const [id, setId] = useState("");
   const [customPrompts, setCustomPrompts] = useState("");
@@ -149,4 +149,4 @@ function App() {
   );
 }
 
-export default App;
+export default DataCollection;

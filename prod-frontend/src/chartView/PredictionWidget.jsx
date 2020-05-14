@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { Divider, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import "./predictionWidget.css";
-import { choice } from "./Utilities";
+import { choice } from "../Utilities";
 
 import handBlank from "./hands/blank.png";
 import handA from "./hands/a.png";

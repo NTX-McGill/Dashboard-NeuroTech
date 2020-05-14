@@ -1,14 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 
-import { Container, Grid, Typography } from "@material-ui/core";
+import { Container, Tab, Tabs, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-import PredictionWidget from "./PredictionWidget";
+// import PredictionWidget from "./PredictionWidget";
 
-import Features_Chart from "./FeaturesChart.jsx";
-import Signals_Chart from "./FilteredSignalsChart.jsx";
-import FingerHeatmap from "./HeatmapComponent.jsx";
-import P5heatmap from "./p5heatmap.jsx";
+//import DataCollectionPage from "./dataCollectionView/DataCollectionPage";
+//import CalibrationPage from "./calibrationView/CalibrationPage";
+import ChartPage from "./chartView/ChartPage";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -21,9 +20,21 @@ const useStyles = makeStyles(theme => ({
   title: {
     marginBottom: theme.spacing() * 4,
   },
+  navigation: {
+    marginBottom: theme.spacing(4),
+  },
 }));
 
+function a11yProps(index) {
+  return {
+    id: `full-width-tab-${index}`,
+    'aria-controls': `full-width-tabpanel-${index}`,
+  };
+}
+
 function App() {
+  const [tab, setTab] = useState(2);
+
   const classes = useStyles();
 
   return (
@@ -32,6 +43,18 @@ function App() {
         <Typography className={classes.title} variant="h3">
           McGill NeuroTech 2020 - Production Dashboard
         </Typography>
+        <Tabs
+          className={classes.navigation}
+          value={tab}
+          onChange={(tab, newValue) => setTab(newValue)}
+          variant="fullWidth"
+          indicatorColor="primary"
+          textColor="primary"
+        >
+          <Tab label="Chart View" {...a11yProps(0)} />
+          <Tab label="Data Collection" {...a11yProps(1)} />
+          <Tab label="Calibration" {...a11yProps(2)} />
+        </Tabs>
 
         {/* <Grid container spacing={4}>
           <Grid item xs={3}>
@@ -42,9 +65,8 @@ function App() {
       {/* <Bar_Chart/> */}
       {/*<Signals_Chart/>*/}
       {/* <Features_Chart feature="rms" /> */}
-      <P5heatmap/>
-    <FingerHeatmap blockWidth={100} />
-    <Features_Chart feature="var" />
+      {[<ChartPage />][tab]}
+      {/*, <DataCollectionPage />, <CalibrationPage />*/}
     </div>
   );
 }
