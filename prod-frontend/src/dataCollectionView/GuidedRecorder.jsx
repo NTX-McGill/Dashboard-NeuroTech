@@ -4,10 +4,11 @@ import { Typography } from "@material-ui/core";
 
 import { sendData, sendPrompt } from "./Bridge";
 import ProgressBar from "./ProgressBar";
-import { choice, getDateTime } from "../Utilities";
+import { choice, getDateTime } from "./Utilities";
 
 import Hands from "./hand.png";
 import Green from "./green.png";
+import "./app.css";
 
 function GuidedRecorder({ recording, onKey, onPrompt }) {
   const fingers = [

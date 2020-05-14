@@ -4,9 +4,10 @@ import { Typography } from "@material-ui/core";
 
 import { sendCustomPrompt } from "./Bridge";
 import ProgressBar from "./ProgressBar";
-import { choice } from "../Utilities";
+import { choice } from "./Utilities";
 
 import Green from './green.png';
+import './app.css';
 
 function InTheAirRecorder({ recording, onCustomPrompt, customPrompts }) {
     const fingers = customPrompts.split(',');

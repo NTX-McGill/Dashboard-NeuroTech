@@ -23,15 +23,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function a11yProps(index) {
-  return {
-    id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
-  };
-}
+const a11yProps = index => ({
+  id: `full-width-tab-${index}`,
+  'aria-controls': `full-width-tabpanel-${index}`,
+});
 
 function App() {
-  const [tab, setTab] = useState(2);
+  const [tab, setTab] = useState(1);
 
   const classes = useStyles();
 
@@ -53,12 +51,6 @@ function App() {
           <Tab label="Data Collection" {...a11yProps(1)} />
           <Tab label="Calibration" {...a11yProps(2)} />
         </Tabs>
-
-        {/* <Grid container spacing={4}>
-          <Grid item xs={3}>
-            <PredictionWidget paperCN={classes.paper} />
-          </Grid>
-        </Grid> */}
       </Container>
 
       {[<ChartPage />, <DataCollectionPage />, <CalibrationPage />][tab]}
