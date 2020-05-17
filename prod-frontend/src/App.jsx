@@ -3,9 +3,11 @@ import React, { useState } from "react";
 import { Container, Tab, Tabs, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
+// import PredictionWidget from "./PredictionWidget";
+
+//import DataCollectionPage from "./dataCollectionView/DataCollectionPage";
+//import CalibrationPage from "./calibrationView/CalibrationPage";
 import ChartPage from "./chartView/ChartPage";
-import DataCollectionPage from "./dataCollectionView/DataCollectionPage";
-import CalibrationPage from "./calibrationView/CalibrationPage";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -60,8 +62,11 @@ function App() {
           </Grid>
         </Grid> */}
       </Container>
-
-      {[<ChartPage />, <DataCollectionPage />, <CalibrationPage />][tab]}
+      {/* <Bar_Chart/> */}
+      {/*<Signals_Chart/>*/}
+      {/* <Features_Chart feature="rms" /> */}
+      {[<ChartPage />][tab]}
+      {/*, <DataCollectionPage />, <CalibrationPage />*/}
     </div>
   );
 }

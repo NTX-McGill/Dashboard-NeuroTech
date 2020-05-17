@@ -20,7 +20,7 @@ import numpy as np
 class Prediction():
     def __init__(self, num_channels=8, shift=0.1, order=2, fs=250, 
                  notch_freq=60.0, low=5.0, high=50.0,
-                 should_filter=True, model_filename=None):
+                 should_filter=True, model_filename=None, noise_mode=False):
         
         if (model_filename):
             # 'model_windows-2020-02-23-03_08_2020_15_48_56.pkl'
@@ -28,9 +28,9 @@ class Prediction():
                 data = pickle.load(f)
                 self.clf = data['classifier']
                 self.features = data['features']
-                # self.features = ['iemg', 'mav', 'mmav', 'var','var_abs', 'rms', 'rms_3', 'wl', 'zc', 'ssc', 'wamp', 'freq_feats','freq_var']
                 
         #Parameters for filters
+        self.first_val = None
         self.num_channels = num_channels
         self.shift = shift
         self.shift_samples = int(shift * 250)
@@ -39,6 +39,7 @@ class Prediction():
         self.notch_freq = notch_freq
         self.low_pass = low
         self.high_pass = high
+        self.noise_mode = noise_mode
         
         
         self.channel_names = ['channel {}'.format(i) for i in range(1,9)]
@@ -161,9 +162,20 @@ class Prediction():
         for ch in range(arr.shape[1]):
             arr_filtered[:,ch]= filter_signal(arr[:,ch])
         """
+
         filtered_arr = self.apply_filter(arr)
         res, _ = self.compute_features(filtered_arr, self.channel_names, self.features)
         input_arr = np.array(list(res.values()))
+
+        if self.noise_mode:
+            if not self.first_val:
+                self.first_val = np.squeeze(input_arr)[0]
+            ratio = max(1, (np.squeeze(input_arr)[0]) / self.first_val)
+            index = int(np.log2(ratio))
+            index = min(index, 9)
+            val = np.zeros(10)
+            val[index] = 1
+            return val
         return self.clf.predict_proba(np.squeeze(input_arr).reshape(1, -1))
     
     def get_filtered_features_prediction(self, arr):
@@ -176,6 +188,15 @@ class Prediction():
         filtered_arr = self.apply_filter(arr)
         res, _ = self.compute_features(filtered_arr, self.channel_names, self.features)
         input_arr = np.array(list(res.values()))
+        if self.noise_mode:
+            if not self.first_val:
+                self.first_val = np.squeeze(input_arr)[0]
+            ratio = max(1, (np.squeeze(input_arr)[0]) / self.first_val)
+            index = int(np.log2(ratio))
+            index = min(index, 9)
+            val = np.zeros(10)
+            val[index] = 1
+            return filtered_arr, res, val
         return filtered_arr, res, self.clf.predict_proba(np.squeeze(input_arr).reshape(1, -1))
 
    
