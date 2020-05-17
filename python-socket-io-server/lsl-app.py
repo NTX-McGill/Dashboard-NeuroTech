@@ -39,7 +39,8 @@ async def emit_predictions():
 
     # Initialize buffer for storing incoming data
 
-    model_file = 'NeuroTech-ML/model_features_2020-03-22_windows_date_all_subject_all_mode_1_2_4-03_24_2020_18_40_49.pkl'
+    # model_file = 'NeuroTech-ML/model_features_2020-03-22_windows_date_all_subject_all_mode_1_2_4-03_24_2020_18_40_49.pkl'
+    model_file = 'NeuroTech-ML/model_windows_date_all_subject_all_mode_1_2_4_groups_ok_good.pkl'
     bci_buffer = np.zeros([8, 1])
     predictor = Prediction(model_filename=model_file,
                            shift=BUFFER_DIST/BUFFER_SIZE)
@@ -57,6 +58,7 @@ async def emit_predictions():
         if (bci_buffer.shape[1] == BUFFER_SIZE):
             # Build filter buffer
             timestamp = round(time.time() * 1000)
+            # print(timestamp)
 
             filter_buffer, feature_dict, finger_probs = predictor.get_filtered_features_prediction(
                 np.array(bci_buffer))
@@ -81,8 +83,12 @@ async def emit_predictions():
             # signal_data = np.append([filter_buffer[:, 249]], [
             #                         bci_buffer[:, 249]], axis=0).tolist()
             # print(signal_data)
+            
+            # print(timestamp - round(time.time() * 1000))
+            # print("New")
+
             await sio.emit('Finger', int(finger_index))
-            print(finger_probs)
+            print(finger_probs[0])
             await sio.emit('FingerProbs', str(finger_probs[0].tolist()))
             await sio.emit('Feature_Data', formatted_feature_dict)
             # str(feature_arr.transpose().reshape(8,len(FEATURES)).tolist()))
