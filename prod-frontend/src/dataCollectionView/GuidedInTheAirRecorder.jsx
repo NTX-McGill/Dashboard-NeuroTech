@@ -4,11 +4,11 @@ import { Typography } from "@material-ui/core";
 
 import { sendPrompt } from "./Bridge";
 import ProgressBar from "./ProgressBar";
-import { choice } from "./Utilities";
+import { choice, getDateTime } from "./Utilities";
 
 import Hands from "./hand.png";
 import Green from "./green.png";
-import "./app.css";
+import "./dataCollection.css";
 
 function GuidedInTheAirRecorder({ recording, onPrompt }) {
   const fingers = [
@@ -34,7 +34,7 @@ function GuidedInTheAirRecorder({ recording, onPrompt }) {
 
         if (progress === 80) {
           let newPrompt = prompt;
-          sendPrompt({ newPrompt }, onPrompt);
+          sendPrompt({ newPrompt, time: getDateTime(), }, onPrompt);
         }
 
         if (progress >= 100) {

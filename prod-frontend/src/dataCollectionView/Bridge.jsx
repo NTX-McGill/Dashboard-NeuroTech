@@ -1,14 +1,6 @@
-import { getDateTime } from "./Utilities";
+export async function newSession({ time, id, notes, prompts, mode, hand, trial }, callback) {
+  let [timestamp, datetime] = time;
 
-export async function newSession({ id, notes, prompts, mode, hand, trial }, callback) {
-  let [timestamp, datetime] = getDateTime();
-  let mode_str = "Self-directed";
-  if (mode === 1) {
-    mode_str = "Guided";
-    JSON.stringify(prompts);
-  }
-  else if (mode === 2) mode_str = "In-the-air";
-  else if (mode === 3 || mode === 4) mode_str = "Guided-in-the-air";
   fetch(
     "http://localhost:5000/new-session?datetime=" +
     datetime +
@@ -19,7 +11,7 @@ export async function newSession({ id, notes, prompts, mode, hand, trial }, call
     "&notes=" +
     encodeURIComponent(notes.replace(/(?:\r\n|\r|\n)/g, "\\n")) +
     "&mode=" +
-    mode_str +
+    ["Self-directed", "Guided", "In-the-air", "Guided-in-the-air", "Guided-in-the-air"][mode] +
     "&prompts=" +
     encodeURIComponent(prompts.replace(/(?:\r\n|\r|\n)/g, "\\n").replace(/"/g, '\\"')) +
     "&hand=" +
@@ -48,8 +40,9 @@ export async function sendData({ key, time }, callback) {
     .catch(console.log);
 }
 
-export async function sendPrompt({ newPrompt }, callback) {
-  let [timestamp, datetime] = getDateTime();
+export async function sendPrompt({ newPrompt, time }, callback) {
+  let [timestamp, datetime] = time;
+
   fetch(
     "http://localhost:5000/prompt?datetime=" +
     datetime +
@@ -64,8 +57,8 @@ export async function sendPrompt({ newPrompt }, callback) {
     .catch(console.log);
 }
 
-export async function sendCustomPrompt({ newCustomPrompt, hand, finger, key }, callback) {
-  let [timestamp, datetime] = getDateTime();
+export async function sendCustomPrompt({ time, newCustomPrompt, hand, finger, key }, callback) {
+  let [timestamp, datetime] = time;
   fetch(
     "http://localhost:5000/custom-prompt?datetime=" +
     datetime +

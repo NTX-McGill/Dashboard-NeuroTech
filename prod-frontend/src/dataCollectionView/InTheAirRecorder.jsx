@@ -4,10 +4,10 @@ import { Typography } from "@material-ui/core";
 
 import { sendCustomPrompt } from "./Bridge";
 import ProgressBar from "./ProgressBar";
-import { choice } from "./Utilities";
+import { choice, getDateTime } from "./Utilities";
 
 import Green from './green.png';
-import './app.css';
+import './dataCollection.css';
 
 function InTheAirRecorder({ recording, onCustomPrompt, customPrompts }) {
     const fingers = customPrompts.split(',');
@@ -23,12 +23,12 @@ function InTheAirRecorder({ recording, onCustomPrompt, customPrompts }) {
                 if (progress === 0) {
                     let newCustomPrompt = choice(fingers);
                     setCustomPrompt(newCustomPrompt);
-                }  
+                }
                 setProgress(progress => progress + (updateInterval / 3000) * 100);
 
                 if (progress === 80) {
                     let newCustomPrompt = customPrompt
-                    sendCustomPrompt({ newCustomPrompt }, onCustomPrompt);
+                    sendCustomPrompt({ newCustomPrompt, time: getDateTime(), }, onCustomPrompt);
                 }
 
                 if (progress >= 100) {
@@ -39,7 +39,7 @@ function InTheAirRecorder({ recording, onCustomPrompt, customPrompts }) {
 
         return () => clearInterval(interval);
     }, [customPrompt, fingers, onCustomPrompt, progress, recording]);
- 
+
     return (
         <div>
             <div className='notGrey'>

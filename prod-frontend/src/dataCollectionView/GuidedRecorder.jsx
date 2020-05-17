@@ -8,7 +8,7 @@ import { choice, getDateTime } from "./Utilities";
 
 import Hands from "./hand.png";
 import Green from "./green.png";
-import "./app.css";
+import "./dataCollection.css";
 
 function GuidedRecorder({ recording, onKey, onPrompt }) {
   const fingers = [
@@ -35,7 +35,7 @@ function GuidedRecorder({ recording, onKey, onPrompt }) {
 
         if (progress === 80) {
           let newPrompt = prompt;
-          sendPrompt({ newPrompt }, onPrompt);
+          sendPrompt({ newPrompt, time: getDateTime(), }, onPrompt);
         }
 
         if (progress >= 100) {
@@ -114,15 +114,15 @@ function GuidedRecorder({ recording, onKey, onPrompt }) {
             </div>
           </div>
         ) : (
-          <div className="parent">
-            <div className="image1">
-              <img width="40%" src={Hands} alt="" />
+            <div className="parent">
+              <div className="image1">
+                <img width="40%" src={Hands} alt="" />
+              </div>
+              <div className={prompt.key}>
+                <img width="3%" src={Green} alt="" />
+              </div>
             </div>
-            <div className={prompt.key}>
-              <img width="3%" src={Green} alt="" />
-            </div>
-          </div>
-        ))}
+          ))}
     </div>
   );
 }

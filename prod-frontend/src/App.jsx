@@ -29,7 +29,7 @@ const a11yProps = index => ({
 });
 
 function App() {
-  const [tab, setTab] = useState(1);
+  const [tab, setTab] = useState(0);
 
   const classes = useStyles();
 

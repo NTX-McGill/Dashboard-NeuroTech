@@ -7,7 +7,7 @@ import EventList from "./EventList";
 import GuidedRecorder from "./GuidedRecorder";
 import SessionInfoForm from "./SessionInfoForm";
 import { newSession } from "./Bridge";
-import { format } from "./Utilities";
+import { format, getDateTime } from "./Utilities";
 import SelfDirectedRecorder from "./SelfDirectedRecorder";
 import InTheAirRecorder from "./InTheAirRecorder";
 import TouchTypeRecorder from "./TouchTypeRecorder";
@@ -50,7 +50,7 @@ function DataCollection() {
   const click = () => {
     if (!recording) {
       if (id === "") setSnackbarIdOpen(true);
-      else if ((mode === 2 || mode === 3) && customPrompts === "") setSnackbarPromptsOpen(true);
+      else if ([2, 3].includes(mode) && customPrompts === "") setSnackbarPromptsOpen(true);
       else {
         closeSnackbars();
         setEvents([]);
@@ -65,7 +65,7 @@ function DataCollection() {
           "right pinkie semicolon",
         ].join(" , ")
           : customPrompts;
-        newSession({ id, notes, prompts, mode, hand, trial }, () => setRecording(true));
+        newSession({ time: getDateTime(), id, notes, prompts, mode, hand, trial }, () => setRecording(true));
       }
     } else stopRecording();
   };
@@ -95,49 +95,49 @@ function DataCollection() {
   return (
     <div className={classes.root}>
       <EnterIdSnackbar
-        onClose={(_, reason) => reason === "clickaway" || setSnackbarIdOpen(false)}
         open={snackbarIdOpen}
+        setOpen={setSnackbarIdOpen}
       />
 
       <EnterPromptSnackbar
         mode={mode}
-        onClose={(_, reason) => reason === "clickaway" || setSnackbarPromptsOpen(false)}
         open={snackbarPromptsOpen}
+        setOpen={setSnackbarPromptsOpen}
       />
 
       <RecordingStoppedSnackbar
-        onClose={(_, reason) => reason === 'clickaway' || setSnackbarRecordingStoppedOpen(false)}
         open={snackbarRecordingStoppedOpen}
+        setOpen={setSnackbarRecordingStoppedOpen}
       />
 
       <Container maxWidth="xl">
         <SessionInfoForm
           {...{
             click,
-            recording,
-            id,
-            setId,
-            notes,
-            setNotes,
+            closeSnackbars,
             customPrompts,
-            setCustomPrompts,
-            mode,
-            setMode,
             hand,
-            trial,
-            setTrial,
+            id,
+            mode,
+            notes,
+            recording,
+            setCustomPrompts,
             setHand,
-            closeSnackbars
+            setId,
+            setNotes,
+            setMode,
+            setTrial,
+            trial,
           }}
         />
         <br /><br />
-        {mode === 0 && <SelfDirectedRecorder {...{ recording, onKey, onPrompt }} />}
-        {mode === 1 && <GuidedRecorder {...{ recording, onKey, onPrompt }} />}
-        {mode === 2 && <InTheAirRecorder {...{ recording, onCustomPrompt, customPrompts }} />}
-        {mode === 3 && <TouchTypeRecorder {...{ recording, onCustomPrompt, customPrompts, stopRecording }} />}
-        {mode === 4 && <GuidedInTheAirRecorder {...{ recording, onPrompt }} />}
+        {React.createElement(
+          [SelfDirectedRecorder, GuidedRecorder, InTheAirRecorder, TouchTypeRecorder, GuidedInTheAirRecorder][mode],
+          { customPrompts, onCustomPrompt, onKey, onPrompt, recording, stopRecording, },
+          null,
+        )}
         <br /> <br />
-        <EventList {...{ events }} />
+        <EventList events={events} />
       </Container>
     </div>
   );

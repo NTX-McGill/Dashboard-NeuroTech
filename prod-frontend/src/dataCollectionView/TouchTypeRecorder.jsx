@@ -7,7 +7,8 @@ import ProgressBar from "./ProgressBar";
 
 import Hands from "./hand.png";
 import Green from "./green.png";
-import "./app.css";
+import "./dataCollection.css";
+import { getDateTime } from "./Utilities";
 
 const TTlookup = JSON.parse(
   '{"space":"right thumb","q":"left pinkie","a":"left pinkie","z":"left pinkie","w":"left ring finger","s":"left ring finger","x":"left ring finger","e":"left middle finger","d":"left middle finger","c":"left middle finger","r":"left index finger","t":"left index finger","f":"left index finger","g":"left index finger","v":"left index finger","b":"left index finger","y":"right index finger","u":"right index finger","h":"right index finger","j":"right index finger","n":"right index finger","m":"right index finger","i":"right middle finger","k":"right middle finger","o":"right ring finger","l":"right ring finger","p":"right pinkie"}'
@@ -65,6 +66,7 @@ function TouchTypeRecorder({
               finger: parts.slice(1).join(' '),
               hand: parts[0],
               key: prompts[promptIndex].character,
+              time: getDateTime(),
             },
             onCustomPrompt
           );
