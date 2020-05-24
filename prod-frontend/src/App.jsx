@@ -5,8 +5,8 @@ import { makeStyles } from "@material-ui/core/styles";
 
 // import PredictionWidget from "./PredictionWidget";
 
-//import DataCollectionPage from "./dataCollectionView/DataCollectionPage";
-//import CalibrationPage from "./calibrationView/CalibrationPage";
+import DataCollectionPage from "./dataCollectionView/DataCollectionPage";
+import CalibrationPage from "./calibrationView/CalibrationPage";
 import ChartPage from "./chartView/ChartPage";
 
 const useStyles = makeStyles(theme => ({
@@ -54,10 +54,11 @@ function App() {
           <Tab label="Calibration" {...a11yProps(2)} />
         </Tabs>
       </Container>
+      {[<ChartPage />, <DataCollectionPage />, <CalibrationPage />][tab]}
       {/* <Bar_Chart/> */}
       {/*<Signals_Chart/>*/}
       {/* <Features_Chart feature="rms" /> */}
-      {[<ChartPage />][tab]}
+      {/* {[<ChartPage />][tab]} */}
       {/*, <DataCollectionPage />, <CalibrationPage />*/}
     </div>
   );
