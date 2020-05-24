@@ -1,18 +1,12 @@
 import React from 'react';
 
-import FeaturesChart from "./FeaturesChart.jsx";
-import FingerHeatmap from "./HeatmapComponent.jsx";
+import FeaturesChart from "./FeatureLinegraph.jsx";
+import FingerHeatmap from "./FingerPredictionHeatmap.jsx";
 
-import SignalsChart from "./FilteredSignalsChart.jsx";
-import P5heatmap from "./p5heatmap.jsx";
-// import P5Feature from "./P5Feature.jsx";
-// import ChartPage from "./ChartPage";
+import SignalsChart from "./SignalLinegraph.jsx";
+import P5heatmap from "./P5FingerPredictionHeatmap.jsx";
 
 function ChartPage() {
-    // return <>
-    //     <FingerHeatmap blockWidth={100} />
-    //     <FeaturesChart feature="var" />
-    // </>;
     return (<>
         {/* <Bar_Chart/> */}
         {/*<Signals_Chart/>*/}
