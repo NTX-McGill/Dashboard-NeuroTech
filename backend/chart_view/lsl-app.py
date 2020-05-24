@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys
 sys.path.append('NeuroTech-ML/')
 from pylsl import StreamInlet, resolve_stream
@@ -7,7 +9,7 @@ from aiohttp import web
 import asyncio
 from real_time_class import Prediction
 import pickle
-from filters import *
+# from filters import *
 import numpy as np
 from scipy import zeros, signal, random
 # from real_time_prediction import predict_function
@@ -23,13 +25,11 @@ app = web.Application()
 # Attach the async socketio to the server
 sio.attach(app)
 
-
 # Tunable Params
-# @todo convert to seconds
 BUFFER_SIZE = 250
 BUFFER_DIST = 25
 FEATURES = ['iemg', 'mav', 'mmav', 'var', 'rms']
-
+DEBUG = True
 
 # Setup background process for emitting predictions
 async def emit_predictions():
@@ -51,10 +51,10 @@ async def emit_predictions():
         sample_np = np.array([sample]).transpose()
         bci_buffer = np.append(bci_buffer, sample_np, axis=1)
 
-        # Quickly relequish control so that other processes can do their thing
+        # Quickly relequish control to other processes to prevent blocking
         await sio.sleep(0)
 
-        # Check if buffer is ready for prediction
+        # Check if buffer is large enough to make a prediction
         if (bci_buffer.shape[1] == BUFFER_SIZE):
             # Build filter buffer
             timestamp = round(time.time() * 1000)
@@ -67,68 +67,52 @@ async def emit_predictions():
             finger_index = np.argmax(finger_probs)
             formatted_feature_dict = {}
             formatted_feature_dict["timestamp"] = timestamp
+
+            # construct feature dictionary for frontend
             for feature in FEATURES:
                 feature_array = []
                 for i in range(1, 9):
+                    # [0] because elements of feature_dict array of length 1
                     feature_array.append(
-                        feature_dict["channel " + str(i) + "_" + feature][0])
+                        feature_dict["channel " + str(i) + "_" + feature][0]) 
 
                 formatted_feature_dict[feature] = feature_array
 
             # Emit predictions
-
             # @todo emit the timestamps along with the data points. Fix Signal_Data labels
-            # print(filter_buffer[:, 249])
-            # print(bci_buffer[:, 249])
-            # signal_data = np.append([filter_buffer[:, 249]], [
-            #                         bci_buffer[:, 249]], axis=0).tolist()
-            # print(signal_data)
-            
-            # print(timestamp - round(time.time() * 1000))
-            # print("New")
 
+            # Predicted finger index
             await sio.emit('Finger', int(finger_index))
-            print(finger_probs[0])
+            # List of finger probabilities, [0] because finger_probs is 2d array of length 1
             await sio.emit('FingerProbs', str(finger_probs[0].tolist()))
+            # Feature dictionary
             await sio.emit('Feature_Data', formatted_feature_dict)
-            # str(feature_arr.transpose().reshape(8,len(FEATURES)).tolist()))
-            # await sio.emit('Signal_Data', {
-            #     "data": str(signal_data),
-            #     "timestamp": timestamp
-            # })
+            # Filtered signal data
             await sio.emit('Filtered_Signal_Data', {
                 "data": str(filter_buffer[:, 249].tolist()),
                 "timestamp": timestamp
             })
 
-            # print("Fitlered")
-            # print(filter_buffer[:, 249])
-            # print("BCI")
-            # print(bci_buffer[:, 249])
-
+            if (DEBUG): print(finger_probs[0])
             # Remove BUFFER_DIST from beginning of buffer
             bci_buffer = np.delete(bci_buffer, np.arange(0, BUFFER_DIST, 1), 1)
 
-
 @sio.event
 async def connect(sid, environ):
-    print("Connected")
-    # await sio.emit('my_response', {'data': 'Connected', 'count': 0}, room=sid)
-
+    print("Connected", sid)
 
 @sio.event
 def disconnect(sid):
     print('Client disconnected')
 
-
-# app.router.add_get('/', index)
-
-
 if __name__ == '__main__':
-    print("Attempting to connect to OpenBCI")
-    # Set up streaming over lsl from OpenBCI
+    print("Attempting to connect to OpenBCI. Please make sure OpenBCI is open with LSL enabled.")
+
+    # Set up streaming over lsl from OpenBCI. 0 picks up the first of three
     streams = resolve_stream('type', 'EEG')
     inlet = StreamInlet(streams[0])
 
     sio.start_background_task(emit_predictions)
+
+    # Start app on port 4002
     web.run_app(app, host='0.0.0.0', port='4002')
