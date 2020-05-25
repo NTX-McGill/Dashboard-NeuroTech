@@ -25,22 +25,23 @@ app = web.Application()
 # Attach the async socketio to the server
 sio.attach(app)
 
-# Tunable Params
+# Tunable Params. Note OpenBCI gives 250 samples per second
 BUFFER_SIZE = 250
 BUFFER_DIST = 25
 FEATURES = ['iemg', 'mav', 'mmav', 'var', 'rms']
 DEBUG = True
 
+
 # Setup background process for emitting predictions
 async def emit_predictions():
     """
-    Waits for sample from OpenBCI, predicts the finger pressed, and emits it.   
+    Waits for sample from OpenBCI, predicts the finger pressed, and emits it.
     """
 
     # Initialize buffer for storing incoming data
 
-    # model_file = 'NeuroTech-ML/model_features_2020-03-22_windows_date_all_subject_all_mode_1_2_4-03_24_2020_18_40_49.pkl'
-    model_file = 'NeuroTech-ML/model_windows_date_all_subject_all_mode_1_2_4_groups_ok_good.pkl'
+    model_file = 'NeuroTech-ML/models/model_windows_date_all_subject_all_mode_1_2_4_groups_ok_good.pkl'
+    # model_file = 'NeuroTech-ML/models/model_features_windows_date_all_subject_all_mode_1_2_4_groups_good_1000ms-05_12_2020_23_59_21.pkl'
     bci_buffer = np.zeros([8, 1])
     predictor = Prediction(model_filename=model_file,
                            shift=BUFFER_DIST/BUFFER_SIZE)

@@ -10,7 +10,7 @@ import P5FingerPredictionHeatmap from "./P5FingerPredictionHeatmap.jsx";
 
 function ChartPage() {
     return (<>
-        <P5FingerPredictionHeatmap/>
+              <P5FingerPredictionHeatmap width={1200} height={400}/>
     </>);
 };
 
