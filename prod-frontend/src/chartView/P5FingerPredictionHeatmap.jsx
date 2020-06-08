@@ -4,14 +4,18 @@ import socketIOClient from "socket.io-client";
 
 export default class App extends Component {
   setup = (p5, canvasParentRef) => {
-    let sketchHeight = this.props.height;
-    let sketchWidth = this.props.width;
-    let numSamples = 100;
-    let numRows = 10;
-    let w = sketchWidth / numSamples;
-    let h = sketchHeight / numRows;
-    let yAxisWidth = 100;
-    let leftMargin = 10;
+    const sketchHeight = this.props.height;
+    const sketchWidth = this.props.width;
+    const numSamples = this.props.numSamples || 50;
+    const xAxisHeight = 40;
+    const yAxisWidth = 100;
+    const numRows = 10;
+    const w = sketchWidth / numSamples;
+    const h = (sketchHeight - xAxisHeight) / numRows;
+    const leftMargin = 10;
+
+    const OPENBCI_HERTZ = 250;
+    const BUFFER_DIST_SECONDS = 0.1;
     const socket = socketIOClient("http://localhost:4002");
 
     // @todo make sure finger labels are aligned with predictions
@@ -69,14 +73,28 @@ export default class App extends Component {
     }
 
     function displayLabels() {
+      // y-labels
       p5.fill("black");
       p5.strokeWeight(0);
       for (let i = 0; i < rowLabels.length; i++) {
-        p5.text(rowLabels[i], 0 + leftMargin, i * h + h / 2);
+        p5.text(rowLabels[i], 0 + leftMargin, i * h + h * 0.65);
+      }
+
+      // x-labels
+      for (let i = Math.round(numSamples * BUFFER_DIST_SECONDS); i >= 0; i--) {
+        p5.text(
+          i,
+          sketchWidth -
+            (i * (sketchWidth - yAxisWidth)) /
+            (numSamples * BUFFER_DIST_SECONDS) -
+            8,
+          sketchHeight - xAxisHeight / 3
+        );
       }
     }
 
     function displayAxis() {
+      // y-axis
       p5.strokeWeight(1);
       p5.stroke(0);
       for (let i = 0; i < numRows + 1; i++) {
@@ -86,8 +104,8 @@ export default class App extends Component {
     }
 
     const calculateColor = (ratio) => {
-      let color1 = "FF0000";
-      let color2 = "00FF00";
+      let color1 = "0000FF";
+      let color2 = "FFFFFF";
       let hex = function (x) {
         x = x.toString(16);
         return x.length === 1 ? "0" + x : x;
@@ -124,6 +142,11 @@ export default class App extends Component {
   };
 
   render() {
-    return <Sketch setup={this.setup} draw={this.draw} />;
+    return (
+      <>
+        <h1>Finger Predictions Chart</h1>
+        <Sketch setup={this.setup} draw={this.draw} />
+      </>
+    );
   }
 }
