@@ -10,11 +10,10 @@ export default class App extends Component {
     const xAxisHeight = 40;
     const yAxisWidth = 100;
     const numRows = 10;
-    const w = sketchWidth / numSamples;
+    const w = (sketchWidth - yAxisWidth) / numSamples;
     const h = (sketchHeight - xAxisHeight) / numRows;
     const leftMargin = 10;
 
-    const OPENBCI_HERTZ = 250;
     const BUFFER_DIST_SECONDS = 0.1;
     const socket = socketIOClient("http://localhost:4002");
 
@@ -32,29 +31,14 @@ export default class App extends Component {
       "Left Pinky",
     ];
 
-    let colors = [
-      "#f7fbff",
-      "#e1edf8",
-      "#cbdff1",
-      "#abd0e6",
-      "#82badb",
-      "#59a2cf",
-      "#3787c0",
-      "#1b6aaf",
-      "#084d97",
-      "#08306b",
-    ];
-
-    let probsData = [[0, 0.2, 0.8, 0, 0, 0, 0, 0, 0, 0]];
-    let color_id = 0;
+    let probsData = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
 
     function updateChart(newData) {
       // probs array with shape 10
 
       newData = JSON.parse(newData);
       newData = newData.map((val) => Number(val));
-      console.log(newData);
-      probsData.push(newData);
+      probsData.push(newData.reverse());
       if (probsData.length > numSamples) {
         probsData.splice(0, 1);
       }
