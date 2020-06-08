@@ -6,7 +6,7 @@ export default class App extends Component {
   setup = (p5, canvasParentRef) => {
     const sketchHeight = this.props.height;
     const sketchWidth = this.props.width;
-    const numSamples = this.props.numSamples || 50;
+    const numSamples = Math.round(this.props.numSeconds / 0.1) || 50;
     const xAxisHeight = 40;
     const yAxisWidth = 100;
     const numRows = 10;
