@@ -49,6 +49,7 @@ async def emit_predictions():
     while True:
         # Pull and append sample from OpenBCI to buffer
         sample, timestamp = inlet.pull_sample()
+        print(timestamp)
         sample_np = np.array([sample]).transpose()
         bci_buffer = np.append(bci_buffer, sample_np, axis=1)
 

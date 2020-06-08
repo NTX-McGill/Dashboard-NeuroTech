@@ -7,13 +7,15 @@ export default class App extends Component {
     let sketchHeight = this.props.height;
     let sketchWidth = this.props.width;
     let numSamples = 100;
-    let numFingers = 10;
+    let numRows = 10;
     let w = sketchWidth / numSamples;
-    let h = sketchHeight / numFingers;
+    let h = sketchHeight / numRows;
     let yAxisWidth = 100;
     let leftMargin = 10;
     const socket = socketIOClient("http://localhost:4002");
-    let fingerLabels = [
+
+    // @todo make sure finger labels are aligned with predictions
+    let rowLabels = [
       "Nothing",
       "Right Thumb",
       "Right Index",
@@ -55,39 +57,63 @@ export default class App extends Component {
 
       for (let i = 0; i < probsData.length; i++) {
         //x
-        for (let j = 0; j < numFingers; j++) {
+        for (let j = 0; j < numRows; j++) {
           // y
           // values range from 0 to 1. Multiply value by colors length and floor it
-          color_id = Math.floor(probsData[i][j] * (colors.length - 1));
-          p5.fill(colors[color_id]);
-          p5.rect(i * w + yAxisWidth, (numFingers - j - 1) * h, w, h);
+          // color_id = Math.floor(probsData[i][j] * (colors.length - 1));
+          p5.fill(calculateColor(probsData[i][j]));
+          p5.rect(i * w + yAxisWidth, (numRows - j - 1) * h, w, h);
         }
       }
       displayAxis();
     }
 
     function displayLabels() {
-      p5.fill('black');
+      p5.fill("black");
       p5.strokeWeight(0);
-      for (let i = 0; i < fingerLabels.length; i++) {
-        p5.text(fingerLabels[i], 0 + leftMargin, i * h + h/2);
+      for (let i = 0; i < rowLabels.length; i++) {
+        p5.text(rowLabels[i], 0 + leftMargin, i * h + h / 2);
       }
     }
 
     function displayAxis() {
       p5.strokeWeight(1);
       p5.stroke(0);
-      for (let i = 0; i < numFingers + 1; i++) {
+      for (let i = 0; i < numRows + 1; i++) {
         p5.line(0 + yAxisWidth, h * i, sketchWidth, h * i);
       }
       p5.strokeWeight(0);
     }
+
+    const calculateColor = (ratio) => {
+      let color1 = "FF0000";
+      let color2 = "00FF00";
+      let hex = function (x) {
+        x = x.toString(16);
+        return x.length === 1 ? "0" + x : x;
+      };
+
+      let r = Math.ceil(
+        parseInt(color1.substring(0, 2), 16) * ratio +
+          parseInt(color2.substring(0, 2), 16) * (1 - ratio)
+      );
+      let g = Math.ceil(
+        parseInt(color1.substring(2, 4), 16) * ratio +
+          parseInt(color2.substring(2, 4), 16) * (1 - ratio)
+      );
+      let b = Math.ceil(
+        parseInt(color1.substring(4, 6), 16) * ratio +
+          parseInt(color2.substring(4, 6), 16) * (1 - ratio)
+      );
+
+      return "#" + (hex(r) + hex(g) + hex(b));
+    };
     // use parent to render canvas in this ref (without that p5 render this canvas outside your component)
     p5.createCanvas(sketchWidth, sketchHeight).parent(canvasParentRef);
     p5.strokeWeight(0);
     p5.stroke(0);
     p5.background(240);
-    p5.fill('white');
+    p5.fill("white");
     p5.rect(yAxisWidth, 0, sketchWidth - yAxisWidth, sketchHeight);
     displayAxis();
     displayLabels();
