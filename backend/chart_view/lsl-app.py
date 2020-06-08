@@ -26,7 +26,7 @@ app = web.Application()
 sio.attach(app)
 
 # Tunable Params. Note OpenBCI gives 250 samples per second
-BUFFER_SIZE_SECONDS = 1
+BUFFER_SIZE_SECONDS = 0.5
 BUFFER_DIST_SECONDS = 0.1
 OPENBCI_HERTZ = 250
 BUFFER_SIZE = round(OPENBCI_HERTZ * BUFFER_SIZE_SECONDS)
@@ -93,7 +93,7 @@ async def emit_predictions():
             await sio.emit('Feature_Data', formatted_feature_dict)
             # Filtered signal data
             await sio.emit('Filtered_Signal_Data', {
-                "data": str(filter_buffer[:, 249].tolist()),
+                "data": str(filter_buffer[:, (BUFFER_SIZE - 1)].tolist()),
                 "timestamp": timestamp
             })
 
