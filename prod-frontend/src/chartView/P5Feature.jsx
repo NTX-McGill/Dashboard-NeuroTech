@@ -4,6 +4,7 @@ import socketIOClient from "socket.io-client";
 
 export default class App extends Component {
   setup = (p5, canvasParentRef) => {
+    const feature = this.props.feature || "var";
     const sketchHeight = this.props.height;
     const sketchWidth = this.props.width;
     const numSamples = Math.round(this.props.numSeconds / 0.1) || 50;
@@ -35,7 +36,7 @@ export default class App extends Component {
       // probs array with shape 10
 
       // console.log(newData["var"]);
-      probsData.push(newData["var"].reverse());
+      probsData.push(newData[feature].reverse());
       if (probsData.length > numSamples) {
         probsData.splice(0, 1);
       }
@@ -126,7 +127,7 @@ export default class App extends Component {
   render() {
     return (
       <>
-        <h1>Feature Values</h1>
+        <h1>{this.props.feature || "var"} Values</h1>
         <Sketch setup={this.setup} draw={this.draw} />
       </>
     );

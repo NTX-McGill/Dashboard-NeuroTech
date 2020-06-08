@@ -13,7 +13,7 @@ function ChartPage() {
   return (
     <>
       <P5FingerPredictionHeatmap width={1200} height={400} numSeconds={5} />
-      <P5Feature width={1200} height={400} numSeconds={5} />
+      <P5Feature width={1200} height={400} numSeconds={5} feature="var" />
     </>
   );
 }
