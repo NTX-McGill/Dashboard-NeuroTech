@@ -26,8 +26,11 @@ app = web.Application()
 sio.attach(app)
 
 # Tunable Params. Note OpenBCI gives 250 samples per second
-BUFFER_SIZE = 250
-BUFFER_DIST = 25
+BUFFER_SIZE_SECONDS = 1
+BUFFER_DIST_SECONDS = 0.1
+OPENBCI_HERTZ = 250
+BUFFER_SIZE = round(OPENBCI_HERTZ * BUFFER_SIZE_SECONDS)
+BUFFER_DIST = round(OPENBCI_HERTZ * BUFFER_DIST_SECONDS)
 FEATURES = ['iemg', 'mav', 'mmav', 'var', 'rms']
 DEBUG = True
 
@@ -49,7 +52,6 @@ async def emit_predictions():
     while True:
         # Pull and append sample from OpenBCI to buffer
         sample, timestamp = inlet.pull_sample()
-        print(timestamp)
         sample_np = np.array([sample]).transpose()
         bci_buffer = np.append(bci_buffer, sample_np, axis=1)
 
