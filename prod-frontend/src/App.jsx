@@ -5,8 +5,8 @@ import { makeStyles } from "@material-ui/core/styles";
 
 // import PredictionWidget from "./PredictionWidget";
 
-//import DataCollectionPage from "./dataCollectionView/DataCollectionPage";
-//import CalibrationPage from "./calibrationView/CalibrationPage";
+import DataCollectionPage from "./dataCollectionView/DataCollectionPage";
+import CalibrationPage from "./calibrationView/CalibrationPage";
 import ChartPage from "./chartView/ChartPage";
 
 const useStyles = makeStyles(theme => ({
@@ -25,15 +25,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function a11yProps(index) {
-  return {
-    id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
-  };
-}
+const a11yProps = index => ({
+  id: `full-width-tab-${index}`,
+  'aria-controls': `full-width-tabpanel-${index}`,
+});
 
 function App() {
-  const [tab, setTab] = useState(2);
+  const [tab, setTab] = useState(0);
 
   const classes = useStyles();
 
@@ -55,17 +53,12 @@ function App() {
           <Tab label="Data Collection" {...a11yProps(1)} />
           <Tab label="Calibration" {...a11yProps(2)} />
         </Tabs>
-
-        {/* <Grid container spacing={4}>
-          <Grid item xs={3}>
-            <PredictionWidget paperCN={classes.paper} />
-          </Grid>
-        </Grid> */}
       </Container>
+      {[<ChartPage />, <DataCollectionPage />, <CalibrationPage />][tab]}
       {/* <Bar_Chart/> */}
       {/*<Signals_Chart/>*/}
       {/* <Features_Chart feature="rms" /> */}
-      {[<ChartPage />][tab]}
+      {/* {[<ChartPage />][tab]} */}
       {/*, <DataCollectionPage />, <CalibrationPage />*/}
     </div>
   );

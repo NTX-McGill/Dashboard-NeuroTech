@@ -1,25 +1,21 @@
-import React from 'react';
+import React from "react";
 
-//import PredictionWidget from "./PredictionWidget";
+// import FeaturesChart from "./FeatureLinegraph.jsx";
+// import FingerHeatmap from "./FingerPredictionHeatmap.jsx";
+// import SignalsChart from "./SignalLinegraph.jsx";
 
-import FeaturesChart from "./FeaturesChart.jsx";
-//import Signals_Chart from "./FilteredSignalsChart.jsx";
-import FingerHeatmap from "./HeatmapComponent.jsx";
+// idea to have two chartpage settings, one for p5 and one for fancy
 
-import SignalsChart from "./FilteredSignalsChart.jsx";
-import P5heatmap from "./p5heatmap.jsx";
-import P5Feature from "./P5Feature.jsx";
-// import ChartPage from "./ChartPage";
+import P5FingerPredictionHeatmap from "./P5FingerPredictionHeatmap";
+import P5Feature from "./P5Feature";
 
 function ChartPage() {
-    return (<>
-        {/* <Bar_Chart/> */}
-        {/*<Signals_Chart/>*/}
-        {/* <Features_Chart feature="rms" /> */}
-        <P5heatmap/>
-        <P5Feature/>
-    </>);
-};
+  return (
+    <>
+      <P5FingerPredictionHeatmap width={1200} height={400} numSeconds={5} />
+      <P5Feature width={1200} height={400} numSeconds={5} feature="var" />
+    </>
+  );
+}
 
 export default ChartPage;
-

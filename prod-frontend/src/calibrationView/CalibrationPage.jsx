@@ -1,9 +1,9 @@
 import React from "react";
 
 function CalibrationPage() {
-    return <>
-
-    </>;
+    return <h3>
+        Todo. :)
+    </h3>;
 }
 
 export default CalibrationPage;

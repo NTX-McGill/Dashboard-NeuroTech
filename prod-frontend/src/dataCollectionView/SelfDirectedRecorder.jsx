@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Typography } from "@material-ui/core";
 
 import { sendData } from "./Bridge";
-import { getDateTime } from "../Utilities";
+import { getDateTime } from "./Utilities";
 
 function SelfDirectedRecorder({ recording, onKey }) {
   const [keyQueue, setKeyQueue] = useState([]);
