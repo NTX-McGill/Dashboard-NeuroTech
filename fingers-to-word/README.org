@@ -140,6 +140,8 @@ Frontend state:
 - Have to port python code to C#
 - Pipeline functionality is limited by C#
 
-* TODO 
+* TODO Next Steps
+- Connect to previous section of pipeline
+- Connect to AR
 - Change word selection mode from 0 indexed to 1 indexed.
 

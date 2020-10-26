@@ -1,26 +1,26 @@
 
 # Table of Contents
 
-1.  [Guide](#orga0504fe)
-    1.  [Interaction](#org9f15338)
-    2.  [Setup](#org6891787)
-2.  [Connecting with AR](#orgdbbddaa)
-    1.  [Maintain State in Backend](#orgd24a1be)
-        1.  [Pros](#orgacaa758)
-        2.  [Cons](#org6c34bf7)
-        3.  [Instructions](#orge80c208)
-    2.  [Maintain State in Frontend](#orgf90e69a)
-        1.  [Pros](#org4e2bc92)
-        2.  [Cons](#org2e89de9)
-3.  [](#org6ce662f)
+1.  [Guide](#org90a5cf2)
+    1.  [Interaction](#org184e93c)
+    2.  [Setup](#orgbbefc4b)
+2.  [Connecting with AR](#org7b9efd0)
+    1.  [Maintain State in Backend](#org1b7bc9f)
+        1.  [Pros](#org430a6e8)
+        2.  [Cons](#org9ef3d5c)
+        3.  [Instructions](#orgfe59582)
+    2.  [Maintain State in Frontend](#orge496dbf)
+        1.  [Pros](#orgb5c2c82)
+        2.  [Cons](#org24173d8)
+3.  [Next Steps](#orgb703921)
 
 
-<a id="orga0504fe"></a>
+<a id="org90a5cf2"></a>
 
 # Guide
 
 
-<a id="org9f15338"></a>
+<a id="org184e93c"></a>
 
 ## Interaction
 
@@ -33,7 +33,7 @@ Keyboard inputs:
 -   **lower case char:** input finger associated with character
 
 
-<a id="org6891787"></a>
+<a id="orgbbefc4b"></a>
 
 ## Setup
 
@@ -48,14 +48,14 @@ Run:
     python prediction.py
 
 
-<a id="orgdbbddaa"></a>
+<a id="org7b9efd0"></a>
 
 # Connecting with AR
 
 Two potentially approaches for connecting with AR.
 
 
-<a id="orgd24a1be"></a>
+<a id="org1b7bc9f"></a>
 
 ## Maintain State in Backend
 
@@ -74,7 +74,7 @@ Frontend state:
 -   most recently typed character
 
 
-<a id="orgacaa758"></a>
+<a id="org430a6e8"></a>
 
 ### Pros
 
@@ -83,7 +83,7 @@ Frontend state:
 -   Pipeline functionality is empowered by python
 
 
-<a id="org6c34bf7"></a>
+<a id="org9ef3d5c"></a>
 
 ### Cons
 
@@ -91,7 +91,7 @@ Frontend state:
 -   Duplicate the finger selection mode state
 
 
-<a id="orge80c208"></a>
+<a id="orgfe59582"></a>
 
 ### Instructions
 
@@ -150,7 +150,7 @@ Frontend state:
         }
 
 
-<a id="orgf90e69a"></a>
+<a id="orge496dbf"></a>
 
 ## Maintain State in Frontend
 
@@ -169,7 +169,7 @@ Frontend state:
 -   most recently typed character
 
 
-<a id="org4e2bc92"></a>
+<a id="orgb5c2c82"></a>
 
 ### Pros
 
@@ -177,7 +177,7 @@ Frontend state:
 -   Duplicate the finger selection mode state
 
 
-<a id="org2e89de9"></a>
+<a id="org24173d8"></a>
 
 ### Cons
 
@@ -186,9 +186,11 @@ Frontend state:
 -   Pipeline functionality is limited by C#
 
 
-<a id="org6ce662f"></a>
+<a id="orgb703921"></a>
 
-# TODO 
+# TODO Next Steps
 
+-   Connect to previous section of pipeline
+-   Connect to AR
 -   Change word selection mode from 0 indexed to 1 indexed.
 
