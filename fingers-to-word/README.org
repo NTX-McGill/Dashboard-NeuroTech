@@ -1,0 +1,147 @@
+
+* Guide
+
+** Interaction
+
+Keyboard inputs:
+- "space" :: select the most likely word
+- "backspace" :: delete last character if one exists, otherwise last word
+- "C-c" :: exit
+- "0" :: Enter word selection mode. Then select a word by pressing a lower case char associated with the desired index
+- lower case char :: input finger associated with character
+
+** Setup
+
+Environment (assuming python3):
+#+begin_src bash
+python -m venv venv
+source venv/bin/activate
+python -m pip install -r requirements.txt
+#+end_src
+
+Run:
+#+begin_src bash
+python prediction.py
+#+end_src
+
+* Connecting with AR
+
+Two potentially approaches for connecting with AR.
+
+** Maintain State in Backend
+
+Maintain the state of the word being built in the backend. Send the frontend instructions for updating the UI accordingly.
+
+Backend state:
+- current finger word
+- finger selection mode
+
+Frontend state:
+- most likely words
+- finger selection mode
+- previously typed words
+- most recently typed character
+
+*** Pros
+- Pipeline changes can be flexible without touching frontend code after implementing networking communication
+- Don't have to port python code to C#.
+- Pipeline functionality is empowered by python
+  
+*** Cons
+- More complicated network communication
+- Duplicate the finger selection mode state
+  
+*** Instructions
+**** Most Likely Words
+
+Instruction to update the most likely words in the frontend
+
+#+begin_src json
+  {
+    "message": "most_likely_words",
+    "words": ["word1", "word2", ...],
+  }
+#+end_src
+
+**** Enter Word Selection Mode
+
+Instruction to enter word selection mode in the frontend
+
+#+begin_src json
+  {
+    "message": "enter_word_selection"
+  }
+#+end_src
+
+**** Capture word
+
+Instruction to capture/select a word.
+
+#+begin_src json
+  {
+    "message": "select_word",
+    "word": "word2"
+  }
+#+end_src
+
+**** Delete Word
+
+Instruction to delete a word backwards
+
+#+begin_src json
+{
+  "message": "delete_word",
+}
+#+end_src
+
+**** Exit Typing Mode
+
+Instruction to leave typing mode
+
+#+begin_src json
+{
+  "message": "leave_typing_mode"
+}
+#+end_src
+
+**** Error Message
+
+Instruction to display error message. Potential errors:
+- could not enter word selection mode
+- could not select word
+
+#+begin_src json
+{
+  "message": "error_message",
+  "error_code": "could_not_select_word"
+}
+#+end_src
+
+** Maintain State in Frontend
+
+Maintain all state in the frontend. Directly transmit fingers to the frontend rather than instructions and let the frontend handle itself.
+
+Backend state:
+- none
+
+Frontend state:
+- current finger word
+- finger selection mode
+- most likely words
+- previously typed words
+- most recently typed character
+
+*** Pros
+- Less complicated network communication
+- Duplicate the finger selection mode state
+
+*** Cons
+- Pipeline improvements have to be made in the frontend
+- Have to port python code to C#
+- Pipeline functionality is limited by C#
+
+* TODO Next Steps
+- Connect to previous section of pipeline
+- Connect to AR
+- Change word selection mode from 0 indexed to 1 indexed.
+
