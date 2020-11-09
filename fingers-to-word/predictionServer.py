@@ -182,8 +182,8 @@ async def send_most_likely_words(words):
     await sio.emit('options', {"words":words})
 
 # trigger word selection mode
-def send_word_selection_mode():
-    pass
+async def send_word_selection_mode():
+    await sio.emit('selection', None)
 
 # trigger word capture
 async def send_word_capture(word):
@@ -235,7 +235,7 @@ async def interactive_mode(word_groupings, server_mode=False, finger_mode=False)
         print(potential_words_display)
 
         if server_mode:
-            send_word_selection_mode(potential_words)
+            await send_word_selection_mode()
 
         if finger_mode:
             # get character prediction
@@ -329,7 +329,7 @@ async def interactive_mode(word_groupings, server_mode=False, finger_mode=False)
         # type 0 to enter word selection mode (left squeeze)
         elif finger_number == "9":
             if finger_word in word_groupings:
-                handle_word_selection_mode(word_groupings[finger_word])
+                await handle_word_selection_mode(word_groupings[finger_word])
             else:
                 handle_error_code("could_not_enter_word_selection_mode")
 
