@@ -141,13 +141,15 @@ Frontend state:
 
     Instruction to display error message. Potential errors:
     
-    -   could not enter word selection mode
-    -   could not select word
+    - could not enter word selection mode
+    - could not select word
     
+    ```
         {
           "message": "error_message",
           "error_code": "could_not_select_word"
         }
+    ```
 
 
 <a id="orge496dbf"></a>

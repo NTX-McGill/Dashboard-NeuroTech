@@ -117,6 +117,7 @@ Instruction to display error message. Potential errors:
 }
 #+end_src
 
+
 ** Maintain State in Frontend
 
 Maintain all state in the frontend. Directly transmit fingers to the frontend rather than instructions and let the frontend handle itself.
@@ -141,7 +142,8 @@ Frontend state:
 - Pipeline functionality is limited by C#
 
 * TODO Next Steps
-- Connect to previous section of pipeline
-- Connect to AR
+- Connect to previous section of pipeline i.e. read fingers from prediction
+- Connect to AR i.e. send instructions to frontend
 - Change word selection mode from 0 indexed to 1 indexed.
+- Trim dictionary
 
