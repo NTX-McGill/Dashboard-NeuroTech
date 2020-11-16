@@ -27,7 +27,7 @@ sio.attach(app)
 
 # Tunable Params. Note OpenBCI gives 250 samples per second
 BUFFER_SIZE_SECONDS = 0.5
-BUFFER_DIST_SECONDS = 0.1
+BUFFER_DIST_SECONDS = 0.5
 OPENBCI_HERTZ = 250
 BUFFER_SIZE = round(OPENBCI_HERTZ * BUFFER_SIZE_SECONDS)
 BUFFER_DIST = round(OPENBCI_HERTZ * BUFFER_DIST_SECONDS)
@@ -46,8 +46,8 @@ async def emit_predictions():
     model_file = 'NeuroTech-ML/models/model_windows_date_all_subject_all_mode_1_2_4_groups_ok_good.pkl'
     # model_file = 'NeuroTech-ML/models/model_features_windows_date_all_subject_all_mode_1_2_4_groups_good_1000ms-05_12_2020_23_59_21.pkl'
     bci_buffer = np.zeros([8, 1])
-    predictor = Prediction(model_filename=model_file,
-                           shift=BUFFER_DIST/BUFFER_SIZE)
+    # predictor = Prediction(model_filename=model_file, shift=BUFFER_DIST/BUFFER_SIZE)
+    predictor = Prediction(model_filename=model_file, shift=BUFFER_DIST_SECONDS)
 
     while True:
         # Pull and append sample from OpenBCI to buffer

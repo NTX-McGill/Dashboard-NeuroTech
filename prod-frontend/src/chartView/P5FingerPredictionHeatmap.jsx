@@ -9,7 +9,7 @@ export default class App extends Component {
     const numSamples = Math.round(this.props.numSeconds / 0.1) || 50;
     const xAxisHeight = 40;
     const yAxisWidth = 100;
-    const numRows = 10;
+    const numRows = 13;
     const w = (sketchWidth - yAxisWidth) / numSamples;
     const h = (sketchHeight - xAxisHeight) / numRows;
     const leftMargin = 10;
@@ -29,9 +29,12 @@ export default class App extends Component {
       "Left Middle",
       "Left Ring",
       "Left Pinky",
+      "Right clench",
+      "Left clench",
+      "Double clench",
     ];
 
-    let probsData = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
+    let probsData = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
 
     function updateChart(newData) {
       // probs array with shape 10
