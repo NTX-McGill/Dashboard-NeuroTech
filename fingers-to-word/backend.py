@@ -21,11 +21,11 @@ def mlproducer(queue):
     FEATURES = ['iemg', 'mav', 'mmav', 'var', 'rms']
     DEBUG = False
 
-    model_file = 'NeuroTech-ML/models/model_windows_date_all_subject_all_mode_1_2_4_groups_ok_good.pkl'
-    # model_file = 'NeuroTech-ML/models/model_features_windows_date_all_subject_all_mode_1_2_4_groups_good_1000ms-05_12_2020_23_59_21.pkl'
+    # model_file = 'NeuroTech-ML/models/model_windows_date_all_subject_all_mode_1_2_4_groups_ok_good.pkl'
+    model_file = 'NeuroTech-ML/models/knn_final_500ms.pkl.pkl'
     bci_buffer = np.zeros([8, 1])
-    predictor = Prediction(model_filename=model_file,
-                           shift=BUFFER_DIST/BUFFER_SIZE)
+    # predictor = Prediction(model_filename=model_file, shift=BUFFER_DIST/BUFFER_SIZE)
+    predictor = Prediction(model_filename=model_file, shift=BUFFER_DIST_SECONDS)
 
     print("Attempting to connect to OpenBCI. Please make sure OpenBCI is open with LSL enabled.")
 
@@ -68,7 +68,7 @@ def mlproducer(queue):
                     'Finger': int(finger_index),
                     'FingerProbs': str(finger_probs[0].tolist()),
                     'Feature_Data': formatted_feature_dict,
-                    'Fitlered_Signal_Data': {
+                    'Filtered_Signal_Data': {
                 "data": str(filter_buffer[:, (BUFFER_SIZE - 1)].tolist()),
                 "timestamp": timestamp
                         }
@@ -83,7 +83,7 @@ def mlproducer(queue):
 
 def consumer(queue, server_mode, finger_mode):
 
-    word_groupings = PredictionServer.get_finger_number_to_word_map(top_5000_words)
+    word_groupings = PredictionServer.get_finger_number_to_word_map(top_10000_words)
     prediction_server = PredictionServer(queue, word_groupings, server_mode=server_mode, finger_mode=finger_mode)
     prediction_server.startServer()
 
