@@ -21,8 +21,15 @@ python -m pip install -r requirements.txt
 
 Run:
 #+begin_src bash
-python prediction.py
+python backend.py
 #+end_src
+
+** Parameters
+
+There are two configurable variables in backend.py
+
+- server_mode :: Indicates whether or not to emit predictions and data over socketio
+- finger_mode :: When true, reads signal data from OpenBCI and converts it to finger numbers. When false, reads keypresses from stdin and converts them to finger numbers.
 
 * Connecting with AR
 
@@ -142,8 +149,8 @@ Frontend state:
 - Pipeline functionality is limited by C#
 
 * TODO Next Steps
-- Connect to previous section of pipeline i.e. read fingers from prediction
-- Connect to AR i.e. send instructions to frontend
-- Change word selection mode from 0 indexed to 1 indexed.
-- Trim dictionary
+- [X] Connect to previous section of pipeline i.e. read fingers from prediction
+- [X] Connect to AR i.e. send instructions to frontend
+- [ ] Change word selection mode from 0 indexed to 1 indexed.
+- [ ] Trim dictionary
 

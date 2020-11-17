@@ -1,28 +1,20 @@
+- [Guide](#sec-1)
+  - [Interaction](#sec-1-1)
+  - [Setup](#sec-1-2)
+  - [Parameters](#sec-1-3)
+- [Connecting with AR](#sec-2)
+  - [Maintain State in Backend](#sec-2-1)
+    - [Pros](#sec-2-1-1)
+    - [Cons](#sec-2-1-2)
+    - [Instructions](#sec-2-1-3)
+  - [Maintain State in Frontend](#sec-2-2)
+    - [Pros](#sec-2-2-1)
+    - [Cons](#sec-2-2-2)
+- [Next Steps](#sec-3)
 
-# Table of Contents
+# Guide<a id="sec-1"></a>
 
-1.  [Guide](#org90a5cf2)
-    1.  [Interaction](#org184e93c)
-    2.  [Setup](#orgbbefc4b)
-2.  [Connecting with AR](#org7b9efd0)
-    1.  [Maintain State in Backend](#org1b7bc9f)
-        1.  [Pros](#org430a6e8)
-        2.  [Cons](#org9ef3d5c)
-        3.  [Instructions](#orgfe59582)
-    2.  [Maintain State in Frontend](#orge496dbf)
-        1.  [Pros](#orgb5c2c82)
-        2.  [Cons](#org24173d8)
-3.  [Next Steps](#orgb703921)
-
-
-<a id="org90a5cf2"></a>
-
-# Guide
-
-
-<a id="org184e93c"></a>
-
-## Interaction
+## Interaction<a id="sec-1-1"></a>
 
 Keyboard inputs:
 
@@ -32,32 +24,34 @@ Keyboard inputs:
 -   **"0":** Enter word selection mode. Then select a word by pressing a lower case char associated with the desired index
 -   **lower case char:** input finger associated with character
 
-
-<a id="orgbbefc4b"></a>
-
-## Setup
+## Setup<a id="sec-1-2"></a>
 
 Environment (assuming python3):
 
-    python -m venv venv
-    source venv/bin/activate
-    python -m pip install -r requirements.txt
+```bash
+python -m venv venv
+source venv/bin/activate
+python -m pip install -r requirements.txt
+```
 
 Run:
 
-    python prediction.py
+```bash
+python backend.py
+```
 
+## Parameters<a id="sec-1-3"></a>
 
-<a id="org7b9efd0"></a>
+There are two configurable variables in backend.py
 
-# Connecting with AR
+-   **server<sub>mode</sub>:** Indicates whether or not to emit predictions and data over socketio
+-   **finger<sub>mode</sub>:** When true, reads signal data from OpenBCI and converts it to finger numbers. When false, reads keypresses from stdin and converts them to finger numbers.
+
+# Connecting with AR<a id="sec-2"></a>
 
 Two potentially approaches for connecting with AR.
 
-
-<a id="org1b7bc9f"></a>
-
-## Maintain State in Backend
+## Maintain State in Backend<a id="sec-2-1"></a>
 
 Maintain the state of the word being built in the backend. Send the frontend instructions for updating the UI accordingly.
 
@@ -73,88 +67,86 @@ Frontend state:
 -   previously typed words
 -   most recently typed character
 
-
-<a id="org430a6e8"></a>
-
-### Pros
+### Pros<a id="sec-2-1-1"></a>
 
 -   Pipeline changes can be flexible without touching frontend code after implementing networking communication
 -   Don't have to port python code to C#.
 -   Pipeline functionality is empowered by python
 
-
-<a id="org9ef3d5c"></a>
-
-### Cons
+### Cons<a id="sec-2-1-2"></a>
 
 -   More complicated network communication
 -   Duplicate the finger selection mode state
 
-
-<a id="orgfe59582"></a>
-
-### Instructions
+### Instructions<a id="sec-2-1-3"></a>
 
 1.  Most Likely Words
 
     Instruction to update the most likely words in the frontend
     
-        {
-          "message": "most_likely_words",
-          "words": ["word1", "word2", ...],
-        }
+    ```json
+    {
+      "message": "most_likely_words",
+      "words": ["word1", "word2", ...],
+    }
+    ```
 
 2.  Enter Word Selection Mode
 
     Instruction to enter word selection mode in the frontend
     
-        {
-          "message": "enter_word_selection"
-        }
+    ```json
+    {
+      "message": "enter_word_selection"
+    }
+    ```
 
 3.  Capture word
 
     Instruction to capture/select a word.
     
-        {
-          "message": "select_word",
-          "word": "word2"
-        }
+    ```json
+    {
+      "message": "select_word",
+      "word": "word2"
+    }
+    ```
 
 4.  Delete Word
 
     Instruction to delete a word backwards
     
-        {
-          "message": "delete_word",
-        }
+    ```json
+    {
+      "message": "delete_word",
+    }
+    ```
 
 5.  Exit Typing Mode
 
     Instruction to leave typing mode
     
-        {
-          "message": "leave_typing_mode"
-        }
+    ```json
+    {
+      "message": "leave_typing_mode"
+    }
+    ```
 
 6.  Error Message
 
     Instruction to display error message. Potential errors:
     
-    - could not enter word selection mode
-    - could not select word
+    -   could not enter word selection mode
+    -   could not select word
     
+    ```json
+    {
+      "message": "error_message",
+      "error_code": "could_not_select_word"
+    }
     ```
-        {
-          "message": "error_message",
-          "error_code": "could_not_select_word"
-        }
-    ```
 
-
-<a id="orge496dbf"></a>
-
-## Maintain State in Frontend
+## Maintain State in Frontend<a id="sec-2-2"></a>
 
 Maintain all state in the frontend. Directly transmit fingers to the frontend rather than instructions and let the frontend handle itself.
 
@@ -170,29 +162,20 @@ Frontend state:
 -   previously typed words
 -   most recently typed character
 
-
-<a id="orgb5c2c82"></a>
-
-### Pros
+### Pros<a id="sec-2-2-1"></a>
 
 -   Less complicated network communication
 -   Duplicate the finger selection mode state
 
-
-<a id="org24173d8"></a>
-
-### Cons
+### Cons<a id="sec-2-2-2"></a>
 
 -   Pipeline improvements have to be made in the frontend
 -   Have to port python code to C#
 -   Pipeline functionality is limited by C#
 
+# TODO Next Steps<a id="sec-3"></a>
 
-<a id="orgb703921"></a>
-
-# TODO Next Steps
-
--   Connect to previous section of pipeline
--   Connect to AR
--   Change word selection mode from 0 indexed to 1 indexed.
-
+-   [X] Connect to previous section of pipeline i.e. read fingers from prediction
+-   [X] Connect to AR i.e. send instructions to frontend
+-   [ ] Change word selection mode from 0 indexed to 1 indexed.
+-   [ ] Trim dictionary
