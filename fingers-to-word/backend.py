@@ -9,7 +9,7 @@ from pylsl import StreamInlet, resolve_stream
 import time
 
 from real_time_class import Prediction
-from predictionServerClass import PredictionServer
+from prediction_server import PredictionServer
 
 def mlproducer(queue):
 
@@ -90,10 +90,11 @@ def consumer(queue, server_mode, finger_mode):
 
 if __name__ == "__main__":
     # server mode means
-    server_mode = False
+    server_mode = True
 
     # finger mode is the opposite of keyboard mode
-    finger_mode = False
+    # finger mode means prediction mode
+    finger_mode = True
 
     queue = Queue()
 
@@ -120,5 +121,3 @@ if __name__ == "__main__":
                 exit()
 
         consumer.join()
-
-
