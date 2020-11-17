@@ -5,35 +5,66 @@ import itertools
 
 class PredictionServer:
 
+    # finger_name_to_finger_number = {
+    #     "left_pinky": 0,
+    #     "left_ring": 1,
+    #     "left_middle": 2,
+    #     "left_index": 3,
+    #     "thumb": 4,
+    #     "right_index": 5,
+    #     "right_middle": 6,
+    #     "right_ring": 7,
+    #     "right_pinky": 8,
+    #     "left_squeeze": 9,
+    #     "right_squeeze": 10,
+    #     "left_and_right_squeeze": 11
+    # }
+    
+    # maps from finger number to possible finger letters
+    # finger_number_to_letters = {
+    #     "0": ["q", "a", "z"],
+    #     "1": ["w", "s", "x"],
+    #     "2": ["e", "d", "c"],
+    #     "3": ["r", "f", "v", "t", "g", "b"],
+    #     "4": [" "],
+    #     "5": ["y", "h", "n", "u", "j", "m"],
+    #     "6": ["i", "k", ","],
+    #     "7": ["o", "l", "."],
+    #     "8": ["p", ";", ":", "'", '"', "/"],
+    #     "9": ["0"],
+    #     "10": ["\\x7f"],
+    #     "11": ["\\x03"]
+    # }
+    
     finger_name_to_finger_number = {
-        "left_pinky": 0,
-        "left_ring": 1,
-        "left_middle": 2,
-        "left_index": 3,
-        "thumb": 4,
-        "right_index": 5,
-        "right_middle": 6,
-        "right_ring": 7,
-        "right_pinky": 8,
-        "left_squeeze": 9,
-        "right_squeeze": 10,
-        "left_and_right_squeeze": 11
+        "left_pinky": 9,
+        "left_ring": 8,
+        "left_middle": 7,
+        "left_index": 6,
+        "thumb": 1,
+        "right_index": 2,
+        "right_middle": 3,
+        "right_ring": 4,
+        "right_pinky": 5,
+        "left_squeeze": 10,
+        "right_squeeze": 11,
+        "left_and_right_squeeze": 12
     }
-
+    
     # maps from finger number to possible finger letters
     finger_number_to_letters = {
-        "0": ["q", "a", "z"],
-        "1": ["w", "s", "x"],
-        "2": ["e", "d", "c"],
-        "3": ["r", "f", "v", "t", "g", "b"],
-        "4": [" "],
-        "5": ["y", "h", "n", "u", "j", "m"],
-        "6": ["i", "k", ","],
-        "7": ["o", "l", "."],
-        "8": ["p", ";", ":", "'", '"', "/"],
-        "9": ["0"],
-        "10": ["\\x7f"],
-        "11": ["\\x03"]
+        "9": ["q", "a", "z"],
+        "8": ["w", "s", "x"],
+        "7": ["e", "d", "c"],
+        "6": ["r", "f", "v", "t", "g", "b"],
+        "1": [" "],
+        "2": ["y", "h", "n", "u", "j", "m"],
+        "3": ["i", "k", ","],
+        "4": ["o", "l", "."],
+        "5": ["p", ";", ":", "'", '"', "/"],
+        "10": ["0"],
+        "11": ["\\x7f"],
+        "12": ["\\x03"]
     }
 
     # maps from letter to finger number
@@ -44,7 +75,8 @@ class PredictionServer:
 
     # create a translator for translating from english to fingers
     english_letters = "qazwsxedcrfvtgbyhnujmikolp"
-    finger_letters = "00011122233333355555566778"
+    # finger_letters = "00011122233333355555566778"
+    finger_letters = "99988877766666622222233445"
     english_to_finger_table = "".maketrans(english_letters, finger_letters)
 
     # translate from english to finger word
@@ -280,19 +312,20 @@ class PredictionServer:
             finger_number = await self.get_finger_number()
 
             # type C-c to exit (left and right squeeze)
-            if finger_number == "11":
+            if finger_number == "12":
                 handle_leave_typing_mode()
 
             # type space to select the first word (thumb)
-            elif finger_number == "4":
+            elif finger_number == "1":
                 try:
                     selected_word = self.word_groupings[finger_word][0]
                     await handle_word_capture(selected_word)
                 except Exception as e:
                     print(f"No word to select")
+                    # finger_word = ""
 
             # type backspace to go back a character (right squeeze)
-            elif finger_number == "10":
+            elif finger_number == "11":
                 if (len(finger_word) == 0):
                     # remove last word from the sentence
                     await handle_delete_word()
@@ -302,15 +335,16 @@ class PredictionServer:
                     await handle_most_likely_words(self.word_groupings[finger_word])
 
             # type 0 to enter word selection mode (left squeeze)
-            elif finger_number == "9":
+            elif finger_number == "10":
                 if finger_word in self.word_groupings:
                     await handle_word_selection_mode(self.word_groupings[finger_word])
                 else:
                     handle_error_code("could_not_enter_word_selection_mode")
 
             # other characters are interpretted as typing
-            else:
+            elif finger_number != "0":
                 finger_word += finger_number
+                print(finger_word)
                 await handle_most_likely_words(self.word_groupings[finger_word])
 
             # print(f"Your Sentence: {sentence}")
