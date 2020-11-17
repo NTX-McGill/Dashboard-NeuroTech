@@ -152,6 +152,42 @@ class Prediction():
             all_ch_names = all_ch_names + new_channel_names
 
         return all_results,all_ch_names
+    
+    def get_fist_clench_predictions(self, features, data, threshold=3000):
+                
+        n_psd_bands = 9 # 9 PSD values for each channel
+        psd_feature_name = 'freq_feats'
+        
+        fist_clench_prob = np.zeros((1, 3))
+        channels_right = ['channel {}'.format(i) for i in (1, 2, 3, 4)]
+        channels_left = ['channel {}'.format(i) for i in (5, 6, 7, 8)]
+        
+        # compute mean PSD feature if it is not present in the features
+        if 'freq_feats' not in features.keys():
+            features, _ = self.compute_features(data, self.channel_names, [psd_feature_name])
+        
+        sum_right = 0
+        sum_left = 0
+        
+        for channel_name in channels_right:
+            for feat_name in ['{}_{}_{}'.format(channel_name, psd_feature_name, i) for i in range(n_psd_bands)]:
+                sum_right += features[feat_name][0]
+                
+        for channel_name in channels_left:
+            for feat_name in ['{}_{}_{}'.format(channel_name, psd_feature_name, i) for i in range(n_psd_bands)]:
+                sum_left += features[feat_name][0]
+            
+        right_clench = sum_right > threshold
+        left_clench = sum_left > threshold
+        
+        if right_clench and left_clench:
+            fist_clench_prob[0, 2] = 1
+        elif right_clench:
+            fist_clench_prob[0, 0] = 1
+        elif left_clench:
+            fist_clench_prob[0, 1] = 1
+                    
+        return fist_clench_prob
 
 
     def predict_function(self, arr):
@@ -176,4 +212,17 @@ class Prediction():
         filtered_arr = self.apply_filter(arr)
         res, _ = self.compute_features(filtered_arr, self.channel_names, self.features)
         input_arr = np.array(list(res.values()))
-        return filtered_arr, res, self.clf.predict_proba(np.squeeze(input_arr).reshape(1, -1))
+        # return filtered_arr, res, self.clf.predict_proba(np.squeeze(input_arr).reshape(1, -1))
+        
+        clench_probs = self.get_fist_clench_predictions(res, filtered_arr, )	
+        finger_probs = self.clf.predict_proba(np.squeeze(input_arr).reshape(1, -1))	
+        	
+        # fist clench	
+        if np.count_nonzero(clench_probs):	
+            probs = np.hstack((np.zeros(finger_probs.shape), clench_probs))	
+            	
+        # no fist clench	
+        else:	
+            probs = np.hstack((finger_probs, np.zeros(clench_probs.shape)))	
+                    	
+        return filtered_arr, res, probs
