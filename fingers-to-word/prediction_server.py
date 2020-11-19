@@ -306,14 +306,29 @@ class PredictionServer:
 
             if self.server_mode:
                 self.send_error_code(code)
+                
+        was_baseline = False
+        
 
         # continuously read characters
         while True:
+            
             finger_number = await self.get_finger_number()
+            
+            if finger_number == "0":
+                was_baseline = True
+            elif not was_baseline:
+                print("Skipping")
+                continue
+            else:
+                was_baseline = False
 
             # type C-c to exit (left and right squeeze)
-            if finger_number == "12":
-                handle_leave_typing_mode()
+            # if finger_number == "12":
+            if finger_number == "10": # left squeeze, reset finger word
+                print("Word reset")
+                finger_word = ""
+                # handle_leave_typing_mode()
 
             # type space to select the first word (thumb)
             elif finger_number == "1":
@@ -326,6 +341,7 @@ class PredictionServer:
 
             # type backspace to go back a character (right squeeze)
             elif finger_number == "11":
+                print("Deleting")
                 if (len(finger_word) == 0):
                     # remove last word from the sentence
                     await handle_delete_word()
@@ -335,7 +351,8 @@ class PredictionServer:
                     await handle_most_likely_words(self.word_groupings[finger_word])
 
             # type 0 to enter word selection mode (left squeeze)
-            elif finger_number == "10":
+            # elif finger_number == "10":
+            elif finger_number == "12": # (left and right squeeze)
                 if finger_word in self.word_groupings:
                     await handle_word_selection_mode(self.word_groupings[finger_word])
                 else:

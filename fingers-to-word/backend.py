@@ -18,11 +18,11 @@ def mlproducer(queue):
     OPENBCI_HERTZ = 250
     BUFFER_SIZE = round(OPENBCI_HERTZ * BUFFER_SIZE_SECONDS)
     BUFFER_DIST = round(OPENBCI_HERTZ * BUFFER_DIST_SECONDS)
-    FEATURES = ['iemg', 'mav', 'mmav', 'var', 'rms']
+    FEATURES = ['var']
     DEBUG = False
 
     # model_file = 'NeuroTech-ML/models/model_windows_date_all_subject_all_mode_1_2_4_groups_ok_good.pkl'
-    model_file = 'NeuroTech-ML/models/knn_final_500ms.pkl.pkl'
+    model_file = 'NeuroTech-ML/models/lr_final_500ms.pkl'
     bci_buffer = np.zeros([8, 1])
     # predictor = Prediction(model_filename=model_file, shift=BUFFER_DIST/BUFFER_SIZE)
     predictor = Prediction(model_filename=model_file, shift=BUFFER_DIST_SECONDS)
