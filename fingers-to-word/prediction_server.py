@@ -188,7 +188,10 @@ class PredictionServer:
             # get character prediction
             if self.server_mode:
                 for key, value in queueItem.items():
+                    # print(key, value)
                     await self.sio.emit(key, value)
+                    
+                await self.sio.emit('finger', {"number":queueItem['Finger']})
 
             finger_number = str(queueItem['Finger'])
 
@@ -308,12 +311,21 @@ class PredictionServer:
                 self.send_error_code(code)
                 
         was_baseline = False
+        spaces = 20
         
 
         # continuously read characters
         while True:
+            continue
+            
+            if spaces != 0:
+                await self.sio.emit('finger', {"number":"1"})
+                spaces -= 1
             
             finger_number = await self.get_finger_number()
+            
+            await handle_word_capture('test')
+            continue
             
             if finger_number == "0":
                 was_baseline = True

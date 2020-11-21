@@ -153,7 +153,7 @@ class Prediction():
 
         return all_results,all_ch_names
     
-    def is_baseline(self, features, data, threshold=10):
+    def is_baseline(self, features, data, threshold=50):
         n_psd_bands = 9
         psd_feature_name = 'freq_feats'
         channel_names = ['channel {}'.format(i+1) for i in range(8)]
@@ -175,7 +175,7 @@ class Prediction():
             return False
 
     
-    def get_fist_clench_predictions(self, features, data, threshold_right=1000, threshold_left=1000):
+    def get_fist_clench_predictions(self, features, data, threshold_right=3000, threshold_left=3000):
                 
         n_psd_bands = 9 # 9 PSD values for each channel
         psd_feature_name = 'freq_feats'

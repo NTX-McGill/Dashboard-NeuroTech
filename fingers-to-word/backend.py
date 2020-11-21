@@ -22,7 +22,7 @@ def mlproducer(queue):
     DEBUG = False
 
     # model_file = 'NeuroTech-ML/models/model_windows_date_all_subject_all_mode_1_2_4_groups_ok_good.pkl'
-    model_file = 'NeuroTech-ML/models/lr_final_500ms.pkl'
+    model_file = 'NeuroTech-ML/models/knn_final_500ms.pkl'
     bci_buffer = np.zeros([8, 1])
     # predictor = Prediction(model_filename=model_file, shift=BUFFER_DIST/BUFFER_SIZE)
     predictor = Prediction(model_filename=model_file, shift=BUFFER_DIST_SECONDS)
