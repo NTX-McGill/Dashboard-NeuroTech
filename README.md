@@ -1,39 +1,24 @@
-# Dashboard-NeuroTech
+# Dashboard-NeuroTech Software
 
-
-Welcome
-
+Contins software for the dashboard, real-time backend, and data collection backend.
 
 ## Frontend
+
 ```
-cd frontend
+cd prod-frontend
 
 yarn install
 
 yarn start
 ```
 
+## Backends
 
+### Real-time
 
-## Backend
-```
-cd backend
+See the README file in `backend/real_time/`.
 
-python3 -m venv env
-```
-Add your env folder in .gitignore
+### Data Collection
 
-Start the virtual environment using:
-```
-source env/bin/activate
-```
+See the README file in `backend/data_collection`.
 
-
-
-To install all of the necessary dependencies in it use:
-
-```
-pip install -r requirements.txt
-
-python webapp_backend.py
-```
