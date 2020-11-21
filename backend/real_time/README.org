@@ -23,6 +23,8 @@ source venv/bin/activate
 python -m pip install -r requirements.txt
 #+end_src
 
+Download a finger number prediction model into `NeuroTech-ML/models` and set the =model_file= variable in =backend.py=.
+
 Run:
 #+begin_src bash
 python backend.py
