@@ -179,7 +179,6 @@ class PredictionServer:
     async def get_finger_number(self):
         # print("Pulling from queue")
         while self.queue.empty():
-            # print("Waiting on empty queue")
             await self.sio.sleep(0.01)
 
         queueItem = self.queue.get()
@@ -311,25 +310,25 @@ class PredictionServer:
                 self.send_error_code(code)
 
         was_baseline = False
-        spaces = 20
+        # spaces = 20
 
         # continuously read characters
         while True:
-            continue
+            # continue
 
-            if spaces != 0:
-                await self.sio.emit('finger', {"number": "1"})
-                spaces -= 1
+            # if spaces != 0:
+            #     await self.sio.emit('finger', {"number": "1"})
+            #     spaces -= 1
 
             finger_number = await self.get_finger_number()
 
-            await handle_word_capture('test')
-            continue
+            # await handle_word_capture('test')
+            # continue
 
             if finger_number == "0":
                 was_baseline = True
             elif not was_baseline:
-                print("Skipping")
+                # print("Skipping")
                 continue
             else:
                 was_baseline = False
@@ -337,7 +336,7 @@ class PredictionServer:
             # type C-c to exit (left and right squeeze)
             # if finger_number == "12":
             if finger_number == "10":  # left squeeze, reset finger word
-                print("Word reset")
+                # print("Word reset")
                 finger_word = ""
                 # handle_leave_typing_mode()
 
@@ -379,5 +378,6 @@ class PredictionServer:
             print("")
 
     def startServer(self):
+        print("Starting server")
         self.sio.start_background_task(self.interactive_mode)
         web.run_app(self.app, host='0.0.0.0', port='4002')
