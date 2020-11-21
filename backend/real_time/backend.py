@@ -19,7 +19,7 @@ def mlproducer(queue):
     BUFFER_SIZE = round(OPENBCI_HERTZ * BUFFER_SIZE_SECONDS)
     BUFFER_DIST = round(OPENBCI_HERTZ * BUFFER_DIST_SECONDS)
     FEATURES = ['var']
-    DEBUG = False
+    DEBUG = True
 
     # model_file = 'NeuroTech-ML/models/model_windows_date_all_subject_all_mode_1_2_4_groups_ok_good.pkl'
     model_file = 'NeuroTech-ML/models/knn_final_500ms.pkl'
@@ -74,8 +74,8 @@ def mlproducer(queue):
                         }
                 })
 
-            # if (DEBUG):
-            #     print(finger_probs[0])
+            if (DEBUG):
+                print(finger_probs[0])
 
             # Remove BUFFER_DIST from beginning of buffer
             bci_buffer = np.delete(bci_buffer, np.arange(0, BUFFER_DIST, 1), 1)
